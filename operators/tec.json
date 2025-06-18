@@ -1,0 +1,44 @@
+{
+	"mySqlDbName" : "gtfs_tec",
+	"gtfsDirectory" : "./gtfs/tec",
+	"operator" : "TEC",
+	"osmOperator" : "TEC",
+	"networks" : [
+		{
+			"osmNetwork" : "TECB",
+			"gtfsAgencyId" : "B",
+			"gtfsAgencyName" : "TEC Brabant Wallon",
+			"idPrefix" : "B"
+		},
+		{
+			"osmNetwork" : "TECC",
+			"gtfsAgencyId" : "C",
+			"gtfsAgencyName" : "TEC Charleroi",
+			"idPrefix" : "C"
+		},
+		{
+			"osmNetwork" : "TECH",
+			"gtfsAgencyId" : "H",
+			"gtfsAgencyName" : "TEC Hainaut",
+			"idPrefix" : "H"
+		},
+		{
+			"osmNetwork" : "TECL",
+			"gtfsAgencyId" : "L",
+			"gtfsAgencyName" : "TEC Liège - Verviers",
+			"idPrefix" : "L"
+		},
+		{
+			"osmNetwork" : "TECN",
+			"gtfsAgencyId" : "N",
+			"gtfsAgencyName" : "TEC Namur - Luxembourg",
+			"idPrefix" : "N"
+		},
+		{
+			"osmNetwork" : "TECX",
+			"gtfsAgencyId" : "N",
+			"gtfsAgencyName" : "TEC Namur - Luxembourg",
+			"idPrefix" : "X"
+		}
+	]
+}
