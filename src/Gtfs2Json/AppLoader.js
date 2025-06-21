@@ -1,5 +1,5 @@
 /*
-Copyright - 2023 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -27,10 +27,8 @@ import process from 'process';
 import theConfig from '../Gtfs2Json/Config.js';
 import theMySqlDb from '../Gtfs2Json/MySqlDb.js';
 
-import GtfsTreeBuilder from '../Gtfs2Json/GtfsTreeBuilder.js';
 import theOperator from '../Common/Operator.js';
-
-import GtfsPlatformsBuilder from '../Gtfs2Json/GtfsPlatformsBuilder.js';
+import GtfsJsonDataBuilder from '../Gtfs2Json/GtfsJsonDataBuilder.js';
 import GtfsLoader from '../Gtfs2Json/GtfsLoader.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -100,9 +98,11 @@ class AppLoader {
 
 		// config
 		this.#createConfig ( options );
+
 		await theOperator.loadData ( theConfig.operatorFile );
 
 		console.info ( '\nStarting gtfs2json ...\n\n' );
+
 		await theMySqlDb.start ( );
 
 		const startTime = process.hrtime.bigint ( );
@@ -110,11 +110,7 @@ class AppLoader {
 		await new GtfsLoader ( ).start ( );
 
 		for ( const network of theOperator.networks ) {
-			await new GtfsTreeBuilder ( ).build ( network );
-		}
-
-		for ( const network of theOperator.networks ) {
-			await new GtfsPlatformsBuilder ( ).build ( network );
+			await new GtfsJsonDataBuilder ( ).build ( network );
 		}
 
 		await theMySqlDb.end ( );

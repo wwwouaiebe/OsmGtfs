@@ -1,5 +1,5 @@
 /*
-Copyright - 2023 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -91,7 +91,7 @@ class MySqlDb {
 	async start ( ) {
 
 		await this.#askCredentials ( );
-		this.#connection = mysql.createConnection (
+		this.#connection = await mysql.createConnection (
 			{
 				host : 'localhost',
 				user : this.#userName,

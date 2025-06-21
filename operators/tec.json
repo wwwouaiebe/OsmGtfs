@@ -8,37 +8,37 @@
 			"osmNetwork" : "TECB",
 			"gtfsAgencyId" : "B",
 			"gtfsAgencyName" : "TEC Brabant Wallon",
-			"idPrefix" : "B"
+			"gtfsIdPrefix" : "B"
 		},
 		{
 			"osmNetwork" : "TECC",
 			"gtfsAgencyId" : "C",
 			"gtfsAgencyName" : "TEC Charleroi",
-			"idPrefix" : "C"
+			"gtfsIdPrefix" : "C"
 		},
 		{
 			"osmNetwork" : "TECH",
 			"gtfsAgencyId" : "H",
 			"gtfsAgencyName" : "TEC Hainaut",
-			"idPrefix" : "H"
+			"gtfsIdPrefix" : "H"
 		},
 		{
 			"osmNetwork" : "TECL",
 			"gtfsAgencyId" : "L",
 			"gtfsAgencyName" : "TEC Liège - Verviers",
-			"idPrefix" : "L"
+			"gtfsIdPrefix" : "L"
 		},
 		{
 			"osmNetwork" : "TECN",
 			"gtfsAgencyId" : "N",
 			"gtfsAgencyName" : "TEC Namur - Luxembourg",
-			"idPrefix" : "N"
+			"gtfsIdPrefix" : "N"
 		},
 		{
 			"osmNetwork" : "TECX",
 			"gtfsAgencyId" : "N",
 			"gtfsAgencyName" : "TEC Namur - Luxembourg",
-			"idPrefix" : "X"
+			"gtfsIdPrefix" : "X"
 		}
 	]
 }

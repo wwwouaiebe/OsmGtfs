@@ -24,44 +24,42 @@ Changes:
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * A simple container to store the app configuration
+ * Coming soon
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class Config {
+class ArrayHelper {
 
 	/**
-	 * Comng soon...
-	 * @type {Number}
+	 * Compare 2 names for sorting.
+	 * Names are splited into a numeric and analphanumric part, the numeric part is completed with
+	 * spaces on the left, then compared as string
+	 * @param {String} first The first name to compare
+	 * @param {String} second The second name to compare
+	 * @returns {Number} The result of the comparison. See String.localCompare ( )
 	 */
 
-	// eslint-disable-next-line no-magic-numbers
-	commitCounter = 100000;
+	static compareRouteName ( first, second ) {
 
-	/**
-	 * The name of the operator file
-	 * @type {String}
-	 */
+		// split the name into the numeric part and the alphanumeric part:
+		// numeric part
+		let firstPrefix = String ( Number.parseInt ( first ) );
+		let secondPrefix = String ( Number.parseInt ( second ) );
 
-	operatorFile = '';
+		// alpha numeric part
+		let firstPostfix = ( first ).replace ( firstPrefix, '' );
+		let secondPostfix = ( second ).replace ( secondPrefix, '' );
 
-	/**
-	 * The constructor
-	 */
+		// complete the numeric part with spaces on the left and compare
+		let result =
+			( firstPrefix.padStart ( 5, ' ' ) + firstPostfix )
+				.localeCompare ( secondPrefix.padStart ( 5, ' ' ) + secondPostfix );
 
-	constructor ( ) {
+		return result;
 	}
 
 }
 
-/* ------------------------------------------------------------------------------------------------------------------------- */
-/**
- * The one and only one instance of Config class. Notice that the object will be froozen directly after reading the parameters
- */
-/* ------------------------------------------------------------------------------------------------------------------------- */
-
-const theConfig = new Config;
-
-export default theConfig;
+export default ArrayHelper;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */
