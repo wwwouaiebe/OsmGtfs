@@ -61,7 +61,7 @@ class GtfsJsonDataBuilder {
 
 	async #buildRoutesMasterTree ( network ) {
    		let routesMasterTree = new RoutesMasterTree ( );
-		await routesMasterTree.build ( network );
+		await routesMasterTree.buildFromDb ( network );
 
 		return routesMasterTree.jsonObject;
 	}
@@ -94,7 +94,7 @@ class GtfsJsonDataBuilder {
 
 		const GtfsJsonData = {
 			startDate : await this.#getStartDate ( ),
-			routeMasterTree : await this.#buildRoutesMasterTree ( network ),
+			routesMasterTree : await this.#buildRoutesMasterTree ( network ),
 			platforms : await this.#buildPlatforms ( network )
 
 		};

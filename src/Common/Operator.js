@@ -80,13 +80,19 @@ class Operator {
 
 	async loadData ( operatorFile ) {
 
-		const jsonOperator = await import ( '../../operators/' + operatorFile, { with : { type : 'json' } } );
+		try {
+			const { default : jsonOperator } = await import ( '../../operators/' + operatorFile, { with : { type : 'json' } } );
 
-		this.#jsonOperator = jsonOperator.default;
+			this.#jsonOperator = jsonOperator;
 
-		this.networks.forEach (
-			network => Object.freeze ( network )
-		);
+			this.networks.forEach (
+				network => Object.freeze ( network )
+			);
+			return true;
+		}
+		catch {
+			return false;
+		}
 	}
 
 	/**

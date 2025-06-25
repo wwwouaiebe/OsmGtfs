@@ -107,7 +107,7 @@ class AppLoader {
 
 		const startTime = process.hrtime.bigint ( );
 
-		await new GtfsLoader ( ).start ( );
+		// await new GtfsLoader ( ).loadData ( );
 
 		for ( const network of theOperator.networks ) {
 			await new GtfsJsonDataBuilder ( ).build ( network );

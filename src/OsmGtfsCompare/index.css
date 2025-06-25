@@ -1,0 +1,346 @@
+/*
+Copyright - 2024 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
+
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/*
+Changes:
+	- v1.0.0:
+		- created
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+a,
+body,
+h1,
+h2,
+p,
+div
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	font-weight: normal;
+	vertical-align: baseline;
+	background: transparent;
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--main-background-color: black;
+		--main-color: white;
+		--link-hover-color: lightgray;
+		--link-color: orange;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--main-background-color: white;
+		--main-color: black;
+		--link-hover-color: #505050;
+		--link-color: #8b0000;
+	}
+}
+
+body {
+	line-height: normal;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	margin-left: 2em;
+	margin-right: 2em;
+	color: var(--main-color);
+	background-color: var(--main-background-color);
+}
+
+body.cyDark {
+	--main-background-color: black;
+	--main-color: white;
+	--link-hover-color: lightgray;
+	--link-color: orange;
+}
+
+body.cyLight {
+	--main-background-color: white;
+	--main-color: black;
+	--link-hover-color: #505050;
+	--link-color: #8b0000;
+}
+
+header {
+	position: sticky;
+	top:0;
+	background-color: var(--main-background-color);
+	padding-top: 1em;
+	z-index: 500;
+}
+
+#configForm {
+	text-align: center;
+}
+
+#waitAnimation 
+{
+	margin-bottom: 0em; 
+	height: 0.2em; width: 100%; 
+	overflow: hidden;
+	visibility: hidden;
+}
+
+#waitAnimationBullet { 
+	background-color: red; 
+	height: 100%; 
+	width: 3em; 
+	animation: 2s linear 0s infinite alternate WaitAnimationBullet;
+}
+
+@keyframes WaitAnimationBullet { from { margin-left: 0%; } to { margin-left: calc(100% - 1em); } }
+
+#paneButtons{
+	border-top-style: solid;
+	border-top-width: 0.1em;
+	padding-top: 2em;
+	border-bottom-style: solid;
+	border-bottom-width: 0.1em;
+}
+
+#routesLinks {
+	height: 0.4em;
+	overflow: hidden;
+	white-space: pre;
+	border-top-width: 0.4em;
+	border-top-style: solid;
+	border-top-color: red;
+	border-right-width: 0.1em;
+	border-right-style: solid;
+	border-left-width: 0.1em;
+	border-left-style: solid;
+	color:red;
+	text-align: center;
+}
+
+#routesLinks:hover {
+	width: 100%;
+	height: auto;
+	color: var(--main-color);
+	background-color: var(--main-background-color);
+	padding:1em;
+	overflow: visible;
+	white-space: normal;
+}
+
+footer {
+	border-top-style: solid ;
+	border-top-width: 0.1em;
+	position: sticky;
+	bottom: 0em;
+	left: 2em;;
+	background-color: var(--main-background-color);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	text-align: center;
+}
+
+footer span {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+label {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.fontLarge {
+	/* For sun, moon and help buttons */
+	margin-left: 2em;
+	font-size: 140%;
+}
+
+.busShortcutAnchor{
+
+	margin-right: 0.1em;
+}
+
+.isWarning {
+	color: rgb(255,0,255);
+}
+
+.isError {
+	color: red;
+}
+
+.josmButton{
+	margin-left: 1em;
+	background-color: rgb(41, 193, 243);
+	color: white;
+}
+
+.josmButton.josmButtonVisited {
+	background-color: gray;
+	color:black;
+}
+
+.josmButton:hover, .josmButton.josmButtonVisited:hover {
+	background-color: blue;
+	color: white;
+	cursor: pointer;
+}
+
+.gpxButton {
+	font-size: 80%;
+	padding: 0.2em;
+	margin-right: 1em;
+	margin-bottom: 0.2em;
+	background-color: rgb(41, 193, 243);
+	color:white;
+}
+
+.gpxButton:hover, .gpxButton.gpxButtonVisited:hover {
+	background-color: blue;
+	color: white;
+}
+
+.gpxButton.gpxButtonVisited {
+	background-color: gray;
+}
+
+#cyDarkLight {
+	margin-left: 2em;;
+}
+
+.pane {
+	border-left-style: solid;
+	border-right-style: solid;
+	border-left-width: 0.1em;
+	border-right-width: 0.1em;
+	min-height: 5em;
+	margin: 0;
+	padding: 0em;
+	padding-bottom: 1em;
+}
+
+.pane h1 {
+    font-size:  160%;
+	font-weight: bold;
+	text-decoration: underline;
+	margin-left:1em;
+	padding-top : 3em;
+	margin-bottom: 1em;
+}
+
+.pane h2 {
+    font-size:  140%;
+	font-weight: bold;
+    margin-top : 1em;
+    margin-left : 3em;
+	margin-bottom : 1em;
+	text-decoration: underline dotted;
+}
+
+.pane h3 {
+    font-size:  120%;
+	font-weight: bold;
+    padding-top : 1em;
+    padding-left : 5em;
+	padding-bottom : 1em;
+}
+
+.pane p {
+	margin-left: 7em;
+}
+
+.pane.errorsOnly div > h1,
+.pane.errorsOnly div > h2,
+.pane.errorsOnly div > h3,
+.pane.errorsOnly div > p
+{
+	width: 0;
+	height: 0;
+	margin: 0 ;
+	padding: 0 ;
+	border-width: 0 !important;
+	border-style: none !important;
+	visibility: hidden;
+	transform: scale(0);
+}
+
+.pane.errorsOnly div.haveErrors > h1,
+.pane.errorsOnly div.haveErrors > h2,
+.pane.errorsOnly div.haveErrors > h3,
+.pane.errorsOnly div.haveErrors > p
+{
+	width:auto;
+	height:auto;
+	visibility:visible;
+	transform: scale(1);
+}
+
+.pane.errorsOnly div.haveErrors > h1 {
+	margin-left:1em;
+	padding-top : 3em;
+	margin-bottom: 1em;
+}
+
+.pane.errorsOnly div.haveErrors > h2 {
+    margin-top : 1em;
+    margin-left : 3em;
+	margin-bottom : 1em;
+}
+
+.pane.errorsOnly div.haveErrors > h3 {
+    padding-top : 1em;
+    padding-left : 5em;
+	padding-bottom : 1em;
+}
+
+.pane.errorsOnly div.haveErrors > p {
+	margin-left: 7em;
+}
+
+.paneButton {
+	display: inline-block;
+	border-style: solid;
+	border-width: 0.1em;
+	padding-top: 0.3em;
+	padding-left: 2em;
+	padding-right: 2em;
+	background-color: lightgray;
+}
+
+.selectedPaneButton {
+	background-color: white;
+}
+
+.hiddenPane,
+.hiddenPane h1,
+.hiddenPane h2,
+.hiddenPane h3,
+.hiddenPane p
+{
+	width: 0;
+	height: 0;
+	margin: 0 ;
+	padding: 0 ;
+	min-height: 0;
+	border-width: 0 !important;
+	border-style: none !important;
+	visibility: hidden;
+	transform: scale(0);
+}

@@ -333,29 +333,10 @@ class GtfsLoader {
 	}
 
 	/**
-     * Load the GTFS files into the db
-     */
-
-	async #loadData ( ) {
-
-		await this.#agencyTableLoader.loadData ( 'agency.txt' );
-		await this.#calendarDatesTableLoader.loadData ( 'calendar_dates.txt' );
-		await this.#calendarTableLoader.loadData ( 'calendar.txt' );
-		await this.#feedInfoTableLoader.loadData ( 'feed_info.txt' );
-		await this.#routeTableLoader.loadData ( 'routes.txt' );
-		await this.#shapesTableLoader.loadData ( 'shapes.txt' );
-		await this.#stopsTableLoader.loadData ( 'stops.txt' );
-		await this.#stopTimesTableLoader.loadData ( 'stop_times.txt' );
-		await this.#translationsTableLoader.loadData ( 'translations.txt' );
-		await this.#tripsTableLoader.loadData ( 'trips.txt' );
-
-	}
-
-	/**
      * Start the upload of the gtfs
      */
 
-	async start ( ) {
+	async loadData ( ) {
 
 		theMySqlDb.execSql (
 			'DROP VIEW if exists lat_lon_for_shape, routes_for_agency, shapes_for_route;'
@@ -367,7 +348,16 @@ class GtfsLoader {
 
 		await this.#createViews ( );
 
-		await this.#loadData ( );
+		await this.#agencyTableLoader.loadData ( 'agency.txt' );
+		await this.#calendarDatesTableLoader.loadData ( 'calendar_dates.txt' );
+		await this.#calendarTableLoader.loadData ( 'calendar.txt' );
+		await this.#feedInfoTableLoader.loadData ( 'feed_info.txt' );
+		await this.#routeTableLoader.loadData ( 'routes.txt' );
+		await this.#shapesTableLoader.loadData ( 'shapes.txt' );
+		await this.#stopsTableLoader.loadData ( 'stops.txt' );
+		await this.#stopTimesTableLoader.loadData ( 'stop_times.txt' );
+		await this.#translationsTableLoader.loadData ( 'translations.txt' );
+		await this.#tripsTableLoader.loadData ( 'trips.txt' );
 
 		await theMySqlDb.execSql (
 			'update routes set agency_id = \'STIB-MIVB\' where agency_id is null;'

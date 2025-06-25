@@ -23,7 +23,6 @@ Changes:
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import Route from '../Common/Route.js';
-import theMySqlDb from '../Gtfs2Json/MySqlDb.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -129,6 +128,8 @@ class RouteMaster {
 
 	async #selectRoutesFromDb ( network ) {
 
+		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
+
 		// Remember that in some networks the same ref is used for multiple routes master
 		// so the description field is needed
 		const dbRoutes = await theMySqlDb.execSql (
@@ -165,26 +166,30 @@ class RouteMaster {
 	}
 
 	/**
-	 * Complete the route master object with the routes from the gtfs db
-	 * @param {Object} network the network in witch the route master is located
+	 * Complete the route master object with the routes from the json file
+	 * @param {Object} jsonRouteMaster the routeMaster from the json file
 	 */
 
-	async #buildFromDb ( network ) {
-		const dbRoutes = await this.#selectRoutesFromDb ( network );
-		for ( const dbRoute of dbRoutes ) {
-			const gtfsRoute = new Route ( dbRoute );
-			await gtfsRoute.build ( network );
-			this.#routes.push ( gtfsRoute );
+	buildFromJson ( jsonRouteMaster ) {
+		for ( const jsonRoute of jsonRouteMaster.routes ) {
+			const gtfsRoute = new Route ( jsonRoute );
+			gtfsRoute.buildFromJson ( jsonRoute );
+			this.routes.push ( gtfsRoute );
 		}
 	}
 
 	/**
-	 * Build the route master object
+	 * Complete the route master object with the routes from the gtfs db
 	 * @param {Object} network the network in witch the route master is located
 	 */
 
-	async build ( network ) {
-		await this.#buildFromDb ( network );
+	async buildFromDb ( network ) {
+		const dbRoutes = await this.#selectRoutesFromDb ( network );
+		for ( const dbRoute of dbRoutes ) {
+			const gtfsRoute = new Route ( dbRoute );
+			await gtfsRoute.buildFromDb ( network );
+			this.#routes.push ( gtfsRoute );
+		}
 	}
 
 	/**

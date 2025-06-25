@@ -23,7 +23,6 @@ Changes:
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import RouteMaster from './RouteMaster.js';
-import theMySqlDb from '../Gtfs2Json/MySqlDb.js';
 import ArrayHelper from './ArrayHelper.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -66,6 +65,8 @@ class RoutesMasterTree {
 
 	async #selectRoutesMasterFromDb ( network ) {
 
+		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
+
 		// searching the data in the database
 		const dbRoutesMaster = await theMySqlDb.execSql (
 			'SELECT DISTINCT ' +
@@ -83,26 +84,33 @@ class RoutesMasterTree {
 	}
 
 	/**
-	 * Complete the route master tree object with the routes master from the gtfs db
-	 * @param {Object} network the network for witch the routes master are searched
+	 * Complete the route master tree object with the routes master from the jdon file
+	 * @param {Object} jsonRoutesMasterTree the routes master tree from the json file
 	 */
 
-	async #buildFromDb ( network ) {
-		const dbRoutesMaster = await this.#selectRoutesMasterFromDb ( network );
-		for ( const dbRouteMaster of dbRoutesMaster ) {
-			const gtfsRouteMaster = new RouteMaster ( dbRouteMaster );
-			await gtfsRouteMaster.build ( network );
+	buildFromJson ( jsonRoutesMasterTree ) {
+		for ( const jsonRouteMaster of jsonRoutesMasterTree.routesMaster ) {
+			const gtfsRouteMaster = new RouteMaster ( jsonRouteMaster );
+			gtfsRouteMaster.buildFromJson ( jsonRouteMaster );
 			this.#routesMaster.push ( gtfsRouteMaster );
 		}
 	}
 
 	/**
-	 * Build the route master tree object
-	 * @param {Object} network the network for witch the route master tree is build
+	 * Complete the route master tree object with the routes master from the gtfs db
+	 * @param {Object} network the network for witch the routes master are searched
 	 */
 
-	async build ( network ) {
-		await this.#buildFromDb ( network );
+	async buildFromDb ( network ) {
+
+		const theMySqlDb = await import ( '../Gtfs2Json/MySqlDb.js' );
+
+		const dbRoutesMaster = await this.#selectRoutesMasterFromDb ( network );
+		for ( const dbRouteMaster of dbRoutesMaster ) {
+			const gtfsRouteMaster = new RouteMaster ( dbRouteMaster );
+			await gtfsRouteMaster.buildFromDb ( network );
+			this.#routesMaster.push ( gtfsRouteMaster );
+		}
 	}
 
 	/**

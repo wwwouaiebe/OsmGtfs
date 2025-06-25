@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--
+/*
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+-->
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>wwwouaiebe - Osm Gtfs Compare</title>
+		<link rel="stylesheet" href="index.css" />
+	</head>
+	<body class="cyLight">
+        <header>
+            <div id="configForm">
+                <span id="GTFSValidity"></span>
+                <label>Operator:
+                    <select id="osmOperatorSelect">
+                        <option value="TEC">TEC</option>
+                        <option value="STIB-MIVB">STIB-MIVB</option>
+                    </select>
+                </label>
+                <label>Network: 
+                    <select id="osmNetworkSelect">
+                    </select>
+                </label>
+                <label>Vehicle: 
+                    <select id="osmVehicleSelect">
+                        <option value="bus">bus</option>
+                        <option value="tram">tram</option>
+                        <option value="subway">subway</option>
+                    </select>
+                </label>
+                <label>Type: 
+                    <select id="osmTypeSelect">
+                        <option value="used">used</option>
+                        <option value="proposed">proposed</option>
+                        <option value="disused">disused</option>
+                    </select>
+                </label>
+                <label>
+                    Ref: <input type="text" id="osmRef" value="" title="Add the ref an osm bus/tram/subway relation if you will limit the contro to this relation"/>
+                </label>
+                <label>
+                    New JOSM layer
+                    <input type="checkbox" value="newJosmLayer" id="newJosmLayer" title="JOSM check out in a new layer" checked />
+                </label>
+                <input type="button" value="go" id="goInput" title="Start the control"/>
+                <input type="button" value="Errors only" id="errorsOnlyInput" title="Show all or show only errors"/>
+                <span class="fontLarge"> <a id="cyDarkLight" title="Apparence: sombre">☽</a> </span>
+                <span class="fontLarge"> <a id="help" title="help" target="_blank" href="https://github.com/wwwouaiebe/OsmGtfsCompare#readme">?</a> </span>
+            </div>
+            <div id="waitAnimation"><div id="waitAnimationBullet"></div></div>
+            <div id="paneButtons">
+                <div id="relationsButton" class="paneButton selectedPaneButton">Relations</div><div id="platformsButton" class="paneButton">Platforms</div><div id="statsButton" class="paneButton">Statistics</div>
+            </div>
+            <div id="routesLinks"></div>
+       </header>
+        <main id="report">
+            <div id="relationsPane" class="pane"></div>
+            <div id="platformsPane" class="pane hiddenPane"></div>
+            <div id="statsPane" class="pane hiddenPane"></div>
+        </main>
+        <footer>
+            <p><span>Sorry, we don't have cookies 🍪🍪🍪 for you...</span> <span>© wwwouaiebe 2024-2025</span> <span><a href="https://github.com/wwwouaiebe/OsmGtfsCompare">Sources on Github ↗</a></span><span id="version"></span></span></p>
+        </footer>
+    </body>
+    <script src="index.js" type="module" crossorigin="anonymous"> </script>
+</html>

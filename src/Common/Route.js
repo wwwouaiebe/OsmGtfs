@@ -23,7 +23,6 @@ Changes:
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import PolylineEncoder from '../Common/PolylineEncoder.js';
-import theMySqlDb from '../Gtfs2Json/MySqlDb.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -175,6 +174,9 @@ class Route {
 	 */
 
 	async #selectPlatformsFromDb ( shapePk ) {
+
+		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
+
 		const dbPlatforms = await theMySqlDb.execSql (
 			'SELECT stops.stop_id AS ref ' +
             'FROM stop_times INNER JOIN stops ON stops.stop_pk = stop_times.stop_pk ' +
@@ -193,6 +195,8 @@ class Route {
 	 */
 
 	async #selectNodesFromDb ( shapePk ) {
+
+		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
 
 		// select
 		const nodes = await theMySqlDb.execSql (
@@ -213,10 +217,22 @@ class Route {
 	}
 
 	/**
+	 * Complete the route object with the nodes and platforms from the json file
+	 * @param {Object} jsonRoute the route from the json file
+	 */
+
+	buildFromJson ( jsonRoute ) {
+		this.#nodes = jsonRoute.nodes;
+		this.#platforms = jsonRoute.platforms;
+	}
+
+	/**
 	 * Complete the route object with the nodes and platforms from the gtfs db
 	 */
 
-	async #buildFromDb ( ) {
+	async buildFromDb ( ) {
+
+		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
 
 		// nodes
 		this.#nodes = await this.#selectNodesFromDb ( this.#shapePk );
@@ -230,14 +246,6 @@ class Route {
 				previousPlatformRef = dbPlatform.ref;
 			}
 		}
-	}
-
-	/**
-	 * Build the route object
-	 */
-
-	async build ( ) {
-		await this.#buildFromDb ( );
 	}
 
 	/**
