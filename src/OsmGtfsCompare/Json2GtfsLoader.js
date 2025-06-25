@@ -43,7 +43,7 @@ class Json2GtfsLoader {
 			'../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json',
 			{ with : { type : 'json' } }
 		);
-		
+
 		theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
 
 		console.log ( theGtfsRoutesMasterTree );
