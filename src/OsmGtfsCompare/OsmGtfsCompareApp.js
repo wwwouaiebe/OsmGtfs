@@ -23,11 +23,11 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theVersion from '../OsmGtfsCompare/version.js';
-import GoButtonClickEL from '../OsmGtfsCompare/GoButtonClickEL.js';
-import AutoStartup from '../OsmGtfsCompare/AutoStartup.js';
-import ErrorsOnlyButtonClickEL from '../OsmGtfsCompare/ErrorsOnlyButtonClickEL.js';
-import HeadingReportButtonClickEL from '../OsmGtfsCompare/HeadingReportButtonClickEL.js';
+import theVersion from './version.js';
+import GoButtonClickEL from './GoButtonClickEL.js';
+import AutoStartup from './AutoStartup.js';
+import ErrorsOnlyButtonClickEL from './ErrorsOnlyButtonClickEL.js';
+import HeadingReportButtonClickEL from './HeadingReportButtonClickEL.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -35,7 +35,7 @@ import HeadingReportButtonClickEL from '../OsmGtfsCompare/HeadingReportButtonCli
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class AppLoader {
+class OsmGtfsCompareApp {
 
 	/**
      * The constructor
@@ -78,6 +78,6 @@ class AppLoader {
 	}
 }
 
-export default AppLoader;
+export default OsmGtfsCompareApp;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

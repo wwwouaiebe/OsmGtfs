@@ -24,12 +24,12 @@ Changes:
 
 import process from 'process';
 
-import theConfig from '../Gtfs2Json/Config.js';
-import theMySqlDb from '../Gtfs2Json/MySqlDb.js';
+import theConfig from './Config.js';
+import theMySqlDb from './MySqlDb.js';
 
 import theOperator from '../Common/Operator.js';
-import GtfsJsonDataBuilder from '../Gtfs2Json/GtfsJsonDataBuilder.js';
-import GtfsLoader from '../Gtfs2Json/GtfsLoader.js';
+import GtfsJsonDataBuilder from './GtfsJsonDataBuilder.js';
+import GtfsTxt2MySqlLoader from './GtfsTxt2MySqlLoader.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -40,7 +40,7 @@ import GtfsLoader from '../Gtfs2Json/GtfsLoader.js';
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class AppLoader {
+class Gtfs2JsonApp {
 
 	/**
      * The version number
@@ -107,7 +107,7 @@ class AppLoader {
 
 		const startTime = process.hrtime.bigint ( );
 
-		// await new GtfsLoader ( ).loadData ( );
+		// await new GtfsTxt2MySqlLoader ( ).loadData ( );
 
 		for ( const network of theOperator.networks ) {
 			await new GtfsJsonDataBuilder ( ).build ( network );
@@ -129,6 +129,6 @@ class AppLoader {
 
 }
 
-export default AppLoader;
+export default Gtfs2JsonApp;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

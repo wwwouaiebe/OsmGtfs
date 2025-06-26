@@ -232,8 +232,6 @@ class Route {
 
 	async buildFromDb ( ) {
 
-		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
-
 		// nodes
 		this.#nodes = await this.#selectNodesFromDb ( this.#shapePk );
 

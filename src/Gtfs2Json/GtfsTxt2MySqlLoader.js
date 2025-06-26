@@ -24,17 +24,17 @@ Changes:
 
 import fs from 'fs';
 
-import theMySqlDb from '../Gtfs2Json/MySqlDb.js';
-import AgencyTableLoader from '../Gtfs2Json/AgencyTableLoader.js';
-import CalendarDatesTableLoader from '../Gtfs2Json/CalendarDatesTableLoader.js';
-import CalendarTableLoader from '../Gtfs2Json/CalendarTableLoader.js';
-import FeedInfoTableLoader from '../Gtfs2Json/FeedInfoTableLoader.js';
-import RouteTableLoader from '../Gtfs2Json/RoutesTableLoader.js';
-import ShapesTableLoader from '../Gtfs2Json/ShapesTableLoader.js';
-import StopsTableLoader from '../Gtfs2Json/StopsTableLoader.js';
-import StopTimesTableLoader from '../Gtfs2Json/StopTimesTableLoader.js';
-import TranslationsTableLoader from '../Gtfs2Json/TranslationsTableLoader.js';
-import TripsTableLoader from '../Gtfs2Json/TripsTableLoader.js';
+import theMySqlDb from './MySqlDb.js';
+import AgencyTableLoader from './AgencyTableLoader.js';
+import CalendarDatesTableLoader from './CalendarDatesTableLoader.js';
+import CalendarTableLoader from './CalendarTableLoader.js';
+import FeedInfoTableLoader from './FeedInfoTableLoader.js';
+import RouteTableLoader from './RoutesTableLoader.js';
+import ShapesTableLoader from './ShapesTableLoader.js';
+import StopsTableLoader from './StopsTableLoader.js';
+import StopTimesTableLoader from './StopTimesTableLoader.js';
+import TranslationsTableLoader from './TranslationsTableLoader.js';
+import TripsTableLoader from './TripsTableLoader.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -42,7 +42,7 @@ import TripsTableLoader from '../Gtfs2Json/TripsTableLoader.js';
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class GtfsLoader {
+class GtfsTxt2MySqlLoader {
 
 	/**
      * the 'agency' table loader
@@ -372,6 +372,6 @@ class GtfsLoader {
 	}
 }
 
-export default GtfsLoader;
+export default GtfsTxt2MySqlLoader;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

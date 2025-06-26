@@ -102,9 +102,6 @@ class RoutesMasterTree {
 	 */
 
 	async buildFromDb ( network ) {
-
-		const theMySqlDb = await import ( '../Gtfs2Json/MySqlDb.js' );
-
 		const dbRoutesMaster = await this.#selectRoutesMasterFromDb ( network );
 		for ( const dbRouteMaster of dbRoutesMaster ) {
 			const gtfsRouteMaster = new RouteMaster ( dbRouteMaster );
