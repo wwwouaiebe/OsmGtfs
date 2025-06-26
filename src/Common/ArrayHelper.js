@@ -43,15 +43,15 @@ class ArrayHelper {
 
 		// split the name into the numeric part and the alphanumeric part:
 		// numeric part
-		let firstPrefix = String ( Number.parseInt ( first ) );
-		let secondPrefix = String ( Number.parseInt ( second ) );
+		const firstPrefix = String ( Number.parseInt ( first ) );
+		const secondPrefix = String ( Number.parseInt ( second ) );
 
 		// alpha numeric part
-		let firstPostfix = ( first ).replace ( firstPrefix, '' );
-		let secondPostfix = ( second ).replace ( secondPrefix, '' );
+		const firstPostfix = ( first ).replace ( firstPrefix, '' );
+		const secondPostfix = ( second ).replace ( secondPrefix, '' );
 
 		// complete the numeric part with spaces on the left and compare
-		let result =
+		const result =
 			( firstPrefix.padStart ( 5, ' ' ) + firstPostfix )
 				.localeCompare ( secondPrefix.padStart ( 5, ' ' ) + secondPostfix );
 

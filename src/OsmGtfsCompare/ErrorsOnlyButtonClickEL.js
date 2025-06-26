@@ -50,8 +50,7 @@ class ErrorsOnlyButtonClickEL {
 		event.target.value = 'All' === event.target.value ? 'Error only' : 'All';
 
 		// toogle the report class list
-		let report = document.getElementById ( 'relationsPane' );
-		report.classList.toggle ( 'errorsOnly' );
+		document.getElementById ( 'relationsPane' ).classList.toggle ( 'errorsOnly' );
 	}
 }
 

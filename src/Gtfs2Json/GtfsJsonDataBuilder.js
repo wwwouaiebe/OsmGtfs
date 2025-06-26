@@ -48,7 +48,7 @@ class GtfsJsonDataBuilder {
 	 */
 
 	async #getStartDate ( ) {
-		let startDate = await theMySqlDb.execSql ( 'SELECT feed_info.feed_start_date as startDate FROM feed_info LIMIT 1' );
+		const startDate = await theMySqlDb.execSql ( 'SELECT feed_info.feed_start_date as startDate FROM feed_info LIMIT 1' );
 
 		return startDate [ 0 ]?.startDate;
 	}
@@ -60,7 +60,7 @@ class GtfsJsonDataBuilder {
 	 */
 
 	async #buildRoutesMasterTree ( network ) {
-   		let routesMasterTree = new RoutesMasterTree ( );
+   		const routesMasterTree = new RoutesMasterTree ( );
 		await routesMasterTree.buildFromDb ( network );
 
 		return routesMasterTree.jsonObject;

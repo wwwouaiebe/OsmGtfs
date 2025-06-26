@@ -185,14 +185,14 @@ class TableLoader {
 		this.#dataLinesCounter ++;
 
 		// line is splited into fields values
-		let fieldValues = this.#getFieldsValues ( dataLine );
+		const fieldValues = this.#getFieldsValues ( dataLine );
 		let fieldCounter = 0;
 		let insertSqlString = this.#insertSqlStringHeader;
 
 		// adding values to the sql insert string
 		fieldValues.forEach (
 			fieldValue => {
-				let separator =
+				const separator =
 						'varchar' === this.fieldsMap.get ( this.#fieldsList [ fieldCounter ] ).type
 						||
 						'time' === this.fieldsMap.get ( this.#fieldsList [ fieldCounter ] ).type
@@ -223,7 +223,7 @@ class TableLoader {
 	async #loadPartialData ( partialData ) {
 
 		// Split the data into lines
-		let dataArray = partialData.split ( /\r\n|\r|\n/ );
+		const dataArray = partialData.split ( /\r\n|\r|\n/ );
 
 		// Adding remaining data of the previous loop
 		dataArray [ 0 ] = this.#remainingData + dataArray [ 0 ];
@@ -266,7 +266,7 @@ class TableLoader {
 		console.info ( `\nLoading of file ${fileName} started` );
 
 		// creation of a stream. Remember that some gtfs files are big!
-		let readableStream = fs.createReadStream (
+		const readableStream = fs.createReadStream (
 			theOperator.gtfsDirectory + '/' + fileName,
 			{
 				encoding : 'utf8',

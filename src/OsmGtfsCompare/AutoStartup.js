@@ -191,7 +191,7 @@ class AutoStartup {
 		const osmNetworkSelectElement = document.getElementById ( 'osmNetworkSelect' );
 		theOperator.networks.forEach (
 			network => {
-				let optionElement = document.createElement ( 'option' );
+				const optionElement = document.createElement ( 'option' );
 				optionElement.text = network.osmNetwork;
 				osmNetworkSelectElement.appendChild ( optionElement );
 			}

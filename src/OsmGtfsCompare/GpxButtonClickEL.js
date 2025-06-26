@@ -42,7 +42,7 @@ class GpxButtonClickEL {
 	#getRouteFromShapePk ( shapePk ) {
 
 		// parsing to number because data in the button dataset are always string
-		let iShapePk = Number.parseInt ( shapePk );
+		const iShapePk = Number.parseInt ( shapePk );
 		let returnRoute = null;
 		theGtfsTree.routesMaster.forEach (
 			routeMaster => {

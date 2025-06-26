@@ -205,8 +205,8 @@ class Route {
             'ORDER BY shapes.shape_pk, shapes.shape_pt_sequence;'
 		);
 
-		// Creating an array of array of numbers. Reminder numbers are comin as string from the db
-		let nodesArray = [];
+		// Creating an array of array of numbers. Reminder numbers are coming as string from the db
+		const nodesArray = [];
 		nodes.forEach (
 			node => nodesArray.push ( [ Number.parseFloat ( node.lat ), Number.parseFloat ( node.lon ) ] )
 		);
