@@ -25,6 +25,7 @@ Doc reviewed 20250124
 
 import Json2GtfsLoader from '../OsmGtfsCompare/Json2GtfsLoader.js';
 import theDocConfig from './DocConfig.js';
+import theOsmDataLoader from './OsmDataLoader.js';
 
 /*
 import theOsmDataLoader from './OsmDataLoader.js';
@@ -79,10 +80,14 @@ class ValidationAndComparisonStarter {
 		thePlatformsReport.open ( );
 		theRelationsReport.open ( );
 		theStatsReport.open ( );
+		*/
 
 		// loading osm data
 		await theOsmDataLoader.fetchData (	);
 
+		console.log ( theOsmDataLoader.routeMasters.length );
+
+		/*
 		// Validating the platforms
 		await new PlatformsValidator ( ).validate ( );
 

@@ -2,4 +2,6 @@ node_modules/
 gtfs/
 tmp/
 json/
+devData/
+docs/
 upload.bat
