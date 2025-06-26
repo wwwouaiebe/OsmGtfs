@@ -89,6 +89,13 @@ class Route {
 	#nodes;
 
 	/**
+	 * The osmId of the route
+	 * @type {?Number}
+	 */
+
+	#osmId;
+
+	/**
 	 * The name of the route (empty for GTFS)
 	 * @type {String}
 	 */
@@ -145,6 +152,13 @@ class Route {
 	get nodes ( ) { return this.#nodes; }
 
 	/**
+	 * The osmId of the route
+	 * @type {?Number}
+	 */
+
+	get osmId ( ) { return this.#osmId; }
+
+	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route.
 	 * @type {Object}
 	 */
@@ -158,7 +172,8 @@ class Route {
 			shapePk : this.#shapePk,
 			startDate : this. #startDate,
 			endDate : this.#endDate,
-			nodes : this.#nodes
+			nodes : this.#nodes,
+			osmId : this.#osmId
 		};
 		this.#platforms.forEach (
 			platform => jsonRoute.platforms.push ( platform )
@@ -224,6 +239,7 @@ class Route {
 	buildFromJson ( jsonRoute ) {
 		this.#nodes = jsonRoute.nodes;
 		this.#platforms = jsonRoute.platforms;
+		this.#osmId = jsonRoute.osmId;
 	}
 
 	/**

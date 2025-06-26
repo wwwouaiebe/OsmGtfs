@@ -25,6 +25,8 @@ Doc reviewed 20250124
 
 import theDocConfig from '../OsmGtfsCompare/DocConfig.js';
 import ArrayHelper from '../Common/ArrayHelper.js';
+import theOperator from '../Common/Operator.js';
+import theOsmRoutesMasterTree from './OsmRoutesMasterTree.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -39,38 +41,53 @@ class OsmDataLoader {
 	 * @type {Array.<Object>}
 	 */
 
-	routeMasters = [];
+	#osmRoutesMaster = [];
 
 	/**
 	 * A js map for the osm route relations. The key of the map objects is the OSM id
 	 * @type {Map}
 	 */
 
-	routes = new Map ( );
+	#osmRoutes = new Map ( );
 
 	/**
-	 * A js map for the osm ways. The key of the map objects is the OSM id
+	 * A js map for the osm #osmWays. The key of the map objects is the OSM id
 	 * @type {Map}
 	 */
 
-	ways = new Map ( );
+	#osmWays = new Map ( );
 
 	/**
 	 * A js map for the osm nodes. The key of the map objects is the OSM id
 	 * @type {Map}
 	 */
 
-	nodes = new Map ( );
+	#osmNodes = new Map ( );
+
+	/**
+	 * A js map for the osm platforms. The key of the map objects is the OSM id
+	 * @type {Map}
+	 */
+
+	#osmPlatforms = new Map ( );
+
+	/**
+	 * An array with the different roles for an osm platform
+	 * @type {Array.<String>}
+	 */
+
+	#platformRoles = [ 'platform', 'platform_entry_only', 'platform_exit_only' ];
 
 	/**
 	 * Clear maps and array.
 	 */
 
 	#clear ( ) {
-		this.routeMasters.splice ( 0 );
-		this.nodes.clear ( );
-		this.ways.clear ( );
-		this.routes.clear ( );
+		this.#osmRoutesMaster.splice ( 0 );
+		this.#osmNodes.clear ( );
+		this.#osmWays.clear ( );
+		this.#osmRoutes.clear ( );
+		this.#osmPlatforms.clear ( );
 	}
 
 	/**
@@ -78,11 +95,75 @@ class OsmDataLoader {
 	 */
 
 	#sortRoutesMaster ( ) {
-		this.routeMasters.sort (
-			( first, second ) => {
-				ArrayHelper.compareRouteName ( first.tags.ref, second.tags.ref );
-			}
+		this.#osmRoutesMaster.sort (
+			( first, second ) => ArrayHelper.compareRouteName ( first.tags.ref, second.tags.ref )
 		 );
+	}
+
+	/**
+	 * get a string with all the ref:operator given to the platform
+	 * @param {Object} osmPlatform
+	 * @returns {String} a string with all the platforms ref:operator (csv format)
+	 */
+
+	#getOperatorPlatformRef ( osmPlatform ) {
+		let platformRefs = '';
+		for ( const network of theOperator.networks ) {
+			let platformRef = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
+			if ( platformRef ) {
+				platformRefs += platformRef + ';';
+			}
+		}
+		return platformRefs.slice ( 0, -1 );
+	}
+
+	/**
+	 * Build the RouteMasterTree object for osm
+	 */
+
+	#TreeBuilder ( ) {
+		const routesMasterTree = {
+			routesMaster : []
+		};
+		this.#osmRoutesMaster.forEach (
+			osmRouteMaster => {
+				let routeMaster = {
+					description : osmRouteMaster?.tags?.description,
+					ref : osmRouteMaster?.tags.ref,
+					type : [ 'tram', 'subway', 'train', 'bus' ].indexOf ( osmRouteMaster?.tags?.route_master ),
+					routes : [],
+					osmId : osmRouteMaster.id
+				};
+				osmRouteMaster.members.forEach (
+					routeMasterMember => {
+						const osmRoute = this.#osmRoutes.get ( routeMasterMember.ref );
+						if ( osmRoute ) {
+							let route = {
+								platforms : [],
+								shapePk : null,
+								startDate : null,
+								endDate : null,
+								nodes : null,
+								osmId : osmRoute.id
+							};
+							osmRoute.members.forEach (
+								routeMember => {
+									const osmPlatform = this.#osmPlatforms.get ( routeMember.ref );
+									if ( osmPlatform && -1 !== this.#platformRoles.indexOf ( routeMember.role )	) {
+										route.platforms.push ( this.#getOperatorPlatformRef ( osmPlatform ) );
+									}
+								}
+							);
+							routeMaster.routes.push ( route );
+						}
+					}
+				);
+				routesMasterTree.routesMaster.push ( routeMaster );
+			}
+		);
+
+		theOsmRoutesMasterTree.buildFromJson ( routesMasterTree );
+		console.log ( theOsmRoutesMasterTree );
 	}
 
 	/**
@@ -91,7 +172,6 @@ class OsmDataLoader {
 	 */
 
 	#loadOsmData ( elements ) {
-		console.log ( elements );
 		elements.forEach (
 			element => {
 				switch ( element.type ) {
@@ -101,13 +181,13 @@ class OsmDataLoader {
 					case 'proposed:route_master' :
 					case 'disused:route_master' :
 						Object.freeze ( element );
-						this.routeMasters.push ( element );
+						this.#osmRoutesMaster.push ( element );
 						break;
 					case 'route' :
 					case 'proposed:route' :
 					case 'disused:route' :
 						Object.freeze ( element );
-						this.routes.set ( element.id, element );
+						this.#osmRoutes.set ( element.id, element );
 						break;
 					default :
 						break;
@@ -115,14 +195,17 @@ class OsmDataLoader {
 					break;
 				case 'way' :
 					Object.freeze ( element );
-					this.ways.set ( element.id, element );
+					this.#osmWays.set ( element.id, element );
 					break;
 				case 'node' :
 					Object.freeze ( element );
-					this.nodes.set ( element.id, element );
+					this.#osmNodes.set ( element.id, element );
 					break;
 				default :
 					break;
+				}
+				if ( 'platform' === element?.tags?.public_transport ) {
+					this.#osmPlatforms.set ( element.id, element );
 				}
 			}
 		);
@@ -143,12 +226,10 @@ class OsmDataLoader {
 				'../../devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json',
 				{ with : { type : 'json' } }
 			);
-			this.#loadOsmData ( osmData.elements );
-
-			return true;
+			return osmData.elements;
 		}
 		catch {
-			return false;
+			return null;
 		}
 
 	}
@@ -161,7 +242,7 @@ class OsmDataLoader {
 	async #fetchOverpassApi ( uri ) {
 
 		// fetch overpass-api
-		let success = false;
+		let elements = null;
 		await fetch ( uri )
 			.then (
 				response => {
@@ -173,10 +254,7 @@ class OsmDataLoader {
 			)
 			.then (
 				jsonResponse => {
-
-					this.#loadOsmData ( jsonResponse.elements );
-
-					success = true;
+					elements = jsonResponse.elements;
 				}
 			)
 			.catch (
@@ -185,7 +263,7 @@ class OsmDataLoader {
 				}
 			);
 
-		return success;
+		return elements;
 	}
 
 	/**
@@ -207,12 +285,20 @@ class OsmDataLoader {
 			( '' === theDocConfig.ref ? '' : '["ref"="' + theDocConfig.ref + '"]' ) +
 			'->.rou;(.rou <<; - .rou;); >> ->.rm;.rm out;';
 
+		let elements = null;
+
 		if ( useDevData ) {
-			return await this.#loadDevData ( uri );
+			elements = await this.#loadDevData ( uri );
+		}
+		else {
+
+			elements = await this.#fetchOverpassApi ( uri );
 		}
 
-		return await this.#fetchOverpassApi ( uri );
-
+		if ( elements ) {
+			this.#loadOsmData ( elements );
+			this.#TreeBuilder ( );
+		}
 	}
 
 	/**

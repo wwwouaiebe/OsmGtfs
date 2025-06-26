@@ -85,8 +85,6 @@ class ValidationAndComparisonStarter {
 		// loading osm data
 		await theOsmDataLoader.fetchData (	);
 
-		console.log ( theOsmDataLoader.routeMasters.length );
-
 		/*
 		// Validating the platforms
 		await new PlatformsValidator ( ).validate ( );

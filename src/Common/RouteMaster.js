@@ -66,6 +66,13 @@ class RouteMaster {
 	#routes = [];
 
 	/**
+	 * The osmId of the route master
+	 * @type {?Number}
+	 */
+
+	#osmId;
+
+	/**
 	 * The description of the route master.
 	 * For gtfs it's the route_long_name field of the table route
 	 * For OSM, it's the description tag of the route master
@@ -99,6 +106,13 @@ class RouteMaster {
 	get routes ( ) { return this.#routes; }
 
 	/**
+	 * The osmId of the route master
+	 * @type {?Number}
+	 */
+
+	get osmId ( ) { return this.#osmId; }
+
+	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route master.
 	 * @type {Object}
 	 */
@@ -108,7 +122,8 @@ class RouteMaster {
 			description : this.#description,
 			ref : this.#ref,
 			type : this.#type,
-			routes : []
+			routes : [],
+			osmId : this.#osmId
 		};
 		this.#routes.forEach (
 			route => {
@@ -171,6 +186,7 @@ class RouteMaster {
 	 */
 
 	buildFromJson ( jsonRouteMaster ) {
+		this.#osmId = jsonRouteMaster.osmId;
 		for ( const jsonRoute of jsonRouteMaster.routes ) {
 			const gtfsRoute = new Route ( jsonRoute );
 			gtfsRoute.buildFromJson ( jsonRoute );

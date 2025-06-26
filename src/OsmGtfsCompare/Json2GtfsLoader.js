@@ -39,23 +39,18 @@ class Json2GtfsLoader {
 
 	async loadData ( ) {
 
-		const { default : jsonsData } = await import (
-			'../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json',
-			{ with : { type : 'json' } }
-		);
-
-		theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
-
-		console.log ( theGtfsRoutesMasterTree );
-		return true;
-
-		/*
 		try {
+			const { default : jsonsData } = await import (
+				'../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json',
+				{ with : { type : 'json' } }
+			);
+
+			theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
+			return true;
 		}
 		catch {
 			return false;
 		}
-		*/
 
 	}
 
