@@ -107,11 +107,9 @@ class Gtfs2JsonApp {
 
 		const startTime = process.hrtime.bigint ( );
 
-		await new GtfsTxt2MySqlLoader ( ).loadData ( );
+		// await new GtfsTxt2MySqlLoader ( ).loadData ( );
 
-		for ( const network of theOperator.networks ) {
-			await new GtfsJsonDataBuilder ( ).build ( network );
-		}
+		await new GtfsJsonDataBuilder ( ).build ( );
 
 		await theMySqlDb.end ( );
 

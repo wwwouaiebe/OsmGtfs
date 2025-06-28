@@ -41,6 +41,13 @@ class RoutesMasterTree {
 	#routesMaster = [];
 
 	/**
+	 * An array with the RouteMaster
+	 * @type {Array.<RouteMaster>}
+	 */
+
+	get routesMaster ( ) { return this.#routesMaster; };
+
+	/**
 	 * An object that can be used by JSON.stringify with all the routes master of the network.
 	 * @type {Object}
 	 */
@@ -108,6 +115,7 @@ class RoutesMasterTree {
 			await gtfsRouteMaster.buildFromDb ( network );
 			this.#routesMaster.push ( gtfsRouteMaster );
 		}
+		Object.freeze ( this.#routesMaster );
 	}
 
 	/**

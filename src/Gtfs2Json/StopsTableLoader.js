@@ -188,6 +188,15 @@ class StopsTableLoader extends TableLoader {
 			}
 		);
 
+		this.fieldsMap.set (
+			'network',
+			{
+				name : 'network',
+				type : 'varchar',
+				length : TableLoader.VARCHAR_LENGHT_64
+			}
+		);
+
 		Object.freeze ( this );
 	}
 

@@ -43,14 +43,62 @@ import theOperator from '../Common/Operator.js';
 class GtfsJsonDataBuilder {
 
 	/**
-	 * The validity date of the gffs data
-	 * @returns {String} the validity date
+	 * A map that store the results before writing to the json files
+	 * @type {Map}
 	 */
 
-	async #getStartDate ( ) {
-		const startDate = await theMySqlDb.execSql ( 'SELECT feed_info.feed_start_date as startDate FROM feed_info LIMIT 1' );
+	#GtfsJsonData = new Map ( );
 
-		return startDate [ 0 ]?.startDate;
+	/**
+	 * clear the field route_ref_XXXX in the db before the computing of the route_ref_XXX
+	 * @param {Object} network the network that have to be cleared
+	 */
+
+	async #clearRoutesRef ( network ) {
+		await theMySqlDb.execSql (
+			'update stops set route_ref_' + network.osmNetwork + ' = "";'
+		);
+	}
+
+	/**
+	 * Update the route_ref_XXX field in the db for all stops linked to a route master
+	 * @param {Object} network the updated network
+	 * @param {Object} routeMaster the route master
+	 */
+
+	async #updatePlatforms4RouteMaster ( network, routeMaster ) {
+		const platforms = new Map ( );
+		routeMaster.routes.forEach (
+			route => {
+				route.platforms.forEach (
+					platform => {
+						platforms.set ( platform, platform );
+					}
+				);
+			}
+		);
+
+		for ( const platform of platforms ) {
+			const sqlString =
+				'UPDATE stops set route_ref_' + network.osmNetwork +
+                   ' = concat ( route_ref_' + network.osmNetwork + ', "' + routeMaster.ref + ';" ), platform_type = ' +
+				   routeMaster.type + ' where stop_id = "' +
+                platform [ 0 ] + '";';
+			await theMySqlDb.execSql ( sqlString );
+		}
+	}
+
+	/**
+	 * Update the route_ref_XXX field for an entire network
+	 * @param {Object} network
+	 * @param {Object} routesMasterTree
+	 */
+
+	async #upDateRouteRefs ( network, routesMasterTree ) {
+		this.#clearRoutesRef ( network );
+		for ( const routeMaster of routesMasterTree.routesMaster ) {
+			await this.#updatePlatforms4RouteMaster ( network, routeMaster );
+		}
 	}
 
 	/**
@@ -60,10 +108,13 @@ class GtfsJsonDataBuilder {
 	 */
 
 	async #buildRoutesMasterTree ( network ) {
+		console.info ( 'Now building routes master tree for network ' + network.osmNetwork );
    		const routesMasterTree = new RoutesMasterTree ( );
 		await routesMasterTree.buildFromDb ( network );
 
-		return routesMasterTree.jsonObject;
+		this.#GtfsJsonData.get ( network.osmNetwork ).routesMasterTree = routesMasterTree.jsonObject;
+
+		return routesMasterTree;
 	}
 
 	/**
@@ -75,36 +126,77 @@ class GtfsJsonDataBuilder {
 
 	async #buildPlatforms ( network ) {
 
+		/*
+        UPDATE stops set route_ref_TECL = concat ( route_ref_TECL, "25;") where stop_id = "Baegd741";
+        SELECT SUBSTRING(route_ref_tecl,1,LENGTH ( route_ref_tecl ) - 1) from stops where stop_id = "Baegd741";
+	    */
+
+		console.info ( 'Now building platforms list ' + network.osmNetwork );
+
 		let sqlString = 'SELECT stop_id, stop_name, stop_lat, stop_lon, zone_id, platform_type';
 		for ( const tmpNetwork of theOperator.networks ) {
-			sqlString += ', route_ref_' + tmpNetwork.osmNetwork;
+			sqlString += ', SUBSTRING(route_ref_' + tmpNetwork.osmNetwork + ',1,LENGTH ( route_ref_' +
+			tmpNetwork.osmNetwork + ' ) - 1)  AS route_ref_' + tmpNetwork.osmNetwork;
 		}
-		sqlString += ' FROM stops WHERE route_ref_' + network.osmNetwork + ' is not null ORDER BY stop_id;';
+		sqlString += ' FROM stops WHERE route_ref_' + network.osmNetwork + ' <> "" ORDER BY stop_id;';
 		const platforms = await theMySqlDb.execSql ( sqlString );
 
-		return platforms;
+		this.#GtfsJsonData.get ( network.osmNetwork ).platforms = platforms;
 	}
 
 	/**
-	 * Build and save the gtfs data
-	 * @param {Object} network The network for witch the data are build
+	 * Write the json file for a network
+	 * @param {Object} network the network
 	 */
 
-	async build ( network ) {
-
-		const GtfsJsonData = {
-			startDate : await this.#getStartDate ( ),
-			routesMasterTree : await this.#buildRoutesMasterTree ( network ),
-			platforms : await this.#buildPlatforms ( network )
-
-		};
+	async #writeFile ( network ) {
 
 		if ( ! fs.existsSync ( './json/' + theOperator.operator ) ) {
 			fs.mkdirSync ( './json/' + theOperator.operator );
 		}
 		fs.writeFileSync (
 			'./json/' + theOperator.operator + '/gtfsData-' + network.osmNetwork + '.json',
-			JSON.stringify ( GtfsJsonData ) );
+			JSON.stringify ( this.#GtfsJsonData.get ( network.osmNetwork ) )
+		);
+	}
+
+	/**
+	 * Start the build of the json files
+	 */
+
+	async build ( ) {
+
+		const startDateRecord = await theMySqlDb.execSql (
+			'SELECT feed_info.feed_start_date as startDate FROM feed_info LIMIT 1'
+		);
+
+		for ( const network of theOperator.networks ) {
+			this.#GtfsJsonData. set (
+				network.osmNetwork,
+				{
+					startDate : startDateRecord [ 0 ]?.startDate,
+					routesMasterTree : null,
+					platforms : null
+				}
+			);
+		}
+
+		await theMySqlDb.execSql ( 'update stops set network = "";' );
+
+		for ( const network of theOperator.networks ) {
+			const routesMasterTree = await this.#buildRoutesMasterTree ( network );
+
+			await this.#upDateRouteRefs ( network, routesMasterTree );
+		}
+
+		for ( const network of theOperator.networks ) {
+			await this.#buildPlatforms ( network );
+		}
+
+		for ( const network of theOperator.networks ) {
+			await this.#writeFile ( network );
+		}
+
 	}
 
 	/**

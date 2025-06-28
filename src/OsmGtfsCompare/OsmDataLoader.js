@@ -163,7 +163,6 @@ class OsmDataLoader {
 		);
 
 		theOsmRoutesMasterTree.buildFromJson ( routesMasterTree );
-		console.log ( theOsmRoutesMasterTree );
 	}
 
 	/**

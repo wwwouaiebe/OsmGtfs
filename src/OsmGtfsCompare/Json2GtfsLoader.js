@@ -51,7 +51,6 @@ class Json2GtfsLoader {
 		catch {
 			return false;
 		}
-
 	}
 
 	/**
