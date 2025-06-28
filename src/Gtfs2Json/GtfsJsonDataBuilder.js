@@ -81,7 +81,7 @@ class GtfsJsonDataBuilder {
 		for ( const platform of platforms ) {
 			const sqlString =
 				'UPDATE stops set route_ref_' + network.osmNetwork +
-                   ' = concat ( route_ref_' + network.osmNetwork + ', "' + routeMaster.ref + ';" ), platform_type = ' +
+                   ' = CONCAT ( route_ref_' + network.osmNetwork + ', "' + routeMaster.ref + ';" ), platform_type = ' +
 				   routeMaster.type + ' where stop_id = "' +
                 platform [ 0 ] + '";';
 			await theMySqlDb.execSql ( sqlString );
@@ -94,7 +94,7 @@ class GtfsJsonDataBuilder {
 	 * @param {Object} routesMasterTree
 	 */
 
-	async #upDateRouteRefs ( network, routesMasterTree ) {
+	async #upDateRouteRefFields ( network, routesMasterTree ) {
 		this.#clearRoutesRef ( network );
 		for ( const routeMaster of routesMasterTree.routesMaster ) {
 			await this.#updatePlatforms4RouteMaster ( network, routeMaster );
@@ -133,7 +133,8 @@ class GtfsJsonDataBuilder {
 
 		console.info ( 'Now building platforms list ' + network.osmNetwork );
 
-		let sqlString = 'SELECT stop_id, stop_name, stop_lat, stop_lon, zone_id, platform_type';
+		let sqlString = 'SELECT stop_id, stop_name, stop_lat, stop_lon, zone_id, platform_type, ' +
+		'SUBSTRING( network, 1, LENGTH ( network) -1) as network';
 		for ( const tmpNetwork of theOperator.networks ) {
 			sqlString += ', SUBSTRING(route_ref_' + tmpNetwork.osmNetwork + ',1,LENGTH ( route_ref_' +
 			tmpNetwork.osmNetwork + ' ) - 1)  AS route_ref_' + tmpNetwork.osmNetwork;
@@ -142,6 +143,19 @@ class GtfsJsonDataBuilder {
 		const platforms = await theMySqlDb.execSql ( sqlString );
 
 		this.#GtfsJsonData.get ( network.osmNetwork ).platforms = platforms;
+	}
+
+	/**
+	 * Update of the network field
+	 * @param {Object} network the network
+	 */
+
+	async #updateNetworkField ( network ) {
+
+		await theMySqlDb.execSql (
+			'UPDATE stops set network = CONCAT ( network, "' + network.osmNetwork + ';") where ' +
+			'route_ref_' + network.osmNetwork + ' <> "";'
+		);
 	}
 
 	/**
@@ -186,7 +200,11 @@ class GtfsJsonDataBuilder {
 		for ( const network of theOperator.networks ) {
 			const routesMasterTree = await this.#buildRoutesMasterTree ( network );
 
-			await this.#upDateRouteRefs ( network, routesMasterTree );
+			await this.#upDateRouteRefFields ( network, routesMasterTree );
+		}
+
+		for ( const network of theOperator.networks ) {
+			await this.#updateNetworkField ( network );
 		}
 
 		for ( const network of theOperator.networks ) {
