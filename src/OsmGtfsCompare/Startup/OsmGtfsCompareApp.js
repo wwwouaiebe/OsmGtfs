@@ -23,11 +23,11 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theVersion from './version.js';
-import GoButtonClickEL from './GoButtonClickEL.js';
-import AutoStartup from './AutoStartup.js';
-import ErrorsOnlyButtonClickEL from './ErrorsOnlyButtonClickEL.js';
-import HeadingReportButtonClickEL from './HeadingReportButtonClickEL.js';
+import theVersion from '../../OsmGtfsCompare/interface/version.js';
+import GoButtonClickEL from '../../OsmGtfsCompare/interface/GoButtonClickEL.js';
+import AutoStartup from '../../OsmGtfsCompare/Startup/AutoStartup.js';
+import ErrorsOnlyButtonClickEL from '../../OsmGtfsCompare/interface/ErrorsOnlyButtonClickEL.js';
+import HeadingReportButtonClickEL from '../../OsmGtfsCompare/interface/HeadingReportButtonClickEL.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

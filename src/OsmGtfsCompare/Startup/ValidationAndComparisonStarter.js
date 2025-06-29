@@ -23,9 +23,9 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import Json2GtfsLoader from '../OsmGtfsCompare/Json2GtfsLoader.js';
-import theDocConfig from './DocConfig.js';
-import theOsmDataLoader from './OsmDataLoader.js';
+import Json2GtfsLoader from '../../OsmGtfsCompare/DataLoading/Json2GtfsLoader.js';
+import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theOsmDataLoader from '../../OsmGtfsCompare/DataLoading/OsmDataLoader.js';
 
 /*
 import theOsmDataLoader from './OsmDataLoader.js';

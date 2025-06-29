@@ -23,8 +23,8 @@ Doc reviewed 20250126
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import GpxFactory from '../OsmGtfsCompare/GpxFactory.js';
-import { theGtfsTree } from './DataTree.js';
+import GpxFactory from '../../OsmGtfsCompare/GpxFactory.js';
+import { theGtfsTree } from '../../OsmGtfsCompare/DataTree.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

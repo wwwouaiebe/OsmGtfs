@@ -1,5 +1,5 @@
 /*
-Copyright - 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2024 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -19,49 +19,38 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250126
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theDocConfg from '../OsmGtfsCompare/DocConfig.js';
-import theGtfsRoutesMasterTree from '../OsmGtfsCompare/GtfsRoutesMasterTree.js';
+import ValidationAndComparisonStarter from '../../OsmGtfsCompare/Startup/ValidationAndComparisonStarter.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * Loader for the gtfs data
+ * Simple event handler for click on the go button of the web page
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class Json2GtfsLoader {
+class GoButtonClickEL {
 
 	/**
-     * Start the upload of the gtfs data from the json file
-     */
-
-	async loadData ( ) {
-
-		try {
-			const { default : jsonsData } = await import (
-				'../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json',
-				{ with : { type : 'json' } }
-			);
-
-			theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
-			return true;
-		}
-		catch {
-			return false;
-		}
-	}
-
-	/**
-     * The constructor
-     */
+	 * The contructor
+	 */
 
 	constructor ( ) {
 		Object.freeze ( this );
 	}
+
+	/**
+	 * Event handler
+	 */
+
+	async handleEvent ( ) {
+		await new ValidationAndComparisonStarter ( ). start ( );
+	}
+
 }
 
-export default Json2GtfsLoader;
+export default GoButtonClickEL;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

@@ -23,8 +23,8 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theOperator from '../Common/Operator.js';
-import ValidationAndComparisonStarter from '../OsmGtfsCompare/ValidationAndComparisonStarter.js';
+import theOperator from '../../Common/Operator.js';
+import ValidationAndComparisonStarter from '../../OsmGtfsCompare/Startup/ValidationAndComparisonStarter.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

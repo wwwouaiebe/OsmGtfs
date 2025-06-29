@@ -23,10 +23,10 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theDocConfig from '../OsmGtfsCompare/DocConfig.js';
-import ArrayHelper from '../Common/ArrayHelper.js';
-import theOperator from '../Common/Operator.js';
-import theOsmRoutesMasterTree from './OsmRoutesMasterTree.js';
+import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theOsmRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/OsmRoutesMasterTree.js';
+import ArrayHelper from '../../Common/ArrayHelper.js';
+import theOperator from '../../Common/Operator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -222,9 +222,10 @@ class OsmDataLoader {
 
 		try {
 			const { default : osmData } = await import (
-				'../../devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json',
+				'../../../devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json',
 				{ with : { type : 'json' } }
 			);
+			console.log ( 'osm dev data loaded')
 			return osmData.elements;
 		}
 		catch {

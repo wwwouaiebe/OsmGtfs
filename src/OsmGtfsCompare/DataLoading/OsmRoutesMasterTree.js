@@ -14,7 +14,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
 /*
 Changes:
 	- v1.0.0:
@@ -23,14 +22,14 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import RoutesMasterTree from '../Common/RoutesMasterTree.js';
+import RoutesMasterTree from '../../Common/RoutesMasterTree.js';
 
 /**
- * the one and only one object RoutesMasterTree with gtfs data
+ * the one and only one object RoutesMasterTree with osm data
  */
 
-const theGtfsRoutesMasterTree = new RoutesMasterTree ( );
+const theOsmRoutesMasterTree = new RoutesMasterTree ( );
 
-export default theGtfsRoutesMasterTree;
+export default theOsmRoutesMasterTree;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */
