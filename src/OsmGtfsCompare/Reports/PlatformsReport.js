@@ -1,5 +1,5 @@
 /*
-Copyright - 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2024 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -19,17 +19,38 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import Gtfs2JsonApp from '../Gtfs2Json/Gtfs2JsonApp.js';
+import Report from './Report.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- *The entry point of the app
+ * The platforms report
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-await new Gtfs2JsonApp ( ).loadApp ( );
+class PlatformsReport extends Report {
+
+	/**
+	 * The constructor
+	 */
+
+	constructor ( ) {
+		super ( );
+		this.report = document.getElementById ( 'platformsPane' );
+		Object.freeze ( this );
+	}
+}
+
+/**
+ * The one and only one object PlatformsReport
+ * @type {PlatformsReport}
+ */
+
+const thePlatformsReport = new PlatformsReport;
+
+export default thePlatformsReport;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

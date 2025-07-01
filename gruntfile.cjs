@@ -29,7 +29,7 @@ module.exports = function ( grunt ) {
 				fix : true,
 				overrideConfigFile : 'eslint.config.js'
 			},
-			target : [ 'src/*/*.js' ]
+			target : [ 'src/*/*.js', 'src/*/*/*.js' ]
 		},
 		essimpledoc : {
 			release : {

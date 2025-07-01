@@ -23,15 +23,14 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import Json2GtfsLoader from '../../OsmGtfsCompare/DataLoading/Json2GtfsLoader.js';
+import GtfsDataLoader from '../../OsmGtfsCompare/DataLoading/GtfsDataLoader.js';
 import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
 import theOsmDataLoader from '../../OsmGtfsCompare/DataLoading/OsmDataLoader.js';
+import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
+import theStatsReport from '../Reports/StatsReport.js';
+import PlatformsComparator from '../../OsmGtfsCompare/Compare/PlatformsComparator.js';
 
 /*
-import theOsmDataLoader from './OsmDataLoader.js';
-import GtfsTreeBuilder from './GtfsTreeBuilder.js';
-import OsmTreeBuilder from './OsmTreeBuilder.js';
-import thePlatformsReport from './PlatformsReport.js';
 import theRelationsReport from './RelationsReport.js';
 import theStatsReport from './StatsReport.js';
 import theExcludeList from './ExcludeList.js';
@@ -73,17 +72,18 @@ class ValidationAndComparisonStarter {
 		// loading exclude list
 		// await theExcludeList.loadData ( );
 
-		await new Json2GtfsLoader ( ).loadData ( );
+		await new GtfsDataLoader ( ).loadData ( );
 
-		/*
 		// opening report
 		thePlatformsReport.open ( );
-		theRelationsReport.open ( );
+
+		// theRelationsReport.open ( );
 		theStatsReport.open ( );
-		*/
 
 		// loading osm data
 		await theOsmDataLoader.fetchData (	);
+
+		new PlatformsComparator ( ).compare ( );
 
 		/*
 		// Validating the platforms
@@ -111,12 +111,13 @@ class ValidationAndComparisonStarter {
 		if ( 'used' === theDocConfig.type ) {
 			new OsmGtfsComparator ( ).compare ( );
 		}
+		*/
 
 		// close...
 		thePlatformsReport.close ( );
-		theRelationsReport.close ( );
+
+		// theRelationsReport.close ( );
 		theStatsReport.close ( );
-		*/
 
 	}
 }

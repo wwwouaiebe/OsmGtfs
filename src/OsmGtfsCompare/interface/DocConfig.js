@@ -95,6 +95,22 @@ class DocConfig {
 	get type ( ) { return this.#type; }
 
 	/**
+	 * Get the gtfs type for the selected vehicle ( 0 = tram, 1=subway, 3 = bus...)
+	 * @type {Number}
+	 */
+
+	#gtfsType;
+
+	/**
+	 * Get the gtfs type for the selected vehicle ( 0 = tram, 1=subway, 3 = bus...)
+	 * @type {Number}
+	 */
+
+	get gtfsType ( ) {
+		return this.#gtfsType;
+	}
+
+	/**
      * the ref
      * @type {String}
      */
@@ -111,6 +127,20 @@ class DocConfig {
 		this.#vehicle = document.getElementById ( 'osmVehicleSelect' ).value;
 		this.#type = document.getElementById ( 'osmTypeSelect' ).value;
 		this.#ref = document.getElementById ( 'osmRef' ).value;
+		switch ( this.#vehicle ) {
+		case 'tram' :
+			this.#gtfsType = 0;
+			break;
+		case 'subway' :
+			this.#gtfsType = 1;
+			break;
+		case 'bus' :
+			this.#gtfsType = 3;
+			break;
+		default :
+			break;
+		}
+
 	}
 
 	/**

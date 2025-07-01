@@ -25,6 +25,7 @@ Doc reviewed 20250124
 
 import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
 import theOsmRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/OsmRoutesMasterTree.js';
+import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
 import ArrayHelper from '../../Common/ArrayHelper.js';
 import theOperator from '../../Common/Operator.js';
 
@@ -225,7 +226,6 @@ class OsmDataLoader {
 				'../../../devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json',
 				{ with : { type : 'json' } }
 			);
-			console.log ( 'osm dev data loaded')
 			return osmData.elements;
 		}
 		catch {
@@ -298,6 +298,7 @@ class OsmDataLoader {
 		if ( elements ) {
 			this.#loadOsmData ( elements );
 			this.#TreeBuilder ( );
+			theOsmPlatforms.loadData ( this.#osmPlatforms );
 		}
 	}
 

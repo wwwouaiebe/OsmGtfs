@@ -24,6 +24,7 @@ Changes:
 
 import theDocConfg from '../../OsmGtfsCompare/interface/DocConfig.js';
 import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutesMasterTree.js';
+import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -31,7 +32,7 @@ import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutes
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class Json2GtfsLoader {
+class GtfsDataLoader {
 
 	/**
      * Start the upload of the gtfs data from the json file
@@ -46,7 +47,7 @@ class Json2GtfsLoader {
 			);
 
 			theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
-			console.log ( 'gtfs data loaded' );
+			theGtfsPlatforms.loadData ( jsonsData.platforms );
 			return true;
 		}
 		catch {
@@ -63,6 +64,6 @@ class Json2GtfsLoader {
 	}
 }
 
-export default Json2GtfsLoader;
+export default GtfsDataLoader;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

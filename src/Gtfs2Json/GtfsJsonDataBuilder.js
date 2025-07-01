@@ -133,11 +133,12 @@ class GtfsJsonDataBuilder {
 
 		console.info ( 'Now building platforms list ' + network.osmNetwork );
 
-		let sqlString = 'SELECT stop_id, stop_name, stop_lat, stop_lon, zone_id, platform_type, ' +
-		'SUBSTRING( network, 1, LENGTH ( network) -1) as network';
+		let sqlString = 'SELECT stop_id as ref, stop_name AS nameOperator, stop_lat AS lat, stop_lon AS lon,' +
+		' zone_id AS zone, platform_type AS type, ' +
+		'SUBSTRING( network, 1, LENGTH ( network) -1) AS network';
 		for ( const tmpNetwork of theOperator.networks ) {
 			sqlString += ', SUBSTRING(route_ref_' + tmpNetwork.osmNetwork + ',1,LENGTH ( route_ref_' +
-			tmpNetwork.osmNetwork + ' ) - 1)  AS route_ref_' + tmpNetwork.osmNetwork;
+			tmpNetwork.osmNetwork + ' ) - 1)  AS routeRef_' + tmpNetwork.osmNetwork;
 		}
 		sqlString += ' FROM stops WHERE route_ref_' + network.osmNetwork + ' <> "" ORDER BY stop_id;';
 		const platforms = await theMySqlDb.execSql ( sqlString );

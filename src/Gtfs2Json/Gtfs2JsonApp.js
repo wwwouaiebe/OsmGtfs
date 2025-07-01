@@ -96,18 +96,18 @@ class Gtfs2JsonApp {
 
 	async loadApp ( options ) {
 
+		console.info ( '\nStarting gtfs2json ...\n\n' );
+
 		// config
 		this.#createConfig ( options );
 
 		await theOperator.loadData ( theConfig.operatorFile );
 
-		console.info ( '\nStarting gtfs2json ...\n\n' );
-
 		await theMySqlDb.start ( );
 
 		const startTime = process.hrtime.bigint ( );
 
-		// await new GtfsTxt2MySqlLoader ( ).loadData ( );
+		await new GtfsTxt2MySqlLoader ( ).loadData ( );
 
 		await new GtfsJsonDataBuilder ( ).build ( );
 
