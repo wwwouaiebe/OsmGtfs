@@ -59,9 +59,23 @@ class Report {
 			return '';
 		}
 
-		return '<button title="Edit the relation with JOSM\nJOSM must be already opened!" ' +
-        	'class="josmButton" data-osm-obj-id="' +
-            osmObject.id + '" data-osm-obj-type="' + osmObject.type + '" >JOSM </button>';
+		let buttonHtml = '<button title="Edit the relation with JOSM\nJOSM must be already opened!" ' +
+        	'class="josmButton" ' +
+			'data-osm-obj-id="' + osmObject.id + '" ' +
+			'data-osm-obj-type="' + osmObject.type + '" ';
+
+		if ( osmObject.newTagValues ) {
+			let keyCounter = 1;
+			for ( const [ key, value ] of Object.entries ( osmObject.newTagValues ) ) {
+				buttonHtml +=
+					'data-tag-' + keyCounter + '="' + key + '=' + value + '" ';
+				keyCounter ++;
+			}
+		}
+
+		buttonHtml += '>JOSM </button>';
+
+		return buttonHtml;
 	}
 
 	/**

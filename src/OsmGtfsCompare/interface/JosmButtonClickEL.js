@@ -74,6 +74,18 @@ class JosmButtonClickEL {
 			break;
 		}
 
+		if ( event.target.dataset [ 'tag-1' ] ) {
+			uri += '&addtags=';
+			let tagCounter = 1;
+			while ( event.target.dataset [ 'tag-' + tagCounter ] ) {
+				uri += encodeURI ( event.target.dataset [ 'tag-' + tagCounter ] );
+				tagCounter ++;
+				if ( event.target.dataset [ 'tag-' + tagCounter ] ) {
+					uri += '%7C';
+				}
+			}
+		}
+
 		// calling JOSM
 		await fetch ( uri )
 			.then (

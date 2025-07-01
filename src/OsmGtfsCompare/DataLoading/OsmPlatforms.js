@@ -63,7 +63,7 @@ class OsmPlatforms {
 	 */
 
 	loadData ( osmPlatforms ) {
-		this.#platforms.slear ( );
+		this.#platforms.clear ( );
 		osmPlatforms.forEach (
 			osmPlatform => {
 				let platformProperties = {};
