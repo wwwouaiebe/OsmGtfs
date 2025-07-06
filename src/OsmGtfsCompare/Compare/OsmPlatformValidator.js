@@ -103,7 +103,7 @@ class OsmPlatformValidator {
 	 */
 
 	#validateName ( ) {
-		const gtfsNameOperator = this.#gtfsPlatform.nameOperator.replaceAll ( '´', '\'' );
+		const gtfsNameOperator = this.#gtfsPlatform.nameOperator.replaceAll ( '´', '\'' ).replaceAll ( '  ', ' ');
 
 		if ( this.#osmPlatform.nameOperator ) {
 			const osmNameOperator = this.#osmPlatform.nameOperator.replaceAll ( '´', '\'' );
@@ -127,7 +127,7 @@ class OsmPlatformValidator {
 				{
 					htmlTag : 'p',
 					text : 'Invalid name or missing name:operator:' + theOperator.operator + ' : ' +
-                        this.#osmPlatform.name + ' (name given by ' + theOperator.operator + ' : ' + gtfsNameOperator + ')'
+                        this.#osmPlatform.name + ' name given by ' + theOperator.operator + ' : ' + gtfsNameOperator
 				}
 			);
 			theStatsReport.addPlatformsErrorName ( );
