@@ -103,7 +103,7 @@ class OsmPlatformValidator {
 	 */
 
 	#validateName ( ) {
-		const gtfsNameOperator = this.#gtfsPlatform.nameOperator.replaceAll ( '´', '\'' ).replaceAll ( '  ', ' ');
+		const gtfsNameOperator = this.#gtfsPlatform.nameOperator.replaceAll ( '´', '\'' ).replaceAll ( '  ', ' ' );
 
 		if ( this.#osmPlatform.nameOperator ) {
 			const osmNameOperator = this.#osmPlatform.nameOperator.replaceAll ( '´', '\'' );
