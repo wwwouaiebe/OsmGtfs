@@ -1,5 +1,5 @@
 {
-	"mySqlDbName" : "gtfs_tec",
+	"mySqlDbName" : "new_gtfs_tec",
 	"gtfsDirectory" : "./gtfs/tec",
 	"operator" : "TEC",
 	"osmOperator" : "TEC",

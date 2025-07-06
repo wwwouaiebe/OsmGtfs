@@ -25,6 +25,7 @@ Changes:
 import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
 import theOperator from '../../Common/Operator.js';
 import theStatsReport from '../Reports/StatsReport.js';
+import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -33,6 +34,13 @@ import theStatsReport from '../Reports/StatsReport.js';
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 class OsmPlatformValidator {
+
+	/**
+	 * A reference to the currently validated platform when this platform have more than 1ref, null otherwise
+	 * @type {?Object}
+	 */
+
+	#platformWithMoreThan1Ref;
 
 	/**
 	 * The currently validated osm platform
@@ -147,6 +155,17 @@ class OsmPlatformValidator {
 	 */
 
 	#validateNetwork ( ) {
+		if ( this.#platformWithMoreThan1Ref ) {
+			this.#errorsArray.push (
+				{
+					htmlTag : 'p',
+					text : 'This platform have multiple ref:' + theOperator.operator +
+						'* in osm. Not possible to control the network tag'
+				}
+			);
+			return;
+		}
+
 		let haveErrors = false;
 		const gtfsNetworks = this.#gtfsPlatform.network.split ( ';' );
 		const osmNetworks = this.#osmPlatform.network.split ( ';' );
@@ -220,6 +239,16 @@ class OsmPlatformValidator {
 	 */
 
 	#validateRouteRefs ( ) {
+		if ( this.#platformWithMoreThan1Ref ) {
+			this.#errorsArray.push (
+				{
+					htmlTag : 'p',
+					text : 'This platform have multiple ref:' + theOperator.operator +
+						'* in osm. Not possible to control the route_ref:' + theOperator.operator + '* tags'
+				}
+			);
+			return;
+		}
 		theOperator.networks.forEach (
 			network => {
 				if (
@@ -290,6 +319,7 @@ class OsmPlatformValidator {
 	validate ( osmPlatform, gtfsPlatform ) {
  		this.#osmPlatform = osmPlatform;
 		this.#gtfsPlatform = gtfsPlatform;
+		this.#platformWithMoreThan1Ref = theOsmPlatforms.platformsWithMore1ref.get ( this.#osmPlatform.osmId );
 		this.#errorsArray = [];
 		this.#newTagValues = {};
 		this.#validateName ( );

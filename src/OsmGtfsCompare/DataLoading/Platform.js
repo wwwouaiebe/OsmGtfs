@@ -147,28 +147,28 @@ class Platform {
 	 * @type {String}
 	 */
 
-	#ref;
+	#gtfsRef;
 
 	/**
 	 * The ref of the platform
 	 * @type {String}
 	 */
 
-	get ref ( ) { return this.#ref; }
+	get gtfsRef ( ) { return this.#gtfsRef; }
 
 	/**
 	 * The refs of the platform (osm: a platform can have multiple refs)
 	 * @type {Array.<String>}
 	 */
 
-	#refs;
+	#osmRefs;
 
 	/**
 	 * The refs of the platform (osm: a platform can have multiple refs)
 	 * @type {Array.<String>}
 	 */
 
-	get refs ( ) { return this.#refs; }
+	get osmRefs ( ) { return this.#osmRefs; }
 
 	/**
 	 * the route_ref of the platform
@@ -242,8 +242,8 @@ class Platform {
 		this.#nameOperator = platformProperties.nameOperator;
 		this.#network = platformProperties.network;
 		this.#operator = platformProperties.operator;
-		this.#ref = platformProperties.ref;
-		this.#refs = platformProperties.refs;
+		this.#gtfsRef = platformProperties.gtfsRef;
+		this.#osmRefs = platformProperties.osmRefs;
 		this.#routeRefs = platformProperties.routeRefs;
 		this.#zone = platformProperties.zone;
 		this.#osmId = platformProperties.osmId;

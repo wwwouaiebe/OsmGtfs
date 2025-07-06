@@ -86,10 +86,9 @@ class GtfsPlatforms {
 						}
 					}
 				);
-				platformProperties.ref = jsonPlatform.ref;
-				platformProperties.refs = [ jsonPlatform.ref ];
+				platformProperties.gtfsRef = jsonPlatform.gtfsRef;
 				if ( jsonPlatform.type === theDocConfig.gtfsType ) {
-					this.#platforms.set ( jsonPlatform.ref, new Platform ( platformProperties ) );
+					this.#platforms.set ( jsonPlatform.gtfsRef, new Platform ( platformProperties ) );
 				}
 			}
 		);

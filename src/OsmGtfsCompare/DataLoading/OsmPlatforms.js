@@ -34,6 +34,13 @@ import Platform from './Platform.js';
 class OsmPlatforms {
 
 	/**
+	 * A map with the platforms having more than one ref. Key of the map is the osmId
+	 * @type {Map}
+	 */
+
+	platformsWithMore1ref = new Map ( );
+
+	/**
 	 * A js map with the gtfs platforms. The keys are the osm ref
 	 * @type {Map}
 	 */
@@ -64,6 +71,7 @@ class OsmPlatforms {
 
 	loadData ( osmPlatforms ) {
 		this.#platforms.clear ( );
+		this.platformsWithMore1ref.clear ( );
 		osmPlatforms.forEach (
 			osmPlatform => {
 				let platformProperties = {};
@@ -88,27 +96,38 @@ class OsmPlatforms {
 				platformProperties.osmType = osmPlatform.type;
 
 				platformProperties.routeRefs = {};
-				let refs = [];
+				platformProperties.osmRefs = {};
 				theOperator.networks.forEach (
 					network => {
 						const routeRef = osmPlatform?.tags [ 'route_ref:' + network.osmNetwork ];
 						if ( routeRef ) {
 							platformProperties.routeRefs [ network.osmNetwork ] = routeRef;
 						}
-						const ref = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
-						if ( ref ) {
-							refs = refs.concat ( ref.split ( ';' ) );
+						const osmRef = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
+						if ( osmRef ) {
+							platformProperties.osmRefs [ network.osmNetwork ] = osmRef;
 						}
 					}
 				);
-				platformProperties.refs = refs;
 
-				refs.forEach (
-					ref => {
-						platformProperties.ref = ref;
-						this.#platforms.set ( ref, new Platform ( platformProperties ) );
+				let refsCounter = 0;
+				let newPlatform = null;
+				Object.values ( platformProperties.osmRefs ) .forEach (
+					refs => {
+						refs.split ( ';' ).forEach (
+							ref => {
+								platformProperties.gtfsRef = ref;
+								newPlatform = new Platform ( platformProperties );
+								this.#platforms.set ( ref, newPlatform );
+								refsCounter ++;
+							}
+						);
 					}
 				);
+
+				if ( 1 < refsCounter ) {
+					this.platformsWithMore1ref.set ( newPlatform.osmId, newPlatform );
+				}
 			}
 		);
 	}

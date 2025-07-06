@@ -96,9 +96,6 @@ class OsmDataLoader {
 	 */
 
 	#sortRoutesMaster ( ) {
-		this.#osmRoutesMaster.sort (
-			( first, second ) => ArrayHelper.compareRouteName ( first.tags.ref, second.tags.ref )
-		 );
 	}
 
 	/**
@@ -172,6 +169,7 @@ class OsmDataLoader {
 	 */
 
 	#loadOsmData ( elements ) {
+		const tmpOsmPlatforms = [];
 		elements.forEach (
 			element => {
 				switch ( element.type ) {
@@ -205,11 +203,23 @@ class OsmDataLoader {
 					break;
 				}
 				if ( 'platform' === element?.tags?.public_transport ) {
-					this.#osmPlatforms.set ( element.id, element );
+					tmpOsmPlatforms.push ( element );
 				}
 			}
 		);
-		this.#sortRoutesMaster ( );
+
+		tmpOsmPlatforms.sort (
+			( first, second ) => first?.tags?.name.localeCompare ( second?.tags?.name )
+		);
+		tmpOsmPlatforms.forEach (
+			tmpOsmPlatform => {
+				this.#osmPlatforms.set ( tmpOsmPlatform.id, tmpOsmPlatform );
+			}
+		);
+
+		this.#osmRoutesMaster.sort (
+			( first, second ) => ArrayHelper.compareRouteName ( first.tags.ref, second.tags.ref )
+		 );
 	}
 
 	/**
@@ -291,7 +301,6 @@ class OsmDataLoader {
 			elements = await this.#loadDevData ( uri );
 		}
 		else {
-
 			elements = await this.#fetchOverpassApi ( uri );
 		}
 

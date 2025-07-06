@@ -44,8 +44,8 @@ class PlatformsComparator {
 		let platformCounter = 0;
 		theGtfsPlatforms.platforms.forEach (
 			gtfsPlatform => {
-				if ( ! theOsmPlatforms.platforms.get ( gtfsPlatform.ref ) ) {
-					thePlatformsReport.add ( 'p', gtfsPlatform.ref + ' ' + gtfsPlatform.nameOperator );
+				if ( ! theOsmPlatforms.platforms.get ( gtfsPlatform.gtfsRef ) ) {
+					thePlatformsReport.add ( 'p', gtfsPlatform.gtfsRef + ' ' + gtfsPlatform.nameOperator );
 					platformCounter ++;
 				}
 			}
@@ -64,10 +64,10 @@ class PlatformsComparator {
 		let platformCounter = 0;
 		theOsmPlatforms.platforms.forEach (
 			osmPlatform => {
-				if ( ! theGtfsPlatforms.platforms.get ( osmPlatform.ref ) ) {
+				if ( ! theGtfsPlatforms.platforms.get ( osmPlatform.gtfsRef ) ) {
 					thePlatformsReport.add (
 						'p',
-						osmPlatform.ref + ' ' + osmPlatform.name,
+						osmPlatform.gtfsRef + ' ' + osmPlatform.name,
 						{ id : osmPlatform.osmId, type : osmPlatform.osmType } );
 					platformCounter ++;
 				}
@@ -79,6 +79,23 @@ class PlatformsComparator {
 	}
 
 	/**
+	 * Report the platforms with more than one ref:tec? (on the same tag or on different tag)
+	 */
+
+	#reportOsmPlatformsWithMore1ref ( ) {
+		thePlatformsReport.add ( 'h1', 'Osm platforms with more than 1 ref' );
+		theOsmPlatforms.platformsWithMore1ref.forEach (
+			osmPlatform => {
+				let platformText = osmPlatform.name + ' ';
+				for ( const [ network, ref ] of Object.entries ( osmPlatform.osmRefs ) ) {
+					platformText += network + ' : ' + ref + ' ';
+				}
+				thePlatformsReport.add ( 'p', platformText, { id : osmPlatform.osmId, type : osmPlatform.osmType } );
+			}
+		);
+	}
+
+	/**
 	 * Start the validation of platforms
 	 */
 
@@ -87,7 +104,7 @@ class PlatformsComparator {
 		thePlatformsReport.add ( 'h1', 'Platforms validation' );
 		theOsmPlatforms.platforms.forEach (
 			osmPlatform => {
-				const gtfsPlatform = theGtfsPlatforms.platforms.get ( osmPlatform.ref );
+				const gtfsPlatform = theGtfsPlatforms.platforms.get ( osmPlatform.gtfsRef );
 				if ( gtfsPlatform ) {
 					platformValidator.validate ( osmPlatform, gtfsPlatform );
 				}
@@ -102,6 +119,7 @@ class PlatformsComparator {
 	compare ( ) {
 		this.#searchMissingOsmPlatforms ( );
 		this.#searchUnknownGtfsPlatforms ( );
+		this.#reportOsmPlatformsWithMore1ref ( );
 		this.#validatePlatforms ( );
 	}
 
