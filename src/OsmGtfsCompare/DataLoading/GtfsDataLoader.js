@@ -48,6 +48,7 @@ class GtfsDataLoader {
 
 			theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
 			theGtfsPlatforms.loadData ( jsonsData.platforms );
+
 			return true;
 		}
 		catch {

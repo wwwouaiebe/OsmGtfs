@@ -284,8 +284,6 @@ class OsmDataLoader {
 
 		this.#clear ( );
 
-		const useDevData = new URL ( window.location ).searchParams.get ( 'devData' );
-
 		// uri creation
 		let uri =
 			'https://lz4.overpass-api.de/api/interpreter?data=[out:json][timeout:40];' +
@@ -296,6 +294,8 @@ class OsmDataLoader {
 			'->.rou;(.rou <<; - .rou;); >> ->.rm;.rm out;';
 
 		let elements = null;
+
+		const useDevData = new URL ( window.location ).searchParams.get ( 'devData' );
 
 		if ( useDevData ) {
 			elements = await this.#loadDevData ( uri );

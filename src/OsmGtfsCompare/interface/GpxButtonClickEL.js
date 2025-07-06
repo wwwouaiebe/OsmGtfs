@@ -23,8 +23,10 @@ Doc reviewed 20250126
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import GpxFactory from '../../OsmGtfsCompare/GpxFactory.js';
-import { theGtfsTree } from '../../OsmGtfsCompare/DataTree.js';
+import theGtfsRoutesMasterTree from '../DataLoading/GtfsRoutesMasterTree.js';
+import GpxFactory from '../Gpx/GpxFactory.js';
+
+// import { theGtfsTree } from '../../OsmGtfsCompare/DataTree.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -44,7 +46,8 @@ class GpxButtonClickEL {
 		// parsing to number because data in the button dataset are always string
 		const iShapePk = Number.parseInt ( shapePk );
 		let returnRoute = null;
-		theGtfsTree.routesMaster.forEach (
+
+		theGtfsRoutesMasterTree.routesMaster.forEach (
 			routeMaster => {
 				routeMaster.routes.forEach (
 					route => {
@@ -55,6 +58,7 @@ class GpxButtonClickEL {
 				);
 			}
 		);
+
 		return returnRoute;
 	}
 
@@ -77,7 +81,10 @@ class GpxButtonClickEL {
 		clickEvent.target.classList.add ( 'gpxButtonVisited' );
 
 		// Building the gtfs file
-		new GpxFactory ( ).buildGpx ( this.#getRouteFromShapePk ( clickEvent.target.dataset.shapePk ) );
+		new GpxFactory ( ).buildGpx (
+			this.#getRouteFromShapePk ( clickEvent.target.dataset.shapePk ),
+			clickEvent.target.dataset.fileName
+		);
 	}
 }
 

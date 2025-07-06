@@ -28,18 +28,10 @@ import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
 import theOsmDataLoader from '../../OsmGtfsCompare/DataLoading/OsmDataLoader.js';
 import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
 import theStatsReport from '../Reports/StatsReport.js';
+import theRelationsReport from '../Reports/RelationsReport.js';
 import PlatformsComparator from '../../OsmGtfsCompare/Compare/PlatformsComparator.js';
-
-/*
-import theRelationsReport from './RelationsReport.js';
-import theStatsReport from './StatsReport.js';
-import theExcludeList from './ExcludeList.js';
-import GtfsDataTreeLoader from './GtfsDataTreeLoader.js';
-import OsmGtfsComparator from './OsmGtfsComparator.js';
-import OsmRouteMasterValidator from './OsmRouteMasterValidator.js';
-import RoutesWithoutRouteMasterValidator from './RoutesWithoutRouteMasterValidator.js';
-import PlatformsValidator from './PlatformsValidator.js';
-*/
+import RoutesWithoutRouteMasterValidator from '../../OsmGtfsCompare/Compare/RoutesWithoutRouteMasterValidator.js';
+import RoutesMasterTreesComparator from '../Compare/RoutesMasterTreesComparator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -69,54 +61,26 @@ class ValidationAndComparisonStarter {
 		// reading the form
 		theDocConfig.loadData ( );
 
-		// loading exclude list
-		// await theExcludeList.loadData ( );
-
 		await new GtfsDataLoader ( ).loadData ( );
 
 		// opening report
 		thePlatformsReport.open ( );
-
-		// theRelationsReport.open ( );
+		theRelationsReport.open ( );
 		theStatsReport.open ( );
 
 		// loading osm data
 		await theOsmDataLoader.fetchData (	);
 
-		new PlatformsComparator ( ).compare ( );
-
-		/*
-		// Validating the platforms
-		await new PlatformsValidator ( ).validate ( );
-
-		// Report excluded gtfs platforms
-		theExcludeList.reportGtfsExcludedPlatforms ( );
-
 		// Search routes without route_master
 		await new RoutesWithoutRouteMasterValidator ( ).fetchData ( );
 
-		// validating the osm routes and route_ master
-		new OsmRouteMasterValidator ( ).validate ( );
+		new RoutesMasterTreesComparator ( ).compare ( );
 
-		// building the osmtree for the comparison osm gtfs
-		new OsmTreeBuilder ( ).buildTree ( );
-
-		// loading gtfs data for the comparison osm gtfs
-		await new GtfsDataTreeLoader ( ).loadData ( );
-
-		// building the gtfs tree for the comparison osm gtfs
-		new GtfsTreeBuilder ( ).buildTree ( );
-
-		// compare existing osm route_master with gtfs route_master
-		if ( 'used' === theDocConfig.type ) {
-			new OsmGtfsComparator ( ).compare ( );
-		}
-		*/
+		new PlatformsComparator ( ).compare ( );
 
 		// close...
 		thePlatformsReport.close ( );
-
-		// theRelationsReport.close ( );
+		theRelationsReport.close ( );
 		theStatsReport.close ( );
 
 	}
