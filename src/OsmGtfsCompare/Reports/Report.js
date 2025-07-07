@@ -54,19 +54,19 @@ class Report {
 	 * @returns {String} a HTML string with an ButtonHTMLElement or an empty string when the osmObject is null
 	 */
 
-	getJosmEdit ( osmObject ) {
-		if ( ! osmObject?.id || ! osmObject?.type ) {
+	getJosmEdit ( osmObject, newTagValues ) {
+		if ( ! osmObject?.osmId || ! osmObject?.osmType ) {
 			return '';
 		}
 
 		let buttonHtml = '<button title="Edit the relation with JOSM\nJOSM must be already opened!" ' +
         	'class="josmButton" ' +
-			'data-osm-obj-id="' + osmObject.id + '" ' +
-			'data-osm-obj-type="' + osmObject.type + '" ';
+			'data-osm-obj-id="' + osmObject.osmId + '" ' +
+			'data-osm-obj-type="' + osmObject.osmType + '" ';
 
-		if ( osmObject.newTagValues ) {
+		if ( newTagValues ) {
 			let keyCounter = 1;
-			for ( const [ key, value ] of Object.entries ( osmObject.newTagValues ) ) {
+			for ( const [ key, value ] of Object.entries ( newTagValues ) ) {
 				buttonHtml +=
 					'data-tag-' + keyCounter + '="' + key + '=' + value + '" ';
 				keyCounter ++;
@@ -85,21 +85,13 @@ class Report {
 	 */
 
 	getOsmLink ( osmObject ) {
-		let osmId = '';
-		if ( osmObject?.id && osmObject?.type ) {
-			osmId = osmObject.id;
-		}
-		else if ( osmObject?.ref && osmObject?.type ) {
-			osmId = osmObject.ref;
-		}
-		else {
+		if ( ! osmObject?.osmId || ! osmObject?.osmType ) {
 			return '';
 		}
-		let osmType = osmObject.type;
 
 		return '<a target="_blank" href="https://www.openstreetmap.org/' +
-			osmType +
-			'/' + osmId + '"> ' + osmType + ' : ' + osmId + '</a>';
+			osmObject.osmType +
+			'/' + osmObject.osmId + '"> ' + osmObject.osmType + ' : ' + osmObject.osmId + '</a>';
 	}
 
 	/**
@@ -109,14 +101,14 @@ class Report {
 	 * @param {?Object} osmObject an OSM object linked to the error to add in the report
 	 */
 
-	add ( htmlTag, text, osmObject ) {
+	add ( htmlTag, text, osmObject, newTagValues ) {
 		let htmlElement = document.createElement ( htmlTag );
 		htmlElement.innerHTML =
 
             text +
 
 			// JOSM button
-			this.getJosmEdit ( osmObject );
+			this.getJosmEdit ( osmObject, newTagValues );
 
 		this.report.appendChild ( htmlElement );
 	}

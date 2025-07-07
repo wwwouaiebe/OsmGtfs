@@ -56,13 +56,6 @@ class AutoStartup {
 	#vehicle = null;
 
 	/**
-	 * the type given in the url
-	 * @type {?String}
-	 */
-
-	#type = null;
-
-	/**
 	 * the autostartup given in the url
 	 * @type {?String}
 	 */
@@ -79,13 +72,11 @@ class AutoStartup {
 		this.#operator = docURL.searchParams.get ( 'operator' ) || 'TEC';
 		this.#network = docURL.searchParams.get ( 'network' ) || 'TECL';
 		this.#vehicle = docURL.searchParams.get ( 'vehicle' ) || 'bus';
-		this.#type = docURL.searchParams.get ( 'type' ) || 'used';
 		this.#autoStartup = docURL.searchParams.get ( 'autostartup' );
 
 		this.#operator = this.#operator.toUpperCase ( );
 		this.#network = this.#network.toUpperCase ( );
 		this.#vehicle = this.#vehicle.toLowerCase ( );
-		this.#type = this.#type.toLowerCase ( );
 	}
 
 	/**
@@ -157,31 +148,6 @@ class AutoStartup {
 	}
 
 	/**
-	 * This method validate the type given in the url parameters
-	 * A vehicle is valid when the valus is 'used', 'proposed', 'disused'
-	 * @returns {boolean} true when the vehicle is valid, false otherwise
-	 */
-
-	#validateType ( ) {
-
-		// stop if no type type given in the parameters
-		if ( ! this.#type ) {
-			if ( null !== this.#autoStartup ) {
-				alert ( 'Autostartup is enabled but the "type" url parameter is not present' );
-			}
-			return false;
-		}
-
-		// stop and alert the user if a bad type is given in the parameters
-		if ( -1 === [ 'used', 'proposed', 'disused' ].indexOf ( this.#type ) ) {
-			alert ( 'bad value for type parameter : "' + this.#type + '". Must be bus "used", "proposed" or "disused"' );
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * This method complete the network select html element with the networks
 	 */
 
@@ -211,9 +177,8 @@ class AutoStartup {
 	 *  This method select the vehicle and type  given in the url params within the vehicle and type select html element
 	 */
 
-	#selectVehicleAndType ( ) {
+	#selectVehicle ( ) {
 		document.getElementById ( 'osmVehicleSelect' ).value = this.#vehicle;
-		document.getElementById ( 'osmTypeSelect' ).value = this.#type;
 	}
 
 	/**
@@ -239,11 +204,7 @@ class AutoStartup {
 			return;
 		}
 
-		if ( ! this.#validateType ( ) ) {
-			return;
-		}
-
-		this.#selectVehicleAndType ( );
+		this.#selectVehicle ( );
 
 		// auto startup. Reminder that a value is not needed for the autostartup, only the presence of a parameter!
 		if ( null !== this.#autoStartup ) {

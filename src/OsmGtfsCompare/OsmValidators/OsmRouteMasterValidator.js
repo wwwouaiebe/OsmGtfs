@@ -1,0 +1,222 @@
+/*
+Copyright - 2024 2025 - wwwouaiebe - Contact: https://www.ouaie.be/
+
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/*
+Changes:
+	- v1.0.0:
+		- created
+Doc reviewed 20250124
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+import theOsmDataLoader from '../DataLoading/OsmDataLoader.js';
+import theOperator from '../../Common/Operator.js';
+import theRelationsReport from '../Reports/RelationsReport.js';
+import theDocConfig from '../interface/DocConfig.js';
+import theStatsReport from '../Reports/StatsReport.js';
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/**
+ * validator for the route master tags
+ */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+class OsmRouteMasterValidator {
+
+	/**
+	 * The osm object route master to validate
+	 * @type {Object}
+	 */
+
+	#osmRouteMaster;
+
+	/**
+	 * A flag indicating that the route master have errors on tags
+	 * @type {boolean}
+	 */
+
+	#haveErrors = false;
+
+	/**
+	 * verify that the name tag is compliant with the osm rules
+	 */
+
+	#validateName ( ) {
+		if ( ! this.#osmRouteMaster?.tags?.name ) {
+			theRelationsReport.add (
+				'p',
+				'Error M008: no name tag for route_master'
+			);
+			theStatsReport.addRouteMasterErrorName ( );
+			this.#haveErrors = true;
+		}
+		if ( this.#osmRouteMaster?.tags?.name && this.#osmRouteMaster?.tags?.ref ) {
+			let vehicle = theDocConfig.vehicle.substring ( 0, 1 ).toUpperCase ( ) +
+       			theDocConfig.vehicle.substring ( 1 ) + ' ';
+			if ( this.#osmRouteMaster.tags.name !== vehicle + this.#osmRouteMaster.tags.ref ) {
+				theRelationsReport.add (
+					'p',
+					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#osmRouteMaster.tags.ref + ')'
+				);
+				theStatsReport.addRouteMasterErrorName ( );
+				this.#haveErrors = true;
+			}
+		}
+	}
+
+	/**
+	 * Verify that the route_master have a ref tag
+	 */
+
+	#validateRefTag ( ) {
+		if ( ! this.#osmRouteMaster?.tags?.ref ) {
+			theRelationsReport.add (
+				'p',
+				'Error M005: route_master without ref tag '
+			);
+			theStatsReport.addRouteMasterErrorRefs ( );
+			this.#haveErrors = true;
+		}
+	}
+
+	/**
+	 * verify that
+	 * - the ref tag is the same on the route_master and on all route members
+	 */
+
+	#validateSameRefTag ( ) {
+		this.#osmRouteMaster.members.forEach (
+			member => {
+				if ( 'relation' === member.type ) {
+					let route = theOsmDataLoader.getRoute ( member.ref );
+					if ( route ) {
+						if ( this.#osmRouteMaster.tags.ref !== route.tags.ref ) {
+							theRelationsReport.add (
+								'p',
+								'Error M006: ref tag of the route master (' + this.#osmRouteMaster.tags.ref +
+								') is not the same than the ref tag of the route (' + route.tags.ref + ')'
+							);
+							theStatsReport.addRouteMasterErrorSameRefs ( );
+							this.#haveErrors = true;
+						}
+					}
+				}
+			}
+		);
+	}
+
+	/**
+	 * verify that
+	 * - the members are relations
+	 * - the relation members are route relations
+	 */
+
+	#validateMembers ( ) {
+		this.#osmRouteMaster.members.forEach (
+			member => {
+				if ( 'relation' === member.type ) {
+					let route = theOsmDataLoader.getRoute ( member.ref );
+					if ( ! route ) {
+						theRelationsReport.add (
+							'p',
+							'Error M003: a relation member of the route master is not a ' +
+                            theDocConfig.vehicle + ' relation'
+						);
+						theStatsReport.addRouteMasterErrorMembers ( );
+						this.#haveErrors = true;
+					}
+				}
+				else {
+					theRelationsReport.add (
+						'p',
+						'Error M004: a member of the route master is not a relation (' +
+                        member.type + ' ' + member.ref + ' )'
+					);
+					theStatsReport.addRouteMasterErrorMembers ( );
+					this.#haveErrors = true;
+				}
+			}
+		);
+	}
+
+	/**
+	 * Verify tha the route master don(t have a fixme)
+	 */
+
+	#validateFixme ( ) {
+		const fixme = this.#osmRouteMaster?.tags?.fixme;
+		if ( fixme ) {
+			theRelationsReport.add ( 'p', 'A fixme exists for this route master:' + fixme );
+			theStatsReport.addRouteMasterWarningFixme ( );
+		}
+	}
+
+	/**
+	 * Verify that the route master have a operator tag including the current operator
+	 */
+
+	#validateOperator ( ) {
+		const operator = this.#osmRouteMaster?.tags?.operator;
+		if ( ! operator ) {
+			theRelationsReport.add ( 'p', 'Oprator tag not found' );
+			theStatsReport.addRouteMasterErrorOperator ( );
+			this.#haveErrors = true;
+		}
+		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
+			theRelationsReport.add (
+				'p',
+				'Missing operator:' + theOperator.operator
+			);
+			theStatsReport.addRouteMasterErrorOperator ( );
+			this.#haveErrors = true;
+		}
+	}
+
+	/**
+	 * Validate ...
+	 * @param {Object} routeMaster
+	 */
+
+	validate ( routeMaster ) {
+
+		theRelationsReport.add ( 'h3', 'Validation of tags, roles and members for route master' );
+
+		this.#osmRouteMaster = theOsmDataLoader.getRouteMaster ( routeMaster.osmId );
+		this.#validateOperator ( );
+		this.#validateFixme ( );
+		this.#validateMembers ( );
+		this.#validateRefTag ( );
+		this.#validateSameRefTag ( );
+		this.#validateName ( );
+
+		if ( ( ! this.#haveErrors ) ) {
+			theRelationsReport.add ( 'p', 'No validation errors found for route_master' );
+		}
+	}
+
+	/**
+	 * The constructor
+	 */
+
+	constructor ( ) {
+		Object.freeze ( this );
+	}
+}
+
+export default OsmRouteMasterValidator;
+
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

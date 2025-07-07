@@ -40,6 +40,17 @@ class StatsReport extends Report {
 	 */
 
 	#stats = {
+		routesMaster : {
+			operator : 0,
+			fixme : 0,
+			name : 0,
+			members : 0,
+			refs : 0,
+			sameRefs : 0,
+			errors : 0,
+			warnings : 0,
+			fixme : 0
+		},
 		routes : {
 			doneNotOk : 0,
 			doneOk : 0,
@@ -65,12 +76,69 @@ class StatsReport extends Report {
 	 */
 
 	#clearStats ( ) {
+		Object.keys ( this.#stats.routesMaster ).forEach (
+			key => { this.#stats.routesMaster [ key ] = 0; }
+		);
 		Object.keys ( this.#stats.routes ).forEach (
 			key => { this.#stats.routes [ key ] = 0; }
 		);
 		Object.keys ( this.#stats.platforms ).forEach (
 			key => { this.#stats.platforms [ key ] = 0; }
 		);
+	}
+
+	/**
+	 * Increment the routesMaster.errors and routesMaster.sameRefs values of the stats
+	 */
+
+	addRouteMasterErrorSameRefs ( ) {
+		this.#stats.routesMaster.errors ++;
+		this.#stats.routesMaster.sameRefs ++;
+	}
+
+	/**
+	 * Increment the routesMaster.errors and routesMaster.refs values of the stats
+	 */
+
+	addRouteMasterErrorRefs ( ) {
+		this.#stats.routesMaster.errors ++;
+		this.#stats.routesMaster.refs ++;
+	}
+
+	/**
+	 * Increment the routesMaster.errors and routesMaster.members values of the stats
+	 */
+
+	addRouteMasterErrorMembers ( ) {
+		this.#stats.routesMaster.errors ++;
+		this.#stats.routesMaster.members ++;
+	}
+
+	/**
+	 * Increment the routesMaster.errors and routesMaster.name values of the stats
+	 */
+
+	addRouteMasterErrorName ( ) {
+		this.#stats.routesMaster.errors ++;
+		this.#stats.routesMaster.name ++;
+	}
+
+	/**
+	 * Increment the routesMaster.errors and routesMaster.operator values of the stats
+	 */
+
+	addRouteMasterErrorOperator ( ) {
+		this.#stats.routesMaster.errors ++;
+		this.#stats.routesMaster.operator ++;
+	}
+
+	/**
+	 * Increment the routesMaster.warnings and routesMaster.fixme values of the stats
+	 */
+
+	addRouteMasterWarningFixme ( ) {
+		this.#stats.routesMaster.warnings ++;
+		this.#stats.routesMaster.fixme ++;
 	}
 
 	/**
@@ -186,6 +254,9 @@ class StatsReport extends Report {
 		this.report = document.getElementById ( 'statsPane' );
 		Object.freeze ( this );
 		Object.seal ( this.#stats );
+		Object.seal ( this.#stats.routesMaster );
+		Object.seal ( this.#stats.routes );
+		Object.seal ( this.#stats.platforms );
 	}
 
 	/**
@@ -205,6 +276,15 @@ class StatsReport extends Report {
 
 	close ( ) {
 		this.add ( 'h1', 'Stats :' );
+		this.add ( 'h2', 'Routes master' );
+		this.add ( 'p', 'Osm routes master with errors on operator: ' + this.#stats.routesMaster.operator );
+		this.add ( 'p', 'Osm routes master with fixme: ' + this.#stats.routesMaster.fixme );
+		this.add ( 'p', 'Osm routes master with errors on name: ' + this.#stats.routesMaster.name );
+		this.add ( 'p', 'Osm routes master with errors on members: ' + this.#stats.routesMaster.members );
+		this.add ( 'p', 'Osm routes master with errors on ref: ' + this.#stats.routesMaster.refs );
+		this.add ( 'p', 'Osm routes master with refs <> ref on routes: ' + this.#stats.routesMaster.sameRefs );
+		this.add ( 'p', 'Validation errors on routes master to fix: ' + this.#stats.routesMaster.errors );
+		this.add ( 'p', 'Validation warnings on routes master nice to fix: ' + this.#stats.routesMaster.warnings );
 		this.add ( 'h2', 'Routes' );
 		this.add ( 'p', 'Osm route relations done and aligned on GTFS files: ' + this.#stats.routes.doneOk );
 		this.add ( 'p', 'Osm route relations done but not aligned on GTFS files: ' + this.#stats.routes.doneNotOk );
@@ -236,3 +316,5 @@ class StatsReport extends Report {
 const theStatsReport = new StatsReport;
 
 export default theStatsReport;
+
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

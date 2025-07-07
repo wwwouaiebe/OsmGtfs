@@ -143,7 +143,6 @@ class GpxFactory {
 		this.#route.platforms.forEach (
 			( currentPlatformRef, index ) => {
 				const gtfsPlatform = theGtfsPlatforms.getPlatform ( currentPlatformRef );
-				console.log ( gtfsPlatform );
 				this.#gpxString +=
 					GpxFactory.#TAB1 + '<wpt lat="' +
 					gtfsPlatform.lat +
@@ -199,7 +198,9 @@ class GpxFactory {
 			const objURL =
 				fileMimeType
 					?
-					window.URL.createObjectURL ( new File ( [ fileContent ], this.#fileName + '.gpx', { type : fileMimeType } ) )
+					window.URL.createObjectURL (
+						new File ( [ fileContent ], this.#fileName + '.gpx', { type : fileMimeType } )
+					)
 					:
 					URL.createObjectURL ( fileContent );
 			const element = document.createElement ( 'a' );

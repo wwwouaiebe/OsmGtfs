@@ -53,13 +53,6 @@ class DocConfig {
 	#vehicle = '';
 
 	/**
-     * the type
-     * @type {String}
-     */
-
-	#type = '';
-
-	/**
      * the ref
      * @type {String}
      */
@@ -86,13 +79,6 @@ class DocConfig {
      */
 
 	get vehicle ( ) { return this.#vehicle; }
-
-	/**
-     * the type
-     * @type {String}
-     */
-
-	get type ( ) { return this.#type; }
 
 	/**
 	 * Get the gtfs type for the selected vehicle ( 0 = tram, 1=subway, 3 = bus...)
@@ -125,7 +111,6 @@ class DocConfig {
 		this.#operator = document.getElementById ( 'osmOperatorSelect' ).value;
 		this.#network = document.getElementById ( 'osmNetworkSelect' ).value;
 		this.#vehicle = document.getElementById ( 'osmVehicleSelect' ).value;
-		this.#type = document.getElementById ( 'osmTypeSelect' ).value;
 		this.#ref = document.getElementById ( 'osmRef' ).value;
 		switch ( this.#vehicle ) {
 		case 'tram' :
@@ -140,7 +125,6 @@ class DocConfig {
 		default :
 			break;
 		}
-
 	}
 
 	/**

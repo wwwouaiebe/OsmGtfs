@@ -118,23 +118,16 @@ class RoutesWithoutRouteMasterValidator {
 	 */
 
 	 async fetchData ( ) {
-		const uriNetwork = '["network"="' + theDocConfig.network + '"]';
-		const uriType = '["type"="' + ( 'used' === theDocConfig.type ? '' : theDocConfig.type + ':' ) + 'route"]';
-		const uriRoute =
-			'["' + ( 'used' === theDocConfig.type ? '' : theDocConfig.type + ':' ) + 'route"="' + theDocConfig.vehicle + '"]';
-		const uriRouteMaster =
-			'["' + ( 'used' === theDocConfig.type ? '' : theDocConfig.type + ':' ) +
-			'route_master"="' + theDocConfig.vehicle + '"]';
 
 		let uri =
 			'https://lz4.overpass-api.de/api/interpreter?data=[out:json][timeout:40];rel' +
-			uriNetwork +
-			uriType +
-			uriRoute +
+			'["network"="' + theDocConfig.network + '"]' +
+			'["type"="route"]' +
+			'["route"="' + theDocConfig.vehicle + '"]' +
 			'->.all;rel' +
-			uriRouteMaster +
+			'["route_master"="' + theDocConfig.vehicle + '"]' +
 			'(br.all);rel' +
-			uriRoute +
+			'["route"="' + theDocConfig.vehicle + '"]' +
 			'(r)->.b;(.all; - .b; );out;';
 
 		let elements = null;

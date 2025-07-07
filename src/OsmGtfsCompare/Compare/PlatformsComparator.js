@@ -25,7 +25,7 @@ Changes:
 import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
 import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 import thePlatformsReport from '../Reports/PlatformsReport.js';
-import OsmPlatformValidator from './OsmPlatformValidator.js';
+import OsmPlatformValidator from '../OsmValidators/OsmPlatformValidator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

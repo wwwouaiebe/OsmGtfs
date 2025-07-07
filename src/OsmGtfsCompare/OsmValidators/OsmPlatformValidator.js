@@ -22,7 +22,7 @@ Changes:
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
+import thePlatformsReport from '../Reports/PlatformsReport.js';
 import theOperator from '../../Common/Operator.js';
 import theStatsReport from '../Reports/StatsReport.js';
 import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
@@ -89,7 +89,8 @@ class OsmPlatformValidator {
 		thePlatformsReport.add (
 			'h2',
 			'Platform ' + this.#osmPlatform.name,
-			{ id : this.#osmPlatform.osmId, type : this.#osmPlatform.osmType, newTagValues : this.#newTagValues }
+			this.#osmPlatform,
+			this.#newTagValues
 		);
 		this.#errorsArray.forEach (
 			tmpError => {
@@ -168,7 +169,7 @@ class OsmPlatformValidator {
 
 		let haveErrors = false;
 		const gtfsNetworks = this.#gtfsPlatform.network.split ( ';' );
-		const osmNetworks = this.#osmPlatform.network.split ( ';' );
+		const osmNetworks = this.#osmPlatform.network ? this.#osmPlatform.network.split ( ';' ) : [];
 		const othersNetworks = [];
 
 		gtfsNetworks.forEach (
@@ -216,7 +217,8 @@ class OsmPlatformValidator {
 	 */
 
 	#validateOperator ( ) {
-		if ( -1 === this.#osmPlatform.operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
+		const operators = this.#osmPlatform.operator ? this.#osmPlatform.operator.split ( ';' ) : [];
+		if ( -1 === operators.indexOf ( theOperator.operator ) ) {
 			this.#errorsArray.push (
 				{
 					htmlTag : 'p',
@@ -226,11 +228,15 @@ class OsmPlatformValidator {
 			theStatsReport.addPlatformsErrorOperator ( );
 			this.#newTagValues.operator =
 				this.#osmPlatform.operator
-					.split ( ';' )
-					.concat ( [ theOperator.operator ] )
-					.sort ( ( first, second ) => first.localeCompare ( second ) )
-					.toString ( )
-					.replaceAll ( ',', ';' );
+					?
+					this.#osmPlatform.operator
+						.split ( ';' )
+						.concat ( [ theOperator.operator ] )
+						.sort ( ( first, second ) => first.localeCompare ( second ) )
+						.toString ( )
+						.replaceAll ( ',', ';' )
+					:
+					theOperator.operator;
 		}
 	}
 

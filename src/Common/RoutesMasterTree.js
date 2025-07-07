@@ -24,6 +24,7 @@ Changes:
 
 import RouteMaster from './RouteMaster.js';
 import ArrayHelper from './ArrayHelper.js';
+import theDocConfig from '../OsmGtfsCompare/interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -96,10 +97,13 @@ class RoutesMasterTree {
 	 */
 
 	buildFromJson ( jsonRoutesMasterTree ) {
+		this.#routesMaster = [];
 		for ( const jsonRouteMaster of jsonRoutesMasterTree.routesMaster ) {
-			const gtfsRouteMaster = new RouteMaster ( jsonRouteMaster );
-			gtfsRouteMaster.buildFromJson ( jsonRouteMaster );
-			this.#routesMaster.push ( gtfsRouteMaster );
+			if ( jsonRouteMaster.type === theDocConfig.gtfsType ) {
+				const gtfsRouteMaster = new RouteMaster ( jsonRouteMaster );
+				gtfsRouteMaster.buildFromJson ( jsonRouteMaster );
+				this.#routesMaster.push ( gtfsRouteMaster );
+			}
 		}
 	}
 
@@ -109,13 +113,13 @@ class RoutesMasterTree {
 	 */
 
 	async buildFromDb ( network ) {
+		this.#routesMaster = [];
 		const dbRoutesMaster = await this.#selectRoutesMasterFromDb ( network );
 		for ( const dbRouteMaster of dbRoutesMaster ) {
 			const gtfsRouteMaster = new RouteMaster ( dbRouteMaster );
 			await gtfsRouteMaster.buildFromDb ( network );
 			this.#routesMaster.push ( gtfsRouteMaster );
 		}
-		Object.freeze ( this.#routesMaster );
 	}
 
 	/**

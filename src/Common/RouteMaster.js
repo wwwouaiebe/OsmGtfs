@@ -113,6 +113,13 @@ class RouteMaster {
 	get osmId ( ) { return this.#osmId; }
 
 	/**
+	 * The osm type of the route master
+	 * @type {String}
+	 */
+
+	get osmType ( ) { return 'relation'; }
+
+	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route master.
 	 * @type {Object}
 	 */

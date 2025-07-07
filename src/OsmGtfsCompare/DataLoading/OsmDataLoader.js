@@ -84,7 +84,7 @@ class OsmDataLoader {
 	 */
 
 	#clear ( ) {
-		this.#osmRoutesMaster.splice ( 0 );
+		this.#osmRoutesMaster = [];
 		this.#osmNodes.clear ( );
 		this.#osmWays.clear ( );
 		this.#osmRoutes.clear ( );
@@ -92,10 +92,23 @@ class OsmDataLoader {
 	}
 
 	/**
-	 * Sort the route masters
+	 * Get the osm object ( = the object given by overpass) corresponding to a route master
+	 * @param {Number} osmId the osm id of the osm object
+	 * @returns {Object} The searched osm route master
 	 */
 
-	#sortRoutesMaster ( ) {
+	getRouteMaster ( osmId ) {
+		return ( this.#osmRoutesMaster.find ( element => element.id === osmId ) );
+	}
+
+	/**
+	 * Get the osm object ( = the object given by overpass) corresponding to a route
+	 * @param {Number} osmId the osm id of the osm object
+	 * @returns {Object} The searched osm route
+	 */
+
+	getRoute ( osmId ) {
+		return this.#osmRoutes.get ( osmId );
 	}
 
 	/**
@@ -130,7 +143,8 @@ class OsmDataLoader {
 					ref : osmRouteMaster?.tags.ref,
 					type : [ 'tram', 'subway', 'train', 'bus' ].indexOf ( osmRouteMaster?.tags?.route_master ),
 					routes : [],
-					osmId : osmRouteMaster.id
+					osmId : osmRouteMaster.id,
+					operator : osmRouteMaster?.tags?.operator
 				};
 				osmRouteMaster.members.forEach (
 					routeMasterMember => {
@@ -176,14 +190,10 @@ class OsmDataLoader {
 				case 'relation' :
 					switch ( element.tags.type ) {
 					case 'route_master' :
-					case 'proposed:route_master' :
-					case 'disused:route_master' :
 						Object.freeze ( element );
 						this.#osmRoutesMaster.push ( element );
 						break;
 					case 'route' :
-					case 'proposed:route' :
-					case 'disused:route' :
 						Object.freeze ( element );
 						this.#osmRoutes.set ( element.id, element );
 						break;
@@ -288,8 +298,8 @@ class OsmDataLoader {
 		let uri =
 			'https://lz4.overpass-api.de/api/interpreter?data=[out:json][timeout:40];' +
 			'rel["network"~"' + theDocConfig.network + '"]' +
-			'["' + ( 'used' === theDocConfig.type ? '' : theDocConfig.type + ':' ) + 'route"="' + theDocConfig.vehicle + '"]' +
-			'["type"="' + ( 'used' === theDocConfig.type ? '' : theDocConfig.type + ':' ) + 'route"]' +
+			'["route"="' + theDocConfig.vehicle + '"]' +
+			'["type"="route"]' +
 			( '' === theDocConfig.ref ? '' : '["ref"="' + theDocConfig.ref + '"]' ) +
 			'->.rou;(.rou <<; - .rou;); >> ->.rm;.rm out;';
 
