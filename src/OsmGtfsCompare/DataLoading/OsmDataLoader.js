@@ -151,6 +151,9 @@ class OsmDataLoader {
 						const osmRoute = this.#osmRoutes.get ( routeMasterMember.ref );
 						if ( osmRoute ) {
 							let route = {
+								name : osmRoute?.tags?.name,
+								from : osmRoute?.tags?.from,
+								to : osmRoute?.tags?.to,
 								platforms : [],
 								shapePk : null,
 								startDate : null,

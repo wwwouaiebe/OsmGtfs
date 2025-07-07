@@ -219,12 +219,13 @@ class RelationsReport extends Report {
 
 		// adding the osm id to the currentH2Div and currentDataDiv if an OSM object is present
 		if ( osmObject ) {
-			this.#currentH2Div = document.getElementById ( 'osm' + osmObject.id );
-			this.#currentDataDiv = document.getElementById ( 'osm' + osmObject.id + 'DataDiv' );
+			this.#currentH2Div = document.getElementById ( 'osm' + osmObject.osmId );
+			this.#currentDataDiv = document.getElementById ( 'osm' + osmObject.osmId + 'DataDiv' );
 		}
 		else {
 			this.#currentH2Div = null;
 		}
+
 		if ( ! this.#currentH2Div ) {
 
 			// creating the currentH2Div...
@@ -234,12 +235,10 @@ class RelationsReport extends Report {
 
 			// and the currentDataDiv
 			this.#currentDataDiv = document.createElement ( 'div' );
-			this.#currentH1Div.appendChild ( this.#currentDataDiv );
-			this.#currentDataDiv = document.createElement ( 'div' );
 			this.#currentH2Div.appendChild ( this.#currentDataDiv );
 			if ( osmObject ) {
-				this.#currentH2Div.id = 'osm' + osmObject.id;
-				this.#currentDataDiv.id = 'osm' + osmObject.id + 'DataDiv';
+				this.#currentH2Div.id = 'osm' + osmObject.osmId;
+				this.#currentDataDiv.id = 'osm' + osmObject.osmId + 'DataDiv';
 			}
 		}
 	}

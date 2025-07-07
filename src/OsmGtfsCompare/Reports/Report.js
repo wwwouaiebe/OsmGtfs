@@ -130,13 +130,6 @@ class Report {
 	 */
 
 	close ( ) {
-
-		// Add event listeners on josm buttons
-		const josmButtons = document.getElementsByClassName ( 'josmButton' );
-		for ( let counter = 0; counter < josmButtons.length; counter ++ ) {
-			josmButtons[ counter ].addEventListener ( 'click', new JosmButtonClickEL ( ) );
-		}
-
 	}
 }
 

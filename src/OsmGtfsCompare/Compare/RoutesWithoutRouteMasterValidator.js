@@ -51,8 +51,10 @@ class RoutesWithoutRouteMasterValidator {
 				element => {
 					theRelationsReport.add (
 						'p',
-						'Error M001: route wihout route_master ' + theRelationsReport.getOsmLink ( element ),
-						element
+						'Error M001: route wihout route_master ' +
+						( element.tags.name ?? '' ) +
+						theRelationsReport.getOsmLink ( element ),
+						{ osmId : element.id, osmType : element.type }
 					);
 				}
 			);
@@ -60,7 +62,7 @@ class RoutesWithoutRouteMasterValidator {
 	}
 
 	/**
-	 * fetch data from the overpass-api or the dev data
+	 * fetch data from the dev data
 	 * @param {String} uri The uri to use for fetching
 	 */
 
@@ -114,7 +116,7 @@ class RoutesWithoutRouteMasterValidator {
 	}
 
 	/**
-	* fetch the data from overpass-api
+	* fetch the data from overpass-api or the dev data
 	 */
 
 	 async fetchData ( ) {

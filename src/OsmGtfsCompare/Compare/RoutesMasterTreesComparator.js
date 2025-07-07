@@ -28,6 +28,7 @@ import theOsmRoutesMasterTree from '../DataLoading/OsmRoutesMasterTree.js';
 import theRelationsReport from '../Reports/RelationsReport.js';
 import OsmRouteMasterValidator from '../OsmValidators/OsmRouteMasterValidator.js';
 import theDocConfig from '../interface/DocConfig.js';
+import RouteMasterComparator from './RouteMasterComparator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -144,7 +145,7 @@ class RoutesMasterTreesComparator {
 					// and start the validation of the route master
 					new OsmRouteMasterValidator ( ).validate ( osmRouteMaster );
 
-					// new RouteMasterComparator.compare ( gtfsRouteMaster, osmRouteMaster );
+					new RouteMasterComparator ( ).compare ( gtfsRouteMaster, osmRouteMaster );
 				}
 			}
 		);

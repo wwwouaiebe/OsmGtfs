@@ -159,6 +159,13 @@ class Route {
 	get osmId ( ) { return this.#osmId; }
 
 	/**
+	 * The osm type of the route master
+	 * @type {String}
+	 */
+
+	get osmType ( ) { return 'relation'; }
+
+	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route.
 	 * @type {Object}
 	 */
@@ -240,6 +247,9 @@ class Route {
 		this.#nodes = jsonRoute.nodes;
 		this.#platforms = jsonRoute.platforms;
 		this.#osmId = jsonRoute.osmId;
+		this.#name = jsonRoute.name;
+		this.#from = jsonRoute.from;
+		this.#to = jsonRoute.to;
 	}
 
 	/**
