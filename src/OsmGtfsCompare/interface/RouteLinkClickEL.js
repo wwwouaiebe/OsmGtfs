@@ -23,46 +23,17 @@ Doc reviewed 20250126
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theGtfsRoutesMasterTree from '../DataLoading/GtfsRoutesMasterTree.js';
-import GpxFactory from '../Gpx/GpxFactory.js';
-
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * Simple event handler for click on the Download gpx
+ * Simple event handler for click on the route link
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class GpxButtonClickEL {
+class RouteLinkClickEL {
 
 	/**
-	 * Search a route identified by the unique identifier in the GTFS data
-	 * @param {String} shapePk The unique identifier if the route given by mySql
-	 */
-
-	#getRouteFromShapePk ( shapePk ) {
-
-		// parsing to number because data in the button dataset are always string
-		const iShapePk = Number.parseInt ( shapePk );
-		let returnRoute = null;
-
-		theGtfsRoutesMasterTree.routesMaster.forEach (
-			routeMaster => {
-				routeMaster.routes.forEach (
-					route => {
-						if ( route.shapePk === iShapePk ) {
-							returnRoute = route;
-						}
-					}
-				);
-			}
-		);
-
-		return returnRoute;
-	}
-
-	/**
-	 * The constructor
-	 */
+     * The constructor
+     */
 
 	constructor ( ) {
 		Object.freeze ( this );
@@ -74,18 +45,12 @@ class GpxButtonClickEL {
 	 */
 
 	handleEvent ( clickEvent ) {
-
-		// set the button as visited
-		clickEvent.target.classList.add ( 'gpxButtonVisited' );
-
-		// Building the gtfs file
-		new GpxFactory ( ).buildGpx (
-			this.#getRouteFromShapePk ( clickEvent.target.dataset.shapePk ),
-			clickEvent.target.dataset.fileName
+		document.getElementById ( clickEvent.target.dataset.routeMasterLinkDiv ).scrollIntoView (
+			{ behavior : 'smooth', block : 'center' }
 		);
 	}
 }
 
-export default GpxButtonClickEL;
+export default RouteLinkClickEL;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

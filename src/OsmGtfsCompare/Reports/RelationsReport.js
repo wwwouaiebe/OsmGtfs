@@ -26,6 +26,7 @@ Doc reviewed 20250124
 import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
 import JosmButtonClickEL from '../interface/JosmButtonClickEL.js';
 import GpxButtonClickEL from '../interface/GpxButtonClickEL.js';
+import RouteLinkClickEL from '../interface/RouteLinkClickEL.js';
 import theDocConfig from '../interface/DocConfig.js';
 import Report from '../Reports/Report.js';
 
@@ -137,6 +138,11 @@ class RelationsReport extends Report {
 			gpxButtons[ counter ].addEventListener ( 'click', new GpxButtonClickEL ( ) );
 		}
 
+		const busShortcuts = document.getElementsByClassName ( 'busShortcutAnchor' );
+		for ( let counter = 0; counter < busShortcuts.length; counter ++ ) {
+			busShortcuts[ counter ].addEventListener ( 'click', new RouteLinkClickEL ( ) );
+		}
+
 		// Hidding the animation
 		document.getElementById ( 'waitAnimation' ).style.visibility = 'hidden';
 
@@ -149,6 +155,10 @@ class RelationsReport extends Report {
 	open ( ) {
 
 		super.open ( );
+
+		while ( this.#routesLinksdiv.firstChild ) {
+			this.#routesLinksdiv.removeChild ( this.#routesLinksdiv.firstChild );
+		}
 
 		// show the animation
 		document.getElementById ( 'waitAnimation' ).style.visibility = 'visible';
@@ -169,10 +179,10 @@ class RelationsReport extends Report {
 			this.#currentH1Div = document.getElementById ( 'osm' + osmObject.osmIid );
 			this.#currentDataDiv = document.getElementById ( 'osm' + osmObject.osmIid + 'DataDiv' );
 
-			let routeLink = document.createElement ( 'a' );
+			let routeLink = document.createElement ( 'span' );
 			routeLink.classList.add ( 'busShortcutAnchor' );
 			routeLink.innerText = osmObject.ref + ' ';
-			routeLink.href = '#osm' + osmObject.osmId;
+			routeLink.dataset.routeMasterLinkDiv = 'osm' + osmObject.osmId;
 			this.#routesLinksdiv.appendChild ( routeLink );
 		}
 		else {

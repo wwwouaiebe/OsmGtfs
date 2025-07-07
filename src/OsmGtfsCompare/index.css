@@ -221,6 +221,16 @@ label {
 	background-color: gray;
 }
 
+.busShortcutAnchor {
+	color : blue;
+	text-decoration: underline;
+}
+
+.busShortcutAnchor:hover {
+	cursor: pointer;
+	color: red;
+}
+
 #cyDarkLight {
 	margin-left: 2em;;
 }
