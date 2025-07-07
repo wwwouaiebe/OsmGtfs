@@ -135,9 +135,10 @@ class RoutesMasterTreesComparator {
 					theRelationsReport.add (
 						'h1',
 						'Route master : ' +
-							theDocConfig.vehicle +
+							theDocConfig.vehicle + ' ' +
 							( osmRouteMaster.ref ?? '' ) + ' ' +
-							( osmRouteMaster.description ?? '' ) + ' '
+							( osmRouteMaster.description ?? '' ) + ' ',
+						osmRouteMaster
  					);
 
 					// and start the validation of the route master
@@ -220,7 +221,8 @@ class RoutesMasterTreesComparator {
 				unknownOsmRouteMaster => {
 					theRelationsReport.add (
 						'p',
-						unknownOsmRouteMaster.ref + ' ' + unknownOsmRouteMaster.description
+						( unknownOsmRouteMaster.ref ?? '' ) + ' ' + ( unknownOsmRouteMaster.description ?? '' ),
+						unknownOsmRouteMaster
 					);
 				}
 			);

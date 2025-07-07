@@ -28,7 +28,6 @@ import JosmButtonClickEL from '../interface/JosmButtonClickEL.js';
 import GpxButtonClickEL from '../interface/GpxButtonClickEL.js';
 import theDocConfig from '../interface/DocConfig.js';
 import Report from '../Reports/Report.js';
-import theStatsReport from './StatsReport.js';
 
 /*
 Structure of the report:
@@ -104,6 +103,13 @@ class RelationsReport extends Report {
 	#currentHTMLElement = null;
 
 	/**
+	 * A reference to the route links HTMLElement
+	 * @type {HTMLElement}
+	 */
+
+	#routesLinksdiv = document.getElementById ( 'routesLinks' );
+
+	/**
 	 * The constructor
 	 */
 
@@ -130,21 +136,6 @@ class RelationsReport extends Report {
 		for ( let counter = 0; counter < gpxButtons.length; counter ++ ) {
 			gpxButtons[ counter ].addEventListener ( 'click', new GpxButtonClickEL ( ) );
 		}
-
-		// adding bus shortcuts
-		let routesLinksdiv = document.getElementById ( 'routesLinks' );
-
-		/*
-		theOsmDataLoader.routeMasters.forEach (
-			routeMaster => {
-				let routeLink = document.createElement ( 'a' );
-				routeLink.classList.add ( 'busShortcutAnchor' );
-				routeLink.innerText = routeMaster.tags.ref + ' ';
-				routeLink.href = '#osm' + routeMaster.id;
-				routesLinksdiv.appendChild ( routeLink );
-			}
-		);
-		*/
 
 		// Hidding the animation
 		document.getElementById ( 'waitAnimation' ).style.visibility = 'hidden';
@@ -175,12 +166,20 @@ class RelationsReport extends Report {
 
 		// adding the osm id to the currentH1Div and currentDataDiv if an OSM object is present
 		if ( osmObject ) {
-			this.#currentH1Div = document.getElementById ( 'osm' + osmObject.id );
-			this.#currentDataDiv = document.getElementById ( 'osm' + osmObject.id + 'DataDiv' );
+			this.#currentH1Div = document.getElementById ( 'osm' + osmObject.osmIid );
+			this.#currentDataDiv = document.getElementById ( 'osm' + osmObject.osmIid + 'DataDiv' );
+
+			let routeLink = document.createElement ( 'a' );
+			routeLink.classList.add ( 'busShortcutAnchor' );
+			routeLink.innerText = osmObject.ref + ' ';
+			routeLink.href = '#osm' + osmObject.osmId;
+			this.#routesLinksdiv.appendChild ( routeLink );
 		}
 		else {
 			this.#currentH1Div = null;
+			this.#currentH2Div = null;
 		}
+
 		if ( ! this.#currentH1Div ) {
 
 			// creating the currentH1Div...
@@ -192,8 +191,8 @@ class RelationsReport extends Report {
 			this.#currentDataDiv = document.createElement ( 'div' );
 			this.#currentH1Div.appendChild ( this.#currentDataDiv );
 			if ( osmObject ) {
-				this.#currentH1Div.id = 'osm' + osmObject.id;
-				this.#currentDataDiv.id = 'osm' + osmObject.id + 'DataDiv';
+				this.#currentH1Div.id = 'osm' + osmObject.osmId;
+				this.#currentDataDiv.id = 'osm' + osmObject.osmId + 'DataDiv';
 			}
 		}
 
@@ -240,11 +239,9 @@ class RelationsReport extends Report {
 	 * @param {String} htmlTag The HTML tag to add (h1, h2, h3 or p)
 	 * @param {String} text The text to add in the HTMLElement
 	 * @param {Object} osmObject an OSM object to add as a link or a JOSM buton in the HTMLElement
-	 * @param {Number} shapePk A unique identifier given to a GTFS route and coming from mySQL db
 	 */
 
-	// eslint-disable-next-line max-params
-	add ( htmlTag, text, osmObject, shapePk ) {
+	add ( htmlTag, text, osmObject ) {
 
 		// creation of the HTMLElement
 		this.#currentHTMLElement = document.createElement ( htmlTag );
@@ -268,15 +265,8 @@ class RelationsReport extends Report {
 
 		// Adding text in the HTMLElement
 		this.#currentHTMLElement.innerHTML =
-
-			// gpx button
-			// this.#getGpxDownload ( shapePk ) +
 			text +
-
-			// OSM link
 			this.getOsmLink ( osmObject ) +
-
-			// JOSM button
 			this.getJosmEdit ( osmObject );
 
 		// Adding the isError class
@@ -317,21 +307,6 @@ class RelationsReport extends Report {
 				this.#currentH1Div.classList.add ( 'haveErrors' );
 			}
 		}
-	}
-
-	addRouteMasterHeading ( routeMaster ) {
-		this.#currentH1Div = document.createElement ( 'div' );
-		this.#currentH1Div.id = 'OSM' + routeMaster.osmId;
-		this.report.appendChild ( this.#currentH1Div );
-		const h1Element = document.createElement ( 'h1' );
-		h1Element.innerHTML =
-			'Route master : ' +
-			theDocConfig.vehicle +
-			( routeMaster.ref ?? '' ) + ' ' +
-			( routeMaster.description ?? '' ) + ' ' +
-			this.getOsmLink ( routeMaster ) +
-			this.getJosmEdit ( routeMaster );
-		this.#currentH1Div.appendChild ( h1Element );
 	}
 
 	/**
@@ -388,15 +363,15 @@ class RelationsReport extends Report {
 
 	/**
 	 * Add a p htmlElement with a gpx download button and the gpx file name
-	 * @param {*} routeMaster
-	 * @param {*} route
+	 * @param {RouteMaster} routeMaster the route master having the route as member
+	 * @param {Route} route for witch the gpx file must be created
 	 */
 
 	addGpxRoute ( routeMaster, route ) {
 		const gpxRouteName = this.#getGpxRouteName ( routeMaster, route );
 		const pElement = document.createElement ( 'p' );
 		pElement.innerHTML = this.#getGpxDownloadButton ( route.shapePk, gpxRouteName ) + gpxRouteName;
-		this.report.appendChild ( pElement );
+		this.#currentDataDiv.appendChild ( pElement );
 	}
 
 }

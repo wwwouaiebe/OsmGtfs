@@ -51,6 +51,7 @@ class Report {
 	/**
 	 * Return an HTML string with a "JOSM" button
 	 * @param {?Object} osmObject The OSM object for witch the button must be created
+	 * @param {?Object} newTagValues The new values for the tag of the osm object
 	 * @returns {String} a HTML string with an ButtonHTMLElement or an empty string when the osmObject is null
 	 */
 
@@ -99,15 +100,14 @@ class Report {
 	 * @param {String} htmlTag the type of the HTML element to add
 	 * @param {String} text the text to add in the HTML element
 	 * @param {?Object} osmObject an OSM object linked to the error to add in the report
+	 * @param {?Object} newTagValues The new values for the tag of the osm object
 	 */
-
+	/* eslint-disable-next-line max-params */
 	add ( htmlTag, text, osmObject, newTagValues ) {
 		let htmlElement = document.createElement ( htmlTag );
 		htmlElement.innerHTML =
-
             text +
-
-			// JOSM button
+			this.getOsmLink ( osmObject ) +
 			this.getJosmEdit ( osmObject, newTagValues );
 
 		this.report.appendChild ( htmlElement );
@@ -141,3 +141,5 @@ class Report {
 }
 
 export default Report;
+
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

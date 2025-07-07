@@ -65,6 +65,52 @@ class OsmPlatforms {
 	}
 
 	/**
+	 * Build an object with platform properties needed for the comparison from an osmPlatform
+	 * @param {Object} osmPlatform
+	 * @returns {Object} the platform properties
+	 */
+
+	#buildPlatformProperties ( osmPlatform ) {
+		let platformProperties = {};
+		if ( osmPlatform?.tags?.bus ) {
+			platformProperties.type = 3;
+		}
+		else if ( osmPlatform?.tags?.tram ) {
+			platformProperties.type = 0;
+		}
+		else if ( osmPlatform?.tags?.subway ) {
+			platformProperties.type = 1;
+		}
+		platformProperties.fixme = osmPlatform?.tags?.fixme;
+		platformProperties.lat = osmPlatform.lat;
+		platformProperties.lon = osmPlatform.lon;
+		platformProperties.name = osmPlatform?.tags?.name;
+		platformProperties.nameOperator = osmPlatform?.tags [ 'name:operator:' + theOperator.operator ];
+		platformProperties.network = osmPlatform?.tags?.network;
+		platformProperties.operator = osmPlatform?.tags?.operator;
+		platformProperties.zone = osmPlatform?.tags [ 'zone:' + theOperator.operator ];
+		platformProperties.osmId = osmPlatform.id;
+		platformProperties.osmType = osmPlatform.type;
+
+		platformProperties.routeRefs = {};
+		platformProperties.osmRefs = {};
+		theOperator.networks.forEach (
+			network => {
+				const routeRef = osmPlatform?.tags [ 'route_ref:' + network.osmNetwork ];
+				if ( routeRef ) {
+					platformProperties.routeRefs [ network.osmNetwork ] = routeRef;
+				}
+				const osmRef = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
+				if ( osmRef ) {
+					platformProperties.osmRefs [ network.osmNetwork ] = osmRef;
+				}
+			}
+		);
+
+		return platformProperties;
+	}
+
+	/**
 	 * load the data coming from a overpass request
 	 * @param {Array.<Object>} osmPlatforms
 	 */
@@ -74,42 +120,7 @@ class OsmPlatforms {
 		this.platformsWithMore1ref.clear ( );
 		osmPlatforms.forEach (
 			osmPlatform => {
-				let platformProperties = {};
-				if ( osmPlatform?.tags?.bus ) {
-					platformProperties.type = 3;
-				}
-				else if ( osmPlatform?.tags?.tram ) {
-					platformProperties.type = 0;
-				}
-				else if ( osmPlatform?.tags?.subway ) {
-					platformProperties.type = 1;
-				}
-				platformProperties.fixme = osmPlatform?.tags?.fixme;
-				platformProperties.lat = osmPlatform.lat;
-				platformProperties.lon = osmPlatform.lon;
-				platformProperties.name = osmPlatform?.tags?.name;
-				platformProperties.nameOperator = osmPlatform?.tags [ 'name:operator:' + theOperator.operator ];
-				platformProperties.network = osmPlatform?.tags?.network;
-				platformProperties.operator = osmPlatform?.tags?.operator;
-				platformProperties.zone = osmPlatform?.tags [ 'zone:' + theOperator.operator ];
-				platformProperties.osmId = osmPlatform.id;
-				platformProperties.osmType = osmPlatform.type;
-
-				platformProperties.routeRefs = {};
-				platformProperties.osmRefs = {};
-				theOperator.networks.forEach (
-					network => {
-						const routeRef = osmPlatform?.tags [ 'route_ref:' + network.osmNetwork ];
-						if ( routeRef ) {
-							platformProperties.routeRefs [ network.osmNetwork ] = routeRef;
-						}
-						const osmRef = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
-						if ( osmRef ) {
-							platformProperties.osmRefs [ network.osmNetwork ] = osmRef;
-						}
-					}
-				);
-
+				let platformProperties = this.#buildPlatformProperties ( osmPlatform );
 				let refsCounter = 0;
 				let newPlatform = null;
 				Object.values ( platformProperties.osmRefs ) .forEach (
@@ -124,7 +135,6 @@ class OsmPlatforms {
 						);
 					}
 				);
-
 				if ( 1 < refsCounter ) {
 					this.platformsWithMore1ref.set ( newPlatform.osmId, newPlatform );
 				}
