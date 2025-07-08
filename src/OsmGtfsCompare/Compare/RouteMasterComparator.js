@@ -25,6 +25,7 @@ Doc reviewed 20250126
 
 import theRelationsReport from '../Reports/RelationsReport.js';
 import OsmRouteValidator from '../OsmValidators/OsmRouteValidator.js';
+import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -33,6 +34,8 @@ import OsmRouteValidator from '../OsmValidators/OsmRouteValidator.js';
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 class RouteMasterComparator {
+
+	#matchScoresTable = {};
 
    	/**
 	 * The compared GTFS route_master
@@ -48,11 +51,95 @@ class RouteMasterComparator {
 
 	#osmRouteMaster;
 
+	#isSamePlatform ( firstPlatformRef, secondPlatformRef ) {
+		if ( firstPlatformRef === secondPlatformRef ) {
+			return true
+		}
+		const firstPlatformOsmId = theOsmPlatforms.getPlatform ( firstPlatformRef )?.id;
+		const secondPlatformOsmId = theOsmPlatforms.getPlatform ( secondPlatformRef )?.id;
+		return firstPlatformOsmId && secondPlatformOsmId && firstPlatformOsmId === secondPlatformOsmId;
+	}
+
+	#areEqual ( osmRoute, gtfsRoute ) {
+		let areEqual = osmRoute.platforms.toString ( ) === gtfsRoute.platforms.toString ( );
+		if (! areEqual ) {
+			if ( osmRoute.platforms.length === gtfsRoute.platforms.length ) {
+				areEqual = true;
+				for (let platformsCounter = 0; platformsCounter < osmRoute.platforms.length; platformsCounter ++ ) {
+					areEqual &= this.#isSamePlatform ( 
+						gtfsRoute.platforms [ platformsCounter], 
+						gtfsRoute.platforms [ platformsCounter ] 
+					);
+				}
+			}
+		}
+
+		return areEqual;
+	}
+
+	#haveSameFromEndPlatforms ( osmRoute, gtfsRoute ){
+		return ( 
+			this.#isSamePlatform ( osmRoute.platforms [ 0 ], gtfsRoute.platforms [ 0 ] )
+			&&
+			this.#isSamePlatform (
+				osmRoute.platforms [ osmRoute.platforms.length - 1 ],
+				gtfsRoute.platforms [ gtfsRoute.platforms.length - 1 ]
+			)
+		);
+	}
+
+	#areSimilar ( first, second ) {
+		return first.substring ( first.length -1, 0 ) === second.substring ( second.length - 1, 0 );
+	}
+
+	#haveSimilarFromEndPlatforms ( osmRoute, gtfsRoute ) {
+		return (
+			this.#areSimilar ( osmRoute.platforms [ 0 ], gtfsRoute.platforms [ 0 ] )
+			&&
+			this.#areSimilar ( 
+				osmRoute.platforms [ osmRoute.platforms.length - 1 ], 
+				gtfsRoute.platforms [ gtfsRoute.platforms.length - 1 ]
+			)
+		);
+	}
+
+	#computeMatchScore ( osmRoute, gtfsRoute ){
+		if ( this.#areEqual ( osmRoute, gtfsRoute ) ) {
+			return 3;
+		}
+		if ( this.#haveSameFromEndPlatforms ( osmRoute, gtfsRoute ) ) {
+			return 2;
+		}
+		if ( this.#haveSimilarFromEndPlatforms (osmRoute, gtfsRoute ) )	{
+			return 1;
+		}
+
+		return 0;
+
+	}
+
+	#buildMatchScoresTable (  ) {
+		this.#osmRouteMaster.routes.forEach (
+			osmRoute => {
+				this.#matchScoresTable [ osmRoute.osmId ] = {};
+				this.#matchScoresTable [ osmRoute.osmId ].scores = {};
+				this.#gtfsRouteMaster.routes.forEach (
+					gtfsRoute => {
+						this.#matchScoresTable [ osmRoute.osmId ].scores [ gtfsRoute.shapePk] =
+							this.#computeMatchScore  (osmRoute, gtfsRoute);
+					}
+				);
+			}
+		);
+	}
+
     	/**
 	 * Compare the routes linked to the route_master
 	 */
 
 	#compareRoutes ( ) {
+
+		this.#buildMatchScoresTable ( );
 
 		// loop on the osm routes
 		this.#osmRouteMaster.routes.forEach (
@@ -67,7 +154,9 @@ class RouteMasterComparator {
 				new OsmRouteValidator ( ).validate ( osmRoute );
 
 				theRelationsReport.add ( 'h3', 'GTFS comparison results for route' );
-
+				
+				const matchScores = Object.entries ( this.#matchScoresTable [ osmRoute.osmId ] );
+				console.log ( matchScores );
 				// starting to compare the platforms
 				// this.#comparePlatformsHight ( osmRoute );
 			}
