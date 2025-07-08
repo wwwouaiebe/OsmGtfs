@@ -26,7 +26,38 @@
 			"osmNetwork" : "TECL",
 			"gtfsAgencyId" : "L",
 			"gtfsAgencyName" : "TEC Liège - Verviers",
-			"gtfsIdPrefix" : "L"
+			"gtfsIdPrefix" : "L",
+			"excludeList" : {
+				"gtfs" : {
+					"excludedPlatforms" : [
+						{
+							"ref" : "Lladete3",
+							"name" : "Lantin Centre de Détention",
+							"reason" : "Not possible to find this platform on the field"
+						},
+						{
+							"ref" : "LLrc1652",
+							"name" : "LA REID Rue du Canada 165",
+							"reason" : "Not possible to find this platform on the field"
+						},
+						{
+							"ref" : "LLrc1992",
+							"name" : " LA REID Rue du Canada 199",
+							"reason" : "Not possible to find this platform on the field"
+						},
+						{
+							"ref" : "LLrcour2",
+							"name" : " LA REID Les Cours",
+							"reason" : "Not possible to find this platform on the field"
+						},
+						{
+							"ref" : "Lseserv2",
+							"name" : " SERAING Rue M. Servet ",
+							"reason" : "Not possible to find this platform on the field"
+						}
+					]
+				}
+			}
 		},
 		{
 			"osmNetwork" : "TECN",

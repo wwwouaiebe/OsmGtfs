@@ -256,7 +256,12 @@ class Route {
 	 * Complete the route object with the nodes and platforms from the gtfs db
 	 */
 
-	async buildFromDb ( ) {
+	async buildFromDb ( network ) {
+
+		let excludeList = [];
+		if ( network?.excludeList?.gtfs?.excludedPlatforms ) {
+			excludeList = Array.from ( network.excludeList.gtfs.excludedPlatforms, excludedPlatform => excludedPlatform.ref );
+		}
 
 		// nodes
 		this.#nodes = await this.#selectNodesFromDb ( this.#shapePk );
@@ -265,7 +270,11 @@ class Route {
 		const dbPlatforms = await this.#selectPlatformsFromDb ( this.#shapePk );
 		let previousPlatformRef = '';
 		for ( const dbPlatform of dbPlatforms ) {
-			if ( previousPlatformRef !== dbPlatform.ref ) {
+			if (
+				previousPlatformRef !== dbPlatform.ref
+				&&
+				! excludeList.includes ( dbPlatform.ref )
+			) {
 				this.#platforms.push ( dbPlatform.ref );
 				previousPlatformRef = dbPlatform.ref;
 			}

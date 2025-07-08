@@ -122,7 +122,7 @@ class OsmDataLoader {
 		for ( const network of theOperator.networks ) {
 			let platformRef = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
 			if ( platformRef ) {
-				platformRefs += platformRef + ';';
+				platformRefs += platformRef.split ( ';' ) [ 0 ] + ';';
 			}
 		}
 		return platformRefs.slice ( 0, -1 );
@@ -165,7 +165,11 @@ class OsmDataLoader {
 								routeMember => {
 									const osmPlatform = this.#osmPlatforms.get ( routeMember.ref );
 									if ( osmPlatform && -1 !== this.#platformRoles.indexOf ( routeMember.role )	) {
-										route.platforms.push ( this.#getOperatorPlatformRef ( osmPlatform ) );
+
+										// route.platforms.push ( this.#getOperatorPlatformRef ( osmPlatform ) );
+										route.platforms.push (
+											this.#getOperatorPlatformRef ( osmPlatform ).split ( ';' ) [ 0 ]
+										);
 									}
 								}
 							);
