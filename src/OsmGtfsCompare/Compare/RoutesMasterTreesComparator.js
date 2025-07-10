@@ -29,6 +29,7 @@ import theRelationsReport from '../Reports/RelationsReport.js';
 import OsmRouteMasterValidator from '../OsmValidators/OsmRouteMasterValidator.js';
 import theDocConfig from '../interface/DocConfig.js';
 import RouteMasterComparator from './RouteMasterComparator.js';
+import theStatsReport from '../Reports/StatsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -190,12 +191,17 @@ class RoutesMasterTreesComparator {
 					// heading
 					theRelationsReport.add (
 						'h2',
-						'gtfs route : ' + gtfsRouteMaster.ref + ' ' + gtfsRouteMaster.description
+						'gtfs route : ' +
+						theDocConfig.vehicle.slice ( 0, 1 ).toUpperCase ( ) + theDocConfig.vehicle.slice ( 1 ) + ' ' +
+						gtfsRouteMaster.ref + ' ' + gtfsRouteMaster.description
 					);
 
 					// loop on the routes attached to the route master and adding a gpx button to the report
 					gtfsRouteMaster.routes.forEach (
-						route => { theRelationsReport.addGpxRoute ( gtfsRouteMaster, route ); }
+						route => {
+							theRelationsReport.addGpxRoute ( gtfsRouteMaster, route, '🔴' );
+							theStatsReport.addRouteToDo ( );
+						}
 					);
 				}
 			);

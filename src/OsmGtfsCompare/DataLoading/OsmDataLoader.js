@@ -177,6 +177,9 @@ class OsmDataLoader {
 						}
 					}
 				);
+				routeMaster.routes.sort (
+					( first, second ) => first.name.localeCompare ( second.name )
+				);
 				routesMasterTree.routesMaster.push ( routeMaster );
 			}
 		);

@@ -52,7 +52,7 @@ class StatsReport extends Report {
 			fixme : 0
 		},
 		routes : {
-			doneNotOk : 0,
+			doneError : 0,
 			doneOk : 0,
 			toDo : 0,
 			validationErrors : 0,
@@ -146,15 +146,15 @@ class StatsReport extends Report {
 	 */
 
 	addRouteDoneOk ( ) {
-		this.#stats.doneOk ++;
+		this.#stats.routes.doneOk ++;
 	}
 
 	/**
 	 * Increment the doneOk value of the stats
 	 */
 
-	addRouteDoneNotOk ( ) {
-		this.#stats.doneNotOk ++;
+	addRouteDoneError ( ) {
+		this.#stats.routes.doneError ++;
 	}
 
 	/**
@@ -163,7 +163,7 @@ class StatsReport extends Report {
 	 */
 
 	addRouteToDo ( quantity ) {
-		this.#stats.toDo += quantity;
+		this.#stats.routes.toDo += quantity ? quantity : 1;
 	}
 
 	/**
@@ -171,7 +171,7 @@ class StatsReport extends Report {
 	 */
 
 	addRouteValidationError ( ) {
-		this.#stats.validationErrors ++;
+		this.#stats.routes.validationErrors ++;
 	}
 
 	/**
@@ -179,7 +179,7 @@ class StatsReport extends Report {
 	 */
 
 	addRouteValidationWarning ( ) {
-		this.#stats.validationWarnings ++;
+		this.#stats.routes.validationWarnings ++;
 	}
 
 	/**
@@ -287,7 +287,7 @@ class StatsReport extends Report {
 		this.add ( 'p', 'Validation warnings on routes master nice to fix: ' + this.#stats.routesMaster.warnings );
 		this.add ( 'h2', 'Routes' );
 		this.add ( 'p', 'Osm route relations done and aligned on GTFS files: ' + this.#stats.routes.doneOk );
-		this.add ( 'p', 'Osm route relations done but not aligned on GTFS files: ' + this.#stats.routes.doneNotOk );
+		this.add ( 'p', 'Osm route relations done but not aligned on GTFS files: ' + this.#stats.routes.doneError );
 		this.add ( 'p', 'Osm route relations todo: ' + this.#stats.routes.toDo );
 		this.add ( 'p', 'Validation errors on routes to fix: ' + this.#stats.routes.validationErrors );
 		this.add ( 'p', 'Validation warnings on routes nice to fix: ' + this.#stats.routes.validationWarnings );

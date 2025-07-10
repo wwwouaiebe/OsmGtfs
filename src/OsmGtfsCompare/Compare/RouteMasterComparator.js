@@ -27,6 +27,7 @@ import theRelationsReport from '../Reports/RelationsReport.js';
 import OsmRouteValidator from '../OsmValidators/OsmRouteValidator.js';
 import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
+import theStatsReport from '../Reports/StatsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -56,6 +57,13 @@ class RouteMasterComparator {
 	 */
 
 	#matchScoresTable = {};
+
+	/**
+	 * A list of the shapePk of the gtfs routes that have matched with an osm route
+	 * @type {Array.<String>}
+	 */
+
+	#matchedGtfsRoutes = [];
 
 	/**
 	 * A static object with scores given to the comparison of platforms for an osm route and a gtfs route
@@ -169,6 +177,18 @@ class RouteMasterComparator {
 	}
 
 	/**
+	 * Add a matched gtfs route to the list
+	 * @param {Number}  shapePk the shapePk of the route
+	 *
+	 */
+
+	#addToMatchedGtfsRoute ( shapePk ) {
+		if ( -1 === this.#matchedGtfsRoutes.indexOf ( shapePk ) ) {
+			this.#matchedGtfsRoutes.push ( shapePk );
+		}
+	}
+
+	/**
 	 * Compute the match score betwwen an osm route and a gtfs route
 	 * @param {Route} osmRoute the osm route
 	 * @param {Route} gtfsRoute thr gtfs route
@@ -177,12 +197,15 @@ class RouteMasterComparator {
 
 	#computeMatchScore ( osmRoute, gtfsRoute ) {
 		if ( this.#haveSamePlatforms ( osmRoute, gtfsRoute ) ) {
+			this.#addToMatchedGtfsRoute ( gtfsRoute.shapePk );
 			return RouteMasterComparator.#matchScore.haveSamePlatforms;
 		}
 		if ( this.#haveSameFromEndPlatforms ( osmRoute, gtfsRoute ) ) {
+			this.#addToMatchedGtfsRoute ( gtfsRoute.shapePk );
 			return RouteMasterComparator.#matchScore.haveSameFromEndPlatforms;
 		}
 		if ( this.#haveSimilarFromEndPlatforms ( osmRoute, gtfsRoute ) )	{
+			this.#addToMatchedGtfsRoute ( gtfsRoute.shapePk );
 			return RouteMasterComparator.#matchScore.haveSimilarFromEndPlatforms;
 		}
 
@@ -369,6 +392,7 @@ class RouteMasterComparator {
 			)
 		);
 		this.#reportMatchScores ( matchScores );
+		theStatsReport.addRouteDoneOk ( );
 	}
 
 	/**
@@ -390,6 +414,7 @@ class RouteMasterComparator {
 			)
 		);
 		this.#reportMatchScores ( matchScores, osmRoute );
+		theStatsReport.addRouteDoneError ( );
 	}
 
 	/**
@@ -412,6 +437,7 @@ class RouteMasterComparator {
 			)
 		);
 		this.#reportMatchScores ( matchScores, osmRoute );
+		theStatsReport.addRouteDoneError ( );
 	}
 
 	/**
@@ -490,6 +516,50 @@ class RouteMasterComparator {
 	}
 
 	/**
+	 * Add to the report the gtfs routes that don't matches an osm route
+	 */
+
+	#reportNotMatchedGtfsRoutes ( ) {
+		if ( this.#matchedGtfsRoutes.length === this.#gtfsRouteMaster.routes.length ) {
+			return;
+		}
+
+		theRelationsReport.add ( 'h3', 'gtfs routes not found in the osm data' );
+		this.#gtfsRouteMaster.routes.forEach (
+			gtfsRoute => {
+				if ( ! this.#matchedGtfsRoutes.find ( element => element.shapePk === gtfsRoute.shapePk ) ) {
+					const gtfsRoutesPartOfOsmRoute = [];
+					this.#osmRouteMaster.routes.forEach (
+						osmRoute => {
+							if ( osmRoute.platforms.toString ( ). match ( gtfsRoute.platforms.toString ( ) ) ) {
+								gtfsRoutesPartOfOsmRoute.push ( [ gtfsRoute, osmRoute ] );
+							}
+						}
+					);
+
+					// const startPlatform = theGtfsPlatforms.getPlatform ( route.platforms [ 0 ] );
+					// const lastPlatform = theGtfsPlatforms.getPlatform ( route.platforms.slice ( -1 ) [ 0 ] );
+
+					theRelationsReport.addGpxRoute (
+						this.#gtfsRouteMaster,
+						gtfsRoute,
+						0 === gtfsRoutesPartOfOsmRoute.length ? '🔴' : '🟣'
+					);
+					gtfsRoutesPartOfOsmRoute.forEach (
+						gtfsRoutePart => {
+							theRelationsReport.add (
+								'p',
+								'This route is a part of ' + gtfsRoutePart [ 1 ].name,
+								gtfsRoutePart [ 1 ]
+							);
+						}
+					);
+				}
+			}
+		);
+	}
+
+	/**
 	 * Start the comparison between route_master
 	 * @param {RouteMaster} osmRouteMaster The osm route to compare
 	 * @param {RouteMaster} gtfsRouteMaster The GTFS route to compare
@@ -505,7 +575,7 @@ class RouteMasterComparator {
 
 		this.#compareRoutes ( );
 
-		// this.#reportMissingOsmRoutes ( );
+		this.#reportNotMatchedGtfsRoutes ( );
 
 	}
 
