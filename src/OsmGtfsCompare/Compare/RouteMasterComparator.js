@@ -300,6 +300,13 @@ class RouteMasterComparator {
 		}
 	}
 
+	/**
+	 * Get an icon, depending of the start date, end date and match score of a gtfs route
+	 * @param {Route} gtfsRoute
+	 * @param {Object} matchScore
+	 * @returns {String} the searched icon
+	 */
+
 	#getRouteIcon ( gtfsRoute, matchScore ) {
 		if ( new Date ( gtfsRoute.startDate ).valueOf ( ) > Date.now ( ) ) {
 			return '⚪';
@@ -319,10 +326,16 @@ class RouteMasterComparator {
 		return '';
 	}
 
+	/**
+	 * Report the results of the gtfs routes comparison for an osm route
+	 * @param {Object} matchScores the matchScores of the route
+	 * @param {?Route} osmRoute the osm compared route (only needed when the missing platform list is needed)
+	 */
+
 	#reportMatchScores ( matchScores, osmRoute ) {
 		matchScores.forEach (
 			matchScore => {
-				const gtfsRoute = this.#gtfsRouteMaster.routes.find ( route => route.shapePk === matchScore.shapePk );
+				const gtfsRoute = this.#gtfsRouteMaster.routes.find ( element => element.shapePk === matchScore.shapePk );
 				theRelationsReport.addGpxRoute (
 					this.#gtfsRouteMaster,
 					gtfsRoute,
@@ -337,6 +350,11 @@ class RouteMasterComparator {
 			}
 		);
 	}
+
+	/**
+	 * Report the results of the gtfs routes comparison for an osm route with all platforms found
+	 * @param {Object} matchScores the matchScores of the route
+	 */
 
 	#reportMatchScoresSamePlatforms ( matchScores ) {
 		theRelationsReport.add (
@@ -353,6 +371,12 @@ class RouteMasterComparator {
 		this.#reportMatchScores ( matchScores );
 	}
 
+	/**
+	 * Report the results of the gtfs routes comparison for an osm route when the fromand end platforms are found
+	 * @param {Object} matchScores the matchScores of the route
+	 * @param {?Route} osmRoute the osm compared route
+	 */
+
 	#reportMatchScoresSameFromEndPlatforms ( matchScores, osmRoute ) {
 		theRelationsReport.add (
 			'h3',
@@ -367,6 +391,13 @@ class RouteMasterComparator {
 		);
 		this.#reportMatchScores ( matchScores, osmRoute );
 	}
+
+	/**
+	 * Report the results of the gtfs routes comparison for an osm route when the fromand end platforms are similar
+	 *
+	 * @param {Object} matchScores the matchScores of the route
+	 * @param {?Route} osmRoute the osm compared route
+	 */
 
 	#reportMatchScoresSimilarFromEndPlatforms ( matchScores, osmRoute ) {
 		theRelationsReport.add (

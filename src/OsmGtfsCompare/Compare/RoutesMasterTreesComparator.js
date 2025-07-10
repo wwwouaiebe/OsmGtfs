@@ -136,7 +136,7 @@ class RoutesMasterTreesComparator {
 					theRelationsReport.add (
 						'h1',
 						'Route master : ' +
-							theDocConfig.vehicle + ' ' +
+							theDocConfig.vehicle.slice ( 0, 1 ).toUpperCase ( ) + theDocConfig.vehicle.slice ( 1 ) + ' ' +
 							( osmRouteMaster.ref ?? '' ) + ' ' +
 							( osmRouteMaster.description ?? '' ) + ' ',
 						osmRouteMaster

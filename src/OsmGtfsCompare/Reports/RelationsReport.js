@@ -243,10 +243,24 @@ class RelationsReport extends Report {
 		}
 	}
 
+	/**
+	 * Add an HTMLElement to the report and mark this element as warning
+	 * @param {String} htmlTag The HTML tag to add (h1, h2, h3 or p)
+	 * @param {String} text The text to add in the HTMLElement
+	 * @param {Object} osmObject an OSM object to add as a link or a JOSM buton in the HTMLElement
+	 */
+
 	addWarning ( htmlTag, text, osmObject ) {
 		this.add ( htmlTag, text, osmObject );
 		this.#currentHTMLElement.classList.add ( 'isWarning' );
 	}
+
+	/**
+	 * Add an HTMLElement to the report and mark this element as error
+	 * @param {String} htmlTag The HTML tag to add (h1, h2, h3 or p)
+	 * @param {String} text The text to add in the HTMLElement
+	 * @param {Object} osmObject an OSM object to add as a link or a JOSM buton in the HTMLElement
+	 */
 
 	addError ( htmlTag, text, osmObject ) {
 		this.add ( htmlTag, text, osmObject );
@@ -270,7 +284,6 @@ class RelationsReport extends Report {
 	 */
 
 	add ( htmlTag, text, osmObject ) {
-		console.log ( text );
 
 		// creation of the HTMLElement
 		this.#currentHTMLElement = document.createElement ( htmlTag );
@@ -340,7 +353,7 @@ class RelationsReport extends Report {
 		const startPlatform = theGtfsPlatforms.getPlatform ( route.platforms [ 0 ] );
 		const lastPlatform = theGtfsPlatforms.getPlatform ( route.platforms.slice ( -1 ) [ 0 ] );
 		let gpxRouteName =
-            theDocConfig.vehicle + ' ' +
+            theDocConfig.vehicle.slice ( 0, 1 ).toUpperCase ( ) + theDocConfig.vehicle.slice ( 1 ) + ' ' +
             routeMaster.ref + ' - from ' + startPlatform.nameOperator +
             ' (' + startPlatform.gtfsRef + ') to ' +
             lastPlatform.nameOperator + ' (' + lastPlatform.gtfsRef + ') - ' +
@@ -353,24 +366,24 @@ class RelationsReport extends Report {
 	/**
 	 * Add a p htmlElement with a gpx download button and the gpx file name
 	 * @param {RouteMaster} routeMaster the route master having the route as member
-	 * @param {Route} route for witch the gpx file must be created
+	 * @param {Route} gpxRoute for witch the gpx file must be created
+	 * @param {String} routeIcon an icon, depending of the comparison results
 	 */
 
-	addGpxRoute ( routeMaster, route, routeIcon ) {
-		console.log ( 'a' );
-		const gpxRouteName = this.#getGpxRouteName ( routeMaster, route );
+	addGpxRoute ( routeMaster, gpxRoute, routeIcon ) {
+		const gpxRouteName = this.#getGpxRouteName ( routeMaster, gpxRoute );
 		if ( '🔵' === routeIcon || '🟡' === routeIcon ) {
 			this.addError (
 				'p',
 				routeIcon + ' ' + gpxRouteName + ' ' +
-				this.#getGpxDownloadButton ( route.shapePk, gpxRouteName )
+				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )
 			);
 		}
 		else {
 			this.add (
 				'p',
 				routeIcon + ' ' + gpxRouteName + ' ' +
-				this.#getGpxDownloadButton ( route.shapePk, gpxRouteName )
+				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )
 			);
 
 		}
