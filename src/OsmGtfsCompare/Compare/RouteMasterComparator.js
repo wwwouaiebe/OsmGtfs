@@ -63,7 +63,7 @@ class RouteMasterComparator {
 	 * @type {Array.<String>}
 	 */
 
-	#matchedGtfsRoutes = [];
+	#matchedGtfsRoutes = new Map ( );
 
 	/**
 	 * A static object with scores given to the comparison of platforms for an osm route and a gtfs route
@@ -177,18 +177,6 @@ class RouteMasterComparator {
 	}
 
 	/**
-	 * Add a matched gtfs route to the list
-	 * @param {Number}  shapePk the shapePk of the route
-	 *
-	 */
-
-	#addToMatchedGtfsRoute ( shapePk ) {
-		if ( -1 === this.#matchedGtfsRoutes.indexOf ( shapePk ) ) {
-			this.#matchedGtfsRoutes.push ( shapePk );
-		}
-	}
-
-	/**
 	 * Compute the match score betwwen an osm route and a gtfs route
 	 * @param {Route} osmRoute the osm route
 	 * @param {Route} gtfsRoute thr gtfs route
@@ -197,15 +185,15 @@ class RouteMasterComparator {
 
 	#computeMatchScore ( osmRoute, gtfsRoute ) {
 		if ( this.#haveSamePlatforms ( osmRoute, gtfsRoute ) ) {
-			this.#addToMatchedGtfsRoute ( gtfsRoute.shapePk );
+			this.#matchedGtfsRoutes.set ( gtfsRoute.shapePk, gtfsRoute.shapePk );
 			return RouteMasterComparator.#matchScore.haveSamePlatforms;
 		}
 		if ( this.#haveSameFromEndPlatforms ( osmRoute, gtfsRoute ) ) {
-			this.#addToMatchedGtfsRoute ( gtfsRoute.shapePk );
+			this.#matchedGtfsRoutes.set ( gtfsRoute.shapePk, gtfsRoute.shapePk );
 			return RouteMasterComparator.#matchScore.haveSameFromEndPlatforms;
 		}
 		if ( this.#haveSimilarFromEndPlatforms ( osmRoute, gtfsRoute ) )	{
-			this.#addToMatchedGtfsRoute ( gtfsRoute.shapePk );
+			this.#matchedGtfsRoutes.set ( gtfsRoute.shapePk, gtfsRoute.shapePk );
 			return RouteMasterComparator.#matchScore.haveSimilarFromEndPlatforms;
 		}
 
@@ -527,7 +515,7 @@ class RouteMasterComparator {
 		theRelationsReport.add ( 'h3', 'gtfs routes not found in the osm data' );
 		this.#gtfsRouteMaster.routes.forEach (
 			gtfsRoute => {
-				if ( ! this.#matchedGtfsRoutes.find ( element => element.shapePk === gtfsRoute.shapePk ) ) {
+				if ( ! this.#matchedGtfsRoutes.get ( gtfsRoute.shapePk ) ) {
 					const gtfsRoutesPartOfOsmRoute = [];
 					this.#osmRouteMaster.routes.forEach (
 						osmRoute => {
