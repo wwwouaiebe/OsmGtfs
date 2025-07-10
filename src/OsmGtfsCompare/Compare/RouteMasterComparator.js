@@ -36,8 +36,6 @@ import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
 
 class RouteMasterComparator {
 
-	#matchScoresTable = {};
-
    	/**
 	 * The compared GTFS route_master
 	 * @type {Object}
@@ -52,22 +50,66 @@ class RouteMasterComparator {
 
 	#osmRouteMaster;
 
-	#isSamePlatform ( firstPlatformRef, secondPlatformRef ) {
+	/**
+	 * A table that stores the comparison scores for the routes of the current route master
+	 * @type {Object}
+	 */
+
+	#matchScoresTable = {};
+
+	/**
+	 * A static object with scores given to the comparison of platforms for an osm route and a gtfs route
+	 * @type {Object}
+	 */
+
+	static get #matchScore ( ) {
+		return {
+			haveSamePlatforms : 3,
+			haveSameFromEndPlatforms : 2,
+			haveSimilarFromEndPlatforms : 1,
+			haveDifferentPlatforms : 0
+		};
+	}
+
+	/**
+	 * Compare 2 osm platforms ref and return true when the 2 refs are attached to the same osm object
+	 * @param {String} firstPlatformRef the first platform ref to use
+	 * @param {String} secondPlatformRef the second platform ref to use
+	 * @returns {boolean} true when the 2 refs are attached to the same object
+	 */
+
+	#isSameOsmPlatform ( firstPlatformRef, secondPlatformRef ) {
+
+		// The two platforms have the same ref ... return true
 		if ( firstPlatformRef === secondPlatformRef ) {
 			return true;
 		}
+
+		// Searching the two osm objects having the compared ref
+		// Remember that when an osm platform have more than 1 ref, the platform is duplicated,
+		// so it's possible that firstPlatformRef and secondPlatformRef are different, but pointing to
+		// the same osm object
 		const firstPlatformOsmId = theOsmPlatforms.getPlatform ( firstPlatformRef )?.osmId;
 		const secondPlatformOsmId = theOsmPlatforms.getPlatform ( secondPlatformRef )?.osmId;
+
+		// return true when the two objects have the same osm id
 		return firstPlatformOsmId && secondPlatformOsmId && firstPlatformOsmId === secondPlatformOsmId;
 	}
 
-	#areEqual ( osmRoute, gtfsRoute ) {
-		let areEqual = osmRoute.platforms.toString ( ) === gtfsRoute.platforms.toString ( );
-		if ( ! areEqual ) {
+	/**
+	 * Compare an osm route and a gtfs route and returns true when the two routes have the same platforms
+	 * @param {Route} osmRoute the osm route to compare
+	 * @param {Route} gtfsRoute the gtfs route to compare
+	 * @returns {boolean} true when the two routes have the same platforms in the same order
+	 */
+
+	#haveSamePlatforms ( osmRoute, gtfsRoute ) {
+		let haveSamePlatforms = osmRoute.platforms.toString ( ) === gtfsRoute.platforms.toString ( );
+		if ( ! haveSamePlatforms ) {
 			if ( osmRoute.platforms.length === gtfsRoute.platforms.length ) {
-				areEqual = true;
+				haveSamePlatforms = true;
 				for ( let platformsCounter = 0; platformsCounter < osmRoute.platforms.length; platformsCounter ++ ) {
-					areEqual = areEqual && this.#isSamePlatform (
+					haveSamePlatforms = haveSamePlatforms && this.#isSameOsmPlatform (
 						osmRoute.platforms [ platformsCounter ],
 						gtfsRoute.platforms [ platformsCounter ]
 					);
@@ -75,23 +117,45 @@ class RouteMasterComparator {
 			}
 		}
 
-		return areEqual;
+		return haveSamePlatforms;
 	}
+
+	/**
+	 * Compare an osm route and a gtfs route and returns true when the two routes have the same first and last platforms
+	 * @param {Route} osmRoute the osm route to compare
+	 * @param {Route} gtfsRoute the gtfs route to compare
+	 * @returns {boolean} true when the two routes have the same first and last platforms
+	 */
 
 	#haveSameFromEndPlatforms ( osmRoute, gtfsRoute ) {
 		return (
-			this.#isSamePlatform ( osmRoute.platforms [ 0 ], gtfsRoute.platforms [ 0 ] )
+			this.#isSameOsmPlatform ( osmRoute.platforms [ 0 ], gtfsRoute.platforms [ 0 ] )
 			&&
-			this.#isSamePlatform (
+			this.#isSameOsmPlatform (
 				osmRoute.platforms [ osmRoute.platforms.length - 1 ],
 				gtfsRoute.platforms [ gtfsRoute.platforms.length - 1 ]
 			)
 		);
 	}
 
+	/**
+	 * Compare 2 strings and return true when the strings differs only by the last char
+	 * @param {String} first
+	 * @param {String} second
+	 * @returns {boolean} true when the string are similar
+	 */
+
 	#areSimilar ( first, second ) {
 		return first.substring ( first.length - 1, 0 ) === second.substring ( second.length - 1, 0 );
 	}
+
+	/**
+	 * Compare an osm route and a gtfs route and returns true when the two routes have similar first and last platforms refs
+	 * 2 platforms are similar when the platforms refs differs only by the last char
+	 * @param {Route} osmRoute the osm route to compare
+	 * @param {Route} gtfsRoute the gtfs route to compare
+	 * @returns {boolean} true when the two routes have the same first and last platforms
+	 */
 
 	#haveSimilarFromEndPlatforms ( osmRoute, gtfsRoute ) {
 		return (
@@ -104,20 +168,54 @@ class RouteMasterComparator {
 		);
 	}
 
+	/**
+	 * Compute the match score betwwen an osm route and a gtfs route
+	 * @param {Route} osmRoute the osm route
+	 * @param {Route} gtfsRoute thr gtfs route
+	 * @returns {number} the result of the comparison
+	 */
+
 	#computeMatchScore ( osmRoute, gtfsRoute ) {
-		if ( this.#areEqual ( osmRoute, gtfsRoute ) ) {
-			return 3;
+		if ( this.#haveSamePlatforms ( osmRoute, gtfsRoute ) ) {
+			return RouteMasterComparator.#matchScore.haveSamePlatforms;
 		}
 		if ( this.#haveSameFromEndPlatforms ( osmRoute, gtfsRoute ) ) {
-			return 2;
+			return RouteMasterComparator.#matchScore.haveSameFromEndPlatforms;
 		}
 		if ( this.#haveSimilarFromEndPlatforms ( osmRoute, gtfsRoute ) )	{
-			return 1;
+			return RouteMasterComparator.#matchScore.haveSimilarFromEndPlatforms;
 		}
 
-		return 0;
+		return RouteMasterComparator.#matchScore.haveDifferentPlatforms;
 
 	}
+
+	/**
+	 * build the match score table for the current route master
+	 */
+
+	/*
+	Sample of a table:
+	{
+		osmRouteId1 : {
+			matchScores : [
+				{
+					shapePk : 1234,
+					matchScore : 0
+				},
+				{
+					shapePk : 5678,
+					matchScore : 0
+				},
+				...
+			]
+		},
+		osmIdRoute2 : {
+			matchScores ...
+		},
+		...
+	}
+	*/
 
 	#buildMatchScoresTable ( ) {
 		this.#osmRouteMaster.routes.forEach (
@@ -138,9 +236,19 @@ class RouteMasterComparator {
 		);
 	}
 
+	/**
+	 * Report the osm platforms to remove and the gtfs platforms to add  in an osmRoute
+	 * when an osmRoute have differnt platforms than the gtfs route
+	 * @param {Route} osmRoute The osm route
+	 * @param {Route} gtfsRoute The gtfs route
+	 */
+
 	#reportPlatforms ( osmRoute, gtfsRoute ) {
+
 		const osmPlatformsToRemove = [];
 		const gtfsPlatformsToAdd = [];
+
+		// Searching the platforms to remove
 		osmRoute.platforms.forEach (
 			osmPlatform => {
 				if ( ! gtfsRoute.platforms.includes ( osmPlatform ) ) {
@@ -148,6 +256,8 @@ class RouteMasterComparator {
 				}
 			}
 		);
+
+		// Searching the platforms to add
 		gtfsRoute.platforms.forEach (
 			gtfsPlatform => {
 				if ( ! osmRoute.platforms.includes ( gtfsPlatform ) ) {
@@ -155,6 +265,8 @@ class RouteMasterComparator {
 				}
 			}
 		);
+
+		// Computing a string with the platforms to remove
 		let osmPlatformsToRemoveStr = 'Osm platforms to remove: ';
 		osmPlatformsToRemove.forEach (
 			osmPlatformToRemove => {
@@ -164,6 +276,8 @@ class RouteMasterComparator {
 
 			}
 		);
+
+		// Computing a string with the platforms to add
 		let gtfsPlatformToAddStr = 'gtfs platforms to add: ';
 		gtfsPlatformsToAdd.forEach (
 			gtfsPlatformToAdd => {
@@ -173,16 +287,46 @@ class RouteMasterComparator {
 
 			}
 		);
+
+		// reporting
 		theRelationsReport.add ( 'p', osmPlatformsToRemoveStr );
 		theRelationsReport.add ( 'p', gtfsPlatformToAddStr );
+ 		if (
+			0 === osmPlatformsToRemove.length
+			&&
+			0 === gtfsPlatformsToAdd.length
+		) {
+			theRelationsReport.add ( 'p', 'Verify the order of the platforms and the duplicate platforms' );
+		}
+	}
+
+	#getRouteIcon ( gtfsRoute, matchScore ) {
+		if ( new Date ( gtfsRoute.startDate ).valueOf ( ) > Date.now ( ) ) {
+			return '⚪';
+		}
+		else if ( new Date ( gtfsRoute.endDate ).valueOf ( ) < Date.now ( ) ) {
+			return '⚫'; // †
+		}
+		else if ( matchScore.matchScore === RouteMasterComparator.#matchScore.haveSamePlatforms ) {
+			return '🟢';
+		}
+		else if ( matchScore.matchScore === RouteMasterComparator.#matchScore.haveSameFromEndPlatforms ) {
+			return '🔵';
+		}
+		else if ( matchScore.matchScore === RouteMasterComparator.#matchScore.haveSimilarFromEndPlatforms ) {
+			return '🟡';
+		}
+		return '';
 	}
 
 	#reportMatchScores ( matchScores, osmRoute ) {
 		matchScores.forEach (
 			matchScore => {
+				const gtfsRoute = this.#gtfsRouteMaster.routes.find ( route => route.shapePk === matchScore.shapePk );
 				theRelationsReport.addGpxRoute (
 					this.#gtfsRouteMaster,
-					this.#gtfsRouteMaster.routes.find ( route => route.shapePk === matchScore.shapePk )
+					gtfsRoute,
+					this.#getRouteIcon ( gtfsRoute, matchScore )
 				);
 				if ( osmRoute ) {
 					this.#reportPlatforms (
@@ -194,46 +338,49 @@ class RouteMasterComparator {
 		);
 	}
 
-	#reportMatchScores3 ( matchScores ) {
+	#reportMatchScoresSamePlatforms ( matchScores ) {
 		theRelationsReport.add (
-			'p',
+			'h3',
+			'GTFS comparison results for route: ' +
 			(
 				1 === matchScores.length
 					?
-					'A gtfs route with all platforms found 🟢'
+					'a gtfs route with all platforms found'
 					:
-					'Multiple gtfs routes with all platforms found 🟢'
+					'multiple gtfs routes with all platforms found'
 			)
 		);
 		this.#reportMatchScores ( matchScores );
 	}
 
-	#reportMatchScores2 ( matchScores, osmRoute ) {
+	#reportMatchScoresSameFromEndPlatforms ( matchScores, osmRoute ) {
 		theRelationsReport.add (
-			'p',
+			'h3',
+			'GTFS comparison results for route: ' +
 			(
 				1 === matchScores.length
 					?
-					'A gtfs route with from and to platforms found 🔵'
+					'a gtfs route with from and to platforms found'
 					:
-					'Multiple gtfs routes with from and to platforms found 🔵'
+					'multiple gtfs routes with from and to platforms found'
 			)
 		);
 		this.#reportMatchScores ( matchScores, osmRoute );
 	}
 
-	#reportMatchScores1 ( matchScores ) {
+	#reportMatchScoresSimilarFromEndPlatforms ( matchScores, osmRoute ) {
 		theRelationsReport.add (
-			'p',
+			'h3',
+			'GTFS comparison results for route: ' +
 			(
 				1 === matchScores.length
 					?
-					'A gtfs route with similar from and to platforms found 🟡'
+					'a gtfs route with similar from and to platforms found'
 					:
-					'Multiple gtfs routes with similar from and to platforms found 🟡'
+					'multiple gtfs routes with similar from and to platforms found'
 			)
 		);
-		this.#reportMatchScores ( matchScores );
+		this.#reportMatchScores ( matchScores, osmRoute );
 	}
 
 	/**
@@ -256,33 +403,29 @@ class RouteMasterComparator {
 
 				new OsmRouteValidator ( ).validate ( osmRoute );
 
-				theRelationsReport.add ( 'h3', 'GTFS comparison results for route' );
-
-				const matchScores3 = this.#matchScoresTable [ osmRoute.osmId ].matchScores.filter (
-					element => 3 === element.matchScore
+				const matchScoresSamePlatforms = this.#matchScoresTable [ osmRoute.osmId ].matchScores.filter (
+					element => RouteMasterComparator.#matchScore.haveSamePlatforms === element.matchScore
 				);
-				const matchScores2 = this.#matchScoresTable [ osmRoute.osmId ].matchScores.filter (
-					 element => 2 === element.matchScore
+				const matchScoresSameFromEndPlatforms = this.#matchScoresTable [ osmRoute.osmId ].matchScores.filter (
+					 element => RouteMasterComparator.#matchScore.haveSameFromEndPlatforms === element.matchScore
 				);
-				const matchScores1 = this.#matchScoresTable [ osmRoute.osmId ].matchScores.filter (
-					element => 1 === element.matchScore
+				const matchScoresSimilarFromEndPlatforms = this.#matchScoresTable [ osmRoute.osmId ].matchScores.filter (
+					element => RouteMasterComparator.#matchScore.haveSimilarFromEndPlatforms === element.matchScore
 				);
 
-				if ( 0 !== matchScores3.length ) {
-					this.#reportMatchScores3 ( matchScores3 );
+				if ( 0 !== matchScoresSamePlatforms.length ) {
+					this.#reportMatchScoresSamePlatforms ( matchScoresSamePlatforms );
 				}
-				else if ( 0 !== matchScores2.length ) {
-					this.#reportMatchScores2 ( matchScores2, osmRoute );
+				else if ( 0 !== matchScoresSameFromEndPlatforms.length ) {
+					this.#reportMatchScoresSameFromEndPlatforms ( matchScoresSameFromEndPlatforms, osmRoute );
 				}
-				else if ( 0 === matchScores1.length ) {
-					theRelationsReport.add ( 'p', 'No gtfs route found 🔴' );
+				else if ( 0 === matchScoresSimilarFromEndPlatforms.length ) {
+					theRelationsReport.add ( 'h3', 'GTFS comparison results for route' );
+					theRelationsReport.addError ( 'p', '🔴 No gtfs route found' );
 				}
 				else {
-					this.#reportMatchScores1 ( matchScores1, osmRoute );
+					this.#reportMatchScoresSimilarFromEndPlatforms ( matchScoresSimilarFromEndPlatforms, osmRoute );
 				}
-
-				// starting to compare the platforms
-				// this.#comparePlatformsHight ( osmRoute );
 			}
 		);
 	}
@@ -300,7 +443,7 @@ class RouteMasterComparator {
 			!==
 			( this.#gtfsRouteMaster.description ?? '' ).toLowerCase ( ).replaceAll ( ' ', '' )
 		) {
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error C001: the osm description of the route_master ( ' +
 				this.#osmRouteMaster.description +

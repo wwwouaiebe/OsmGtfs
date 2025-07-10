@@ -254,6 +254,7 @@ class Route {
 
 	/**
 	 * Complete the route object with the nodes and platforms from the gtfs db
+	 * @param {Object} network theNetwork in witch the orute is located
 	 */
 
 	async buildFromDb ( network ) {

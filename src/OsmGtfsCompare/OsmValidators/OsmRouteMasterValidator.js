@@ -57,7 +57,7 @@ class OsmRouteMasterValidator {
 
 	#validateName ( ) {
 		if ( ! this.#osmRouteMaster?.tags?.name ) {
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error M008: no name tag for route_master'
 			);
@@ -68,11 +68,10 @@ class OsmRouteMasterValidator {
 			let vehicle = theDocConfig.vehicle.substring ( 0, 1 ).toUpperCase ( ) +
        			theDocConfig.vehicle.substring ( 1 ) + ' ';
 			if ( this.#osmRouteMaster.tags.name !== vehicle + this.#osmRouteMaster.tags.ref ) {
-				theRelationsReport.add (
+				theRelationsReport.addError (
 					'p',
 					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#osmRouteMaster.tags.ref + ')'
 				);
-				theStatsReport.addRouteMasterErrorName ( );
 				this.#haveErrors = true;
 			}
 		}
@@ -84,7 +83,7 @@ class OsmRouteMasterValidator {
 
 	#validateRefTag ( ) {
 		if ( ! this.#osmRouteMaster?.tags?.ref ) {
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error M005: route_master without ref tag '
 			);
@@ -105,7 +104,7 @@ class OsmRouteMasterValidator {
 					let route = theOsmDataLoader.getRoute ( member.ref );
 					if ( route ) {
 						if ( this.#osmRouteMaster.tags.ref !== route.tags.ref ) {
-							theRelationsReport.add (
+							theRelationsReport.addError (
 								'p',
 								'Error M006: ref tag of the route master (' + this.#osmRouteMaster.tags.ref +
 								') is not the same than the ref tag of the route (' + route.tags.ref + ')'
@@ -131,7 +130,7 @@ class OsmRouteMasterValidator {
 				if ( 'relation' === member.type ) {
 					let route = theOsmDataLoader.getRoute ( member.ref );
 					if ( ! route ) {
-						theRelationsReport.add (
+						theRelationsReport.addError (
 							'p',
 							'Error M003: a relation member of the route master is not a ' +
                             theDocConfig.vehicle + ' relation'
@@ -141,7 +140,7 @@ class OsmRouteMasterValidator {
 					}
 				}
 				else {
-					theRelationsReport.add (
+					theRelationsReport.addError (
 						'p',
 						'Error M004: a member of the route master is not a relation (' +
                         member.type + ' ' + member.ref + ' )'
@@ -160,7 +159,7 @@ class OsmRouteMasterValidator {
 	#validateFixme ( ) {
 		const fixme = this.#osmRouteMaster?.tags?.fixme;
 		if ( fixme ) {
-			theRelationsReport.add ( 'p', 'A fixme exists for this route master:' + fixme );
+			theRelationsReport.addWarning ( 'p', 'A fixme exists for this route master:' + fixme );
 			theStatsReport.addRouteMasterWarningFixme ( );
 		}
 	}
@@ -172,12 +171,12 @@ class OsmRouteMasterValidator {
 	#validateOperator ( ) {
 		const operator = this.#osmRouteMaster?.tags?.operator;
 		if ( ! operator ) {
-			theRelationsReport.add ( 'p', 'Oprator tag not found' );
+			theRelationsReport.addError ( 'p', 'Oprator tag not found' );
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;
 		}
 		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Missing operator:' + theOperator.operator
 			);

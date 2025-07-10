@@ -243,6 +243,25 @@ class RelationsReport extends Report {
 		}
 	}
 
+	addWarning ( htmlTag, text, osmObject ) {
+		this.add ( htmlTag, text, osmObject );
+		this.#currentHTMLElement.classList.add ( 'isWarning' );
+	}
+
+	addError ( htmlTag, text, osmObject ) {
+		this.add ( htmlTag, text, osmObject );
+		this.#currentHTMLElement.classList.add ( 'isError' );
+		if ( this.#currentDataDiv ) {
+			this.#currentDataDiv.classList.add ( 'haveErrors' );
+		}
+		if ( this.#currentH2Div ) {
+			this.#currentH2Div.classList.add ( 'haveErrors' );
+		}
+		if ( this.#currentH1Div ) {
+			this.#currentH1Div.classList.add ( 'haveErrors' );
+		}
+	}
+
 	/**
 	 * Add an HTMLElement to the report
 	 * @param {String} htmlTag The HTML tag to add (h1, h2, h3 or p)
@@ -251,6 +270,7 @@ class RelationsReport extends Report {
 	 */
 
 	add ( htmlTag, text, osmObject ) {
+		console.log ( text );
 
 		// creation of the HTMLElement
 		this.#currentHTMLElement = document.createElement ( htmlTag );
@@ -271,51 +291,11 @@ class RelationsReport extends Report {
 		default :
 			break;
 		}
-
-		// Adding text in the HTMLElement
 		this.#currentHTMLElement.innerHTML =
 			text +
 			this.getOsmLink ( osmObject ) +
 			this.getJosmEdit ( osmObject );
 
-		// Adding the isError class
-		if ( text.startsWith ( 'Error' ) ) {
-			this.#currentHTMLElement.classList.add ( 'isError' );
-		}
-
-		// Adding the isWarning class
-		if ( text.startsWith ( 'Warning' ) ) {
-			this.#currentHTMLElement.classList.add ( 'isWarning' );
-		}
-
-		// Adding the haveErrors class
-		if (
-			-1 !== text.indexOf ( '🔵' )
-			||
-			-1 !== text.indexOf ( '🟡' )
-			||
-			-1 !== text.indexOf ( '🔴' )
-			||
-			-1 !== text.indexOf ( '🟣' )
-			||
-			-1 !== text.indexOf ( '†' )
-			||
-			-1 !== text.indexOf ( '🆕' )
-			||
-			text.startsWith ( 'Error' )
-			||
-			text.startsWith ( 'Warning' )
-		) {
-			if ( this.#currentDataDiv ) {
-				this.#currentDataDiv.classList.add ( 'haveErrors' );
-			}
-			if ( this.#currentH2Div ) {
-				this.#currentH2Div.classList.add ( 'haveErrors' );
-			}
-			if ( this.#currentH1Div ) {
-				this.#currentH1Div.classList.add ( 'haveErrors' );
-			}
-		}
 	}
 
 	/**
@@ -376,11 +356,24 @@ class RelationsReport extends Report {
 	 * @param {Route} route for witch the gpx file must be created
 	 */
 
-	addGpxRoute ( routeMaster, route ) {
+	addGpxRoute ( routeMaster, route, routeIcon ) {
+		console.log ( 'a' );
 		const gpxRouteName = this.#getGpxRouteName ( routeMaster, route );
-		const pElement = document.createElement ( 'p' );
-		pElement.innerHTML = this.#getGpxDownloadButton ( route.shapePk, gpxRouteName ) + gpxRouteName;
-		this.#currentDataDiv.appendChild ( pElement );
+		if ( '🔵' === routeIcon || '🟡' === routeIcon ) {
+			this.addError (
+				'p',
+				routeIcon + ' ' + gpxRouteName + ' ' +
+				this.#getGpxDownloadButton ( route.shapePk, gpxRouteName )
+			);
+		}
+		else {
+			this.add (
+				'p',
+				routeIcon + ' ' + gpxRouteName + ' ' +
+				this.#getGpxDownloadButton ( route.shapePk, gpxRouteName )
+			);
+
+		}
 	}
 
 }
