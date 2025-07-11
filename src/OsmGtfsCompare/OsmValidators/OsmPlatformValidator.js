@@ -194,7 +194,7 @@ class OsmPlatformValidator {
 		);
 
 		if ( haveErrors ) {
-			let expectedNetworks =
+			const expectedNetworks =
                 gtfsNetworks.concat ( othersNetworks )
                 	.sort ( ( first, second ) => first.localeCompare ( second ) )
                 	.toString ( )

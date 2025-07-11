@@ -47,11 +47,11 @@ class JosmButtonClickEL {
 	async handleEvent ( event ) {
 
 		// searching the osm id involved in the data of the button
-		let osmObjId = event.target.dataset.osmObjId;
-		let osmObjType = event.target.dataset.osmObjType;
+		const osmObjId = event.target.dataset.osmObjId;
+		const osmObjType = event.target.dataset.osmObjType;
 
 		// reading the newJosmLayer checkbox
-		let newJosmLayer =
+		const newJosmLayer =
 			document.getElementById ( 'newJosmLayer' ).checked
 				?
 				'true'

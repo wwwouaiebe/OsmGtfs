@@ -112,6 +112,37 @@ class OsmDataLoader {
 	}
 
 	/**
+	 * Get the osm object ( = the object given by overpass) corresponding to a way
+	 * @param {Number} osmId the osm id of the osm object
+	 * @returns {Object} The searched osm route
+	 */
+
+	getWay ( osmId ) {
+		return this.#osmWays.get ( osmId );
+	}
+
+	/**
+	 * Get the osm object ( = the object given by overpass) corresponding to a node
+	 * @param {Number} osmId the osm id of the osm object
+	 * @returns {Object} The searched osm route
+	 */
+
+	getNode ( osmId ) {
+		return this.#osmNodes.get ( osmId );
+	}
+
+	/**
+	 * Get the osm object ( = the object given by overpass) corresponding to a platform
+	 * ( = an osmObject with a tag public_transport=platform )
+	 * @param {Number} osmId the osm id of the osm object
+	 * @returns {Object} The searched osm route
+	 */
+
+	getPlatform ( osmId ) {
+		return this.#osmPlatforms.get ( osmId );
+	}
+
+	/**
 	 * get a string with all the ref:operator given to the platform
 	 * @param {Object} osmPlatform
 	 * @returns {String} a string with all the platforms ref:operator (csv format)
@@ -138,7 +169,7 @@ class OsmDataLoader {
 		};
 		this.#osmRoutesMaster.forEach (
 			osmRouteMaster => {
-				let routeMaster = {
+				const routeMaster = {
 					description : osmRouteMaster?.tags?.description,
 					ref : osmRouteMaster?.tags.ref,
 					type : [ 'tram', 'subway', 'train', 'bus' ].indexOf ( osmRouteMaster?.tags?.route_master ),
@@ -150,7 +181,7 @@ class OsmDataLoader {
 					routeMasterMember => {
 						const osmRoute = this.#osmRoutes.get ( routeMasterMember.ref );
 						if ( osmRoute ) {
-							let route = {
+							const route = {
 								name : osmRoute?.tags?.name,
 								from : osmRoute?.tags?.from,
 								to : osmRoute?.tags?.to,

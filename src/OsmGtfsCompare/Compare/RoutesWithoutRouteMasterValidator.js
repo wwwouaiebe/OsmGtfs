@@ -121,7 +121,7 @@ class RoutesWithoutRouteMasterValidator {
 
 	 async fetchData ( ) {
 
-		let uri =
+		const uri =
 			'https://lz4.overpass-api.de/api/interpreter?data=[out:json][timeout:40];rel' +
 			'["network"="' + theDocConfig.network + '"]' +
 			'["type"="route"]' +

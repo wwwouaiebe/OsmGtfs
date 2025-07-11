@@ -84,7 +84,7 @@ class RoutesMasterTreesComparator {
 			// more than one route master found... Searching based on ref and description
 			searchedRoutesMaster = routeMasterTree.routesMaster.filter (
 				element => {
-					let returnValue =
+					const returnValue =
                         routeMaster.ref === element.ref
                         &&
                         element.description

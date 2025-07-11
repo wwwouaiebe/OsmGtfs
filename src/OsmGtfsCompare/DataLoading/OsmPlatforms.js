@@ -120,7 +120,7 @@ class OsmPlatforms {
 		this.platformsWithMore1ref.clear ( );
 		osmPlatforms.forEach (
 			osmPlatform => {
-				let platformProperties = this.#buildPlatformProperties ( osmPlatform );
+				const platformProperties = this.#buildPlatformProperties ( osmPlatform );
 				let refsCounter = 0;
 				let newPlatform = null;
 				Object.values ( platformProperties.osmRefs ) .forEach (

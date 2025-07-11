@@ -52,11 +52,13 @@ class StatsReport extends Report {
 			fixme : 0
 		},
 		routes : {
+			operator : 0,
+			fixme : 0,
 			doneError : 0,
 			doneOk : 0,
 			toDo : 0,
-			validationErrors : 0,
-			validationWarnings : 0
+			errors : 0,
+			warnings : 0
 		},
 		platforms : {
 			warnings : 0,
@@ -139,6 +141,24 @@ class StatsReport extends Report {
 	addRouteMasterWarningFixme ( ) {
 		this.#stats.routesMaster.warnings ++;
 		this.#stats.routesMaster.fixme ++;
+	}
+
+	/**
+	 * Increment the routesMaster.errors and routesMaster.operator values of the stats
+	 */
+
+	addRouteErrorOperator ( ) {
+		this.#stats.routes.errors ++;
+		this.#stats.routes.operator ++;
+	}
+
+	/**
+	 * Increment the routesMaster.warnings and routesMaster.fixme values of the stats
+	 */
+
+	addRouteWarningFixme ( ) {
+		this.#stats.routes.warnings ++;
+		this.#stats.routes.fixme ++;
 	}
 
 	/**
@@ -286,11 +306,13 @@ class StatsReport extends Report {
 		this.add ( 'p', 'Validation errors on routes master to fix: ' + this.#stats.routesMaster.errors );
 		this.add ( 'p', 'Validation warnings on routes master nice to fix: ' + this.#stats.routesMaster.warnings );
 		this.add ( 'h2', 'Routes' );
+		this.add ( 'p', 'Osm routes with errors on operator: ' + this.#stats.routes.operator );
+		this.add ( 'p', 'Osm routes with fixme: ' + this.#stats.routes.fixme );
 		this.add ( 'p', 'Osm route relations done and aligned on GTFS files: ' + this.#stats.routes.doneOk );
 		this.add ( 'p', 'Osm route relations done but not aligned on GTFS files: ' + this.#stats.routes.doneError );
 		this.add ( 'p', 'Osm route relations todo: ' + this.#stats.routes.toDo );
-		this.add ( 'p', 'Validation errors on routes to fix: ' + this.#stats.routes.validationErrors );
-		this.add ( 'p', 'Validation warnings on routes nice to fix: ' + this.#stats.routes.validationWarnings );
+		this.add ( 'p', 'Validation errors on routes to fix: ' + this.#stats.routes.errors );
+		this.add ( 'p', 'Validation warnings on routes nice to fix: ' + this.#stats.routes.warnings );
 		this.add ( 'h2', 'platforms' );
 		this.add ( 'p', 'Osm platforms with errors on name: ' + this.#stats.platforms.name );
 		this.add (

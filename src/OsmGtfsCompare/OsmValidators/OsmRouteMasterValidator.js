@@ -65,7 +65,7 @@ class OsmRouteMasterValidator {
 			this.#haveErrors = true;
 		}
 		if ( this.#osmRouteMaster?.tags?.name && this.#osmRouteMaster?.tags?.ref ) {
-			let vehicle = theDocConfig.vehicle.substring ( 0, 1 ).toUpperCase ( ) +
+			const vehicle = theDocConfig.vehicle.substring ( 0, 1 ).toUpperCase ( ) +
        			theDocConfig.vehicle.substring ( 1 ) + ' ';
 			if ( this.#osmRouteMaster.tags.name !== vehicle + this.#osmRouteMaster.tags.ref ) {
 				theRelationsReport.addError (
@@ -101,7 +101,7 @@ class OsmRouteMasterValidator {
 		this.#osmRouteMaster.members.forEach (
 			member => {
 				if ( 'relation' === member.type ) {
-					let route = theOsmDataLoader.getRoute ( member.ref );
+					const route = theOsmDataLoader.getRoute ( member.ref );
 					if ( route ) {
 						if ( this.#osmRouteMaster.tags.ref !== route.tags.ref ) {
 							theRelationsReport.addError (
@@ -128,7 +128,7 @@ class OsmRouteMasterValidator {
 		this.#osmRouteMaster.members.forEach (
 			member => {
 				if ( 'relation' === member.type ) {
-					let route = theOsmDataLoader.getRoute ( member.ref );
+					const route = theOsmDataLoader.getRoute ( member.ref );
 					if ( ! route ) {
 						theRelationsReport.addError (
 							'p',

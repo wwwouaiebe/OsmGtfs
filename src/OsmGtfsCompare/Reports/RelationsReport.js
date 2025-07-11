@@ -179,7 +179,7 @@ class RelationsReport extends Report {
 			this.#currentH1Div = document.getElementById ( 'osm' + osmObject.osmIid );
 			this.#currentDataDiv = document.getElementById ( 'osm' + osmObject.osmIid + 'DataDiv' );
 
-			let routeLink = document.createElement ( 'span' );
+			const routeLink = document.createElement ( 'span' );
 			routeLink.classList.add ( 'busShortcutAnchor' );
 			routeLink.innerText = osmObject.ref + ' ';
 			routeLink.dataset.routeMasterLinkDiv = 'osm' + osmObject.osmId;
@@ -334,7 +334,7 @@ class RelationsReport extends Report {
 	 */
 
 	#convertDate ( sourceDate ) {
-		let tmpDate =
+		const tmpDate =
 			new Date ( sourceDate )
 				.toLocaleDateString ( )
 				.split ( '/' );
@@ -352,7 +352,7 @@ class RelationsReport extends Report {
 	#getGpxRouteName ( routeMaster, route ) {
 		const startPlatform = theGtfsPlatforms.getPlatform ( route.platforms [ 0 ] );
 		const lastPlatform = theGtfsPlatforms.getPlatform ( route.platforms.slice ( -1 ) [ 0 ] );
-		let gpxRouteName =
+		const gpxRouteName =
             theDocConfig.vehicle.slice ( 0, 1 ).toUpperCase ( ) + theDocConfig.vehicle.slice ( 1 ) + ' ' +
             routeMaster.ref + ' - from ' + startPlatform.nameOperator +
             ' (' + startPlatform.gtfsRef + ') to ' +

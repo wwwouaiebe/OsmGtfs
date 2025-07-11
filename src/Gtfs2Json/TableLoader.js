@@ -119,7 +119,7 @@ class TableLoader {
 
 		// it's complex... field are comma separated, but values can contains a comma...
 		// So, first we split the line at the ""
-		let tmpFieldsValues = dataLine.split ( '"' );
+		const tmpFieldsValues = dataLine.split ( '"' );
 		let tmpDataLine = '';
 		let tmpFieldsValuesCounter = 0;
 
@@ -152,7 +152,7 @@ class TableLoader {
      */
 
 	#setInsertSqlStringHeader ( dataLine ) {
-		let fields = dataLine.split ( ',' );
+		const fields = dataLine.split ( ',' );
 		this.#insertSqlStringHeader = ' INSERT INTO `' + theOperator.mySqlDbName + '`.`' + this.tableName + '` (';
 		fields.forEach (
 			field => {

@@ -66,7 +66,7 @@ class GtfsPlatforms {
 	loadData ( jsonPlatforms ) {
 
 		this.#platforms.clear ( );
-		let platformProperties = {};
+		const platformProperties = {};
 		jsonPlatforms.forEach (
 			jsonPlatform => {
 				platformProperties.type = jsonPlatform.type;

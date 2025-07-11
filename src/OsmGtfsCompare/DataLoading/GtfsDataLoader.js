@@ -60,8 +60,10 @@ class GtfsDataLoader {
 					( first, second ) => {
 						const firstStartPlatform = theGtfsPlatforms.getPlatform ( first.platforms [ 0 ] ).nameOperator;
 						const secondStartPlatform = theGtfsPlatforms.getPlatform ( second.platforms [ 0 ] ).nameOperator;
-						const firstLastPlatform = theGtfsPlatforms.getPlatform ( first.platforms.slice ( -1 ) [ 0 ] ).nameOperator;
-						const secondLastPlatform = theGtfsPlatforms.getPlatform ( second.platforms.slice ( -1 ) [ 0 ] ).nameOperator;
+						const firstLastPlatform =
+							theGtfsPlatforms.getPlatform ( first.platforms.slice ( -1 ) [ 0 ] ).nameOperator;
+						const secondLastPlatform =
+							theGtfsPlatforms.getPlatform ( second.platforms.slice ( -1 ) [ 0 ] ).nameOperator;
 						const startCompare = firstStartPlatform.localeCompare ( secondStartPlatform );
 						const lastCompare = firstLastPlatform.localeCompare ( secondLastPlatform );
 

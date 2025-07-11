@@ -102,7 +102,7 @@ class Report {
 	 */
 	/* eslint-disable-next-line max-params */
 	add ( htmlTag, text, osmObject, newTagValues ) {
-		let htmlElement = document.createElement ( htmlTag );
+		const htmlElement = document.createElement ( htmlTag );
 		htmlElement.innerHTML =
             text +
 			this.getOsmLink ( osmObject ) +
