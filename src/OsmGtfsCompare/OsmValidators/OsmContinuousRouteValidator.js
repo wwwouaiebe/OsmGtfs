@@ -23,7 +23,6 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theOsmDataLoader from '../DataLoading/OsmDataLoader.js';
 import theRelationsReport from '../Reports/RelationsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -46,7 +45,7 @@ class OsmContinuousRouteValidator {
 	 * @type {Object}
 	 */
 
-	#osmRoute;
+	#route;
 
 	/**
 	* Verify that a way is circular (= same node for the first and last node)
@@ -98,12 +97,8 @@ class OsmContinuousRouteValidator {
 
 	validate ( ) {
 		let previousWay = null;
-		this.#osmRoute.members.forEach (
-			member => {
-				const way = theOsmDataLoader.getWay ( member.ref );
-				if ( '' !== member.role || ! way ) {
-					return;
-				}
+		this.#route.ways.forEach (
+			way => {
 				if ( previousWay ) {
 					if (
 						! this.#waysHaveCommonNode ( way, previousWay )
@@ -112,7 +107,7 @@ class OsmContinuousRouteValidator {
 					) {
 						theRelationsReport.add (
 							'p',
-							'Error R001: hole found for route ' + theRelationsReport.getOsmLink ( this.#osmRoute ) +
+							'Error R001: hole found for route ' + theRelationsReport.getOsmLink ( this.#route ) +
                             ' between way id ' + theRelationsReport.getOsmLink ( previousWay ) +
                             ' and way id ' + theRelationsReport.getOsmLink ( way )
 						);
@@ -131,8 +126,8 @@ class OsmContinuousRouteValidator {
 	 * @param {Object} osmRoute The controlled route
 	 */
 
-	constructor ( osmRoute ) {
-		this.#osmRoute = osmRoute;
+	constructor ( route ) {
+		this.#route = route;
 		Object.freeze ( this );
 	}
 }

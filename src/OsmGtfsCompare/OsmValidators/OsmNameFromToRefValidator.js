@@ -23,7 +23,7 @@ Doc reviewed 20250126
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theOsmDataLoader from '../DataLoading/OsmDataLoader.js';
+import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 import theRelationsReport from '../Reports/RelationsReport.js';
 import theDocConfig from '../interface/DocConfig.js';
 
@@ -47,7 +47,7 @@ class OsmNameFromToRefValidator {
 	 * @type {Object}
 	 */
 
-	#osmRoute = null;
+	#route = null;
 
 	/**
 	 * the from platform ( = the first platform of the route)
@@ -68,17 +68,14 @@ class OsmNameFromToRefValidator {
 	 */
 
 	#validateFrom ( ) {
+		const fromPlatform = theOsmPlatforms.getPlatform ( this.#route.platforms [ 0 ] );
 
 		if (
-			this.#osmRoute?.tags?.from
+			this.#route.from
 			&&
-			this.#osmRoute?.tags?.from !== this.#fromPlatform?.tags?.name
+			this.#route.from !== fromPlatform.name
 			&&
-			(
-				this.#osmRoute?.tags?.from.toLowerCase ( )
-				!==
-				( this.#fromPlatform?.tags [ 'name:operator:' + this.#osmRoute?.tags?.operator ] ?? '' ).toLowerCase ( )
-			)
+			this.#route.from.toLowerCase ( ) !== fromPlatform.nameOperator.toLowerCase ( )
 		) {
 			theRelationsReport.add (
 				'p',
@@ -93,17 +90,15 @@ class OsmNameFromToRefValidator {
 	 */
 
 	#validateTo ( )	{
-		if (
-			this.#osmRoute?.tags?.to
-			&&
-			this.#osmRoute?.tags?.to !== this.#toPlatform?.tags?.name
-			&&
-			(
-				this.#osmRoute?.tags?.to.toLowerCase ( )
-				!==
 
-				( this.#toPlatform?.tags [ 'name:operator:' + this.#osmRoute?.tags?.operator ] ?? '' ).toLowerCase ( )
-			)
+		const toPlatform = theOsmPlatforms.getPlatform ( this.#route.platforms [ this.#route.platforms.length - 1 ] );
+
+		if (
+			this.#route.to
+			&&
+			this.#route.to !== toPlatform.name
+			&&
+			this.#route.to.toLowerCase ( ) !== toPlatform.nameOperator.toLowerCase ( )
 		) {
 			theRelationsReport.add (
 				'p',
@@ -119,7 +114,7 @@ class OsmNameFromToRefValidator {
 
 	#haveTagsNameFromToRef ( ) {
 		const haveTagsNameFromToRef =
-			this.#osmRoute?.tags?.from && this.#osmRoute?.tags?.to && this.#osmRoute?.tags?.name && this.#osmRoute?.tags?.ref;
+			this.#route?.from && this.#route?.to && this.#route?.name && this.#route?.ref;
 
 		return haveTagsNameFromToRef;
 	}
@@ -133,12 +128,12 @@ class OsmNameFromToRefValidator {
 		theDocConfig.vehicle.substring ( 1 );
 		if ( this.#haveTagsNameFromToRef ( ) ) {
 			let goodName =
-				vehicle + ' ' + this.#osmRoute?.tags?.ref + ': ' +
-				this.#osmRoute?.tags?.from + ' → ' + this.#osmRoute?.tags?.to;
-			if ( this.#osmRoute?.tags?.name.replaceAll ( '=>', '→' ) !== goodName ) {
+				vehicle + ' ' + this.#route.ref + ': ' +
+				this.#route.from + ' → ' + this.#route.to;
+			if ( this.#route.name.replaceAll ( '=>', '→' ) !== goodName ) {
 				theRelationsReport.add (
 					'p',
-					'Error R006: Invalid name ("' + this.#osmRoute?.tags?.name + '" but expected "' + goodName + '") for route '
+					'Error R006: Invalid name ("' + this.#route.name + '" but expected "' + goodName + '") for route '
 				);
 				this.#haveErrors = true;
 			}
@@ -150,20 +145,7 @@ class OsmNameFromToRefValidator {
 	 */
 
 	#loadPlatforms ( ) {
-		let fromPlatformOsmId = 0;
-		let toPlatformOsmId = 0;
-		this.#osmRoute.members.forEach (
-			member => {
-				if ( 'platform' === member.role ) {
-					if ( 0 === fromPlatformOsmId ) {
-						toPlatformOsmId = member.ref;
-					}
-					toPlatformOsmId = member.ref;
-				}
-			}
-		);
-		this.#fromPlatform = theOsmDataLoader.getPlatform ( fromPlatformOsmId );
-		this.#toPlatform = theOsmDataLoader.getPlatform ( toPlatformOsmId );
+
 	}
 
 	/**
@@ -172,7 +154,7 @@ class OsmNameFromToRefValidator {
 
 	validate ( ) {
 
-		if ( ! this.#osmRoute?.tags?.from ) {
+		if ( ! this.#route.from ) {
 
 			// no from tag
 			theRelationsReport.add (
@@ -182,7 +164,7 @@ class OsmNameFromToRefValidator {
 			this.#haveErrors = true;
 		}
 
-		if ( ! this.#osmRoute?.tags?.to ) {
+		if ( ! this.#route.to ) {
 
 			// no to tag
 			theRelationsReport.add (
@@ -192,7 +174,7 @@ class OsmNameFromToRefValidator {
 			this.#haveErrors = true;
 		}
 
-		if ( ! this.#osmRoute?.tags?.ref ) {
+		if ( ! this.#route.ref ) {
 
 			// no ref tag
 			theRelationsReport.add (
@@ -202,7 +184,7 @@ class OsmNameFromToRefValidator {
 			this.#haveErrors = true;
 		}
 
-		if ( ! this.#osmRoute?.tags?.name ) {
+		if ( ! this.#route.name ) {
 
 			// no name tag
 			theRelationsReport.add (
@@ -213,7 +195,6 @@ class OsmNameFromToRefValidator {
 		}
 
 		this.#loadPlatforms ( );
-
 		this.#validateFrom ( );
 		this.#validateTo ( );
 		this.#validateName ( );
@@ -223,11 +204,11 @@ class OsmNameFromToRefValidator {
 
 	/**
 	 * The constructor
-	 * @param {Object} osmRoute the route to validate
+	 * @param {Route} route the route to validate
 	 */
 
-	constructor ( osmRoute ) {
-		this.#osmRoute = osmRoute;
+	constructor ( route ) {
+		this.#route = route;
 		Object.freeze ( this );
 	}
 }

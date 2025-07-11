@@ -54,6 +54,13 @@ class Route {
 	#to;
 
 	/**
+	 * The ref tag value of the route
+	 * @type {String}
+	 */
+
+	#ref;
+
+	/**
 	 * An array with the ref of the platforms used by the route
 	 * @type {Array.<String>}
 	 */
@@ -88,12 +95,28 @@ class Route {
 
 	#nodes;
 
+	#ways = [];
+
 	/**
 	 * The osmId of the route
 	 * @type {?Number}
 	 */
 
 	#osmId;
+
+	/**
+	 * The operator of the route
+	 * @type {String}
+	 */
+
+	#operator;
+
+	/**
+	 * The fixme of the route
+	 * @type {String}
+	 */
+
+	#fixme;
 
 	/**
 	 * The name of the route (empty for GTFS)
@@ -115,6 +138,13 @@ class Route {
 	 */
 
 	get to ( ) { return this.#to; }
+
+	/**
+	 * The ref tag value of the route
+	 * @type {String}
+	 */
+
+	get ref ( ) { return this.#ref; }
 
 	/**
 	 * An array with the ref of the platforms used by the route
@@ -151,6 +181,8 @@ class Route {
 
 	get nodes ( ) { return this.#nodes; }
 
+	get ways ( ) { return this.#ways; }
+
 	/**
 	 * The osmId of the route
 	 * @type {?Number}
@@ -159,11 +191,25 @@ class Route {
 	get osmId ( ) { return this.#osmId; }
 
 	/**
-	 * The osm type of the route master
+	 * The osm type of the route
 	 * @type {String}
 	 */
 
 	get osmType ( ) { return 'relation'; }
+
+	/**
+	 * The operator of the route
+	 * @type {String}
+	 */
+
+	get operator ( ) { return this.#operator; }
+
+	/**
+	 * The fixme of the route master
+	 * @type {String}
+	 */
+
+	get fixme ( ) { return this.#fixme; }
 
 	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route.
@@ -175,12 +221,16 @@ class Route {
 			name : this.#name,
 			from : this.#from,
 			to : this.#to,
+			ref : this.#ref,
 			platforms : [],
 			shapePk : this.#shapePk,
 			startDate : this. #startDate,
 			endDate : this.#endDate,
 			nodes : this.#nodes,
-			osmId : this.#osmId
+			ways : this.#ways,
+			osmId : this.#osmId,
+			operator : this.#operator,
+			fixme : this.#fixme
 		};
 		this.#platforms.forEach (
 			platform => jsonRoute.platforms.push ( platform )
@@ -250,6 +300,7 @@ class Route {
 		this.#name = jsonRoute.name;
 		this.#from = jsonRoute.from;
 		this.#to = jsonRoute.to;
+		this.#ref = jsonRoute.ref;
 	}
 
 	/**

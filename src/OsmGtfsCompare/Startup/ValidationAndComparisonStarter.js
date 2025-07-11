@@ -25,7 +25,7 @@ Doc reviewed 20250124
 
 import GtfsDataLoader from '../../OsmGtfsCompare/DataLoading/GtfsDataLoader.js';
 import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
-import theOsmDataLoader from '../../OsmGtfsCompare/DataLoading/OsmDataLoader.js';
+import OsmDataLoader from '../../OsmGtfsCompare/DataLoading/OsmDataLoader.js';
 import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
 import theStatsReport from '../Reports/StatsReport.js';
 import theRelationsReport from '../Reports/RelationsReport.js';
@@ -69,7 +69,7 @@ class ValidationAndComparisonStarter {
 		theStatsReport.open ( );
 
 		// loading osm data
-		await theOsmDataLoader.fetchData (	);
+		await new OsmDataLoader ( ).fetchData (	);
 
 		// Search routes without route_master
 		await new RoutesWithoutRouteMasterValidator ( ).fetchData ( );

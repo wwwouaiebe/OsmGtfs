@@ -23,7 +23,6 @@ Doc reviewed 20250124
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theOsmDataLoader from '../DataLoading/OsmDataLoader.js';
 import theOperator from '../../Common/Operator.js';
 import theRelationsReport from '../Reports/RelationsReport.js';
 import theDocConfig from '../interface/DocConfig.js';
@@ -42,7 +41,7 @@ class OsmRouteMasterValidator {
 	 * @type {Object}
 	 */
 
-	#osmRouteMaster;
+	#routeMaster;
 
 	/**
 	 * A flag indicating that the route master have errors on tags
@@ -56,7 +55,7 @@ class OsmRouteMasterValidator {
 	 */
 
 	#validateName ( ) {
-		if ( ! this.#osmRouteMaster?.tags?.name ) {
+		if ( ! this.#routeMaster.name ) {
 			theRelationsReport.addError (
 				'p',
 				'Error M008: no name tag for route_master'
@@ -64,13 +63,13 @@ class OsmRouteMasterValidator {
 			theStatsReport.addRouteMasterErrorName ( );
 			this.#haveErrors = true;
 		}
-		if ( this.#osmRouteMaster?.tags?.name && this.#osmRouteMaster?.tags?.ref ) {
+		if ( this.#routeMaster.name && this.#routeMaster.ref ) {
 			const vehicle = theDocConfig.vehicle.substring ( 0, 1 ).toUpperCase ( ) +
-       			theDocConfig.vehicle.substring ( 1 ) + ' ';
-			if ( this.#osmRouteMaster.tags.name !== vehicle + this.#osmRouteMaster.tags.ref ) {
+       			theDocConfig.vehicle.substring ( 1 );
+			if ( this.#routeMaster.name !== vehicle + ' ' + this.#routeMaster.ref ) {
 				theRelationsReport.addError (
 					'p',
-					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#osmRouteMaster.tags.ref + ')'
+					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#routeMaster.tags.ref + ')'
 				);
 				this.#haveErrors = true;
 			}
@@ -82,7 +81,7 @@ class OsmRouteMasterValidator {
 	 */
 
 	#validateRefTag ( ) {
-		if ( ! this.#osmRouteMaster?.tags?.ref ) {
+		if ( ! this.#routeMaster.ref ) {
 			theRelationsReport.addError (
 				'p',
 				'Error M005: route_master without ref tag '
@@ -98,54 +97,15 @@ class OsmRouteMasterValidator {
 	 */
 
 	#validateSameRefTag ( ) {
-		this.#osmRouteMaster.members.forEach (
-			member => {
-				if ( 'relation' === member.type ) {
-					const route = theOsmDataLoader.getRoute ( member.ref );
-					if ( route ) {
-						if ( this.#osmRouteMaster.tags.ref !== route.tags.ref ) {
-							theRelationsReport.addError (
-								'p',
-								'Error M006: ref tag of the route master (' + this.#osmRouteMaster.tags.ref +
-								') is not the same than the ref tag of the route (' + route.tags.ref + ')'
-							);
-							theStatsReport.addRouteMasterErrorSameRefs ( );
-							this.#haveErrors = true;
-						}
-					}
-				}
-			}
-		);
-	}
-
-	/**
-	 * verify that
-	 * - the members are relations
-	 * - the relation members are route relations
-	 */
-
-	#validateMembers ( ) {
-		this.#osmRouteMaster.members.forEach (
-			member => {
-				if ( 'relation' === member.type ) {
-					const route = theOsmDataLoader.getRoute ( member.ref );
-					if ( ! route ) {
-						theRelationsReport.addError (
-							'p',
-							'Error M003: a relation member of the route master is not a ' +
-                            theDocConfig.vehicle + ' relation'
-						);
-						theStatsReport.addRouteMasterErrorMembers ( );
-						this.#haveErrors = true;
-					}
-				}
-				else {
+		this.#routeMaster.routes.forEach (
+			route => {
+				if ( this.#routeMaster.ref !== route.ref ) {
 					theRelationsReport.addError (
 						'p',
-						'Error M004: a member of the route master is not a relation (' +
-                        member.type + ' ' + member.ref + ' )'
+						'Error M006: ref tag of the route master (' + this.#routeMaster.ref +
+						') is not the same than the ref tag of the route (' + route.ref + ')'
 					);
-					theStatsReport.addRouteMasterErrorMembers ( );
+					theStatsReport.addRouteMasterErrorSameRefs ( );
 					this.#haveErrors = true;
 				}
 			}
@@ -157,7 +117,7 @@ class OsmRouteMasterValidator {
 	 */
 
 	#validateFixme ( ) {
-		const fixme = this.#osmRouteMaster?.tags?.fixme;
+		const fixme = this.#routeMaster.fixme;
 		if ( fixme ) {
 			theRelationsReport.addWarning ( 'p', 'A fixme exists for this route master:' + fixme );
 			theStatsReport.addRouteMasterWarningFixme ( );
@@ -169,7 +129,7 @@ class OsmRouteMasterValidator {
 	 */
 
 	#validateOperator ( ) {
-		const operator = this.#osmRouteMaster?.tags?.operator;
+		const operator = this.#routeMaster.operator;
 		if ( ! operator ) {
 			theRelationsReport.addError ( 'p', 'Oprator tag not found' );
 			theStatsReport.addRouteMasterErrorOperator ( );
@@ -191,13 +151,10 @@ class OsmRouteMasterValidator {
 	 */
 
 	validate ( routeMaster ) {
-
-		theRelationsReport.add ( 'h3', 'Validation of tags, roles and members for route master' );
-
-		this.#osmRouteMaster = theOsmDataLoader.getRouteMaster ( routeMaster.osmId );
+		this.#routeMaster = routeMaster;
+		theRelationsReport.add ( 'h3', 'Validation of tags for route master' );
 		this.#validateOperator ( );
 		this.#validateFixme ( );
-		this.#validateMembers ( );
 		this.#validateRefTag ( );
 		this.#validateSameRefTag ( );
 		this.#validateName ( );

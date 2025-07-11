@@ -19,15 +19,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20250124
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theOperator from '../../Common/Operator.js';
 import theOsmRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/OsmRoutesMasterTree.js';
 import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
 import ArrayHelper from '../../Common/ArrayHelper.js';
-import theOperator from '../../Common/Operator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -39,52 +39,45 @@ class OsmDataLoader {
 
 	/**
 	 * An array for the osm route_masters relations
-	 * @type {Array.<Object>}
+	 * @type {Map.<OsmRouteMaster>}
 	 */
 
-	#osmRoutesMaster = [];
+	#osmRoutesMaster = new Map ( );
 
 	/**
 	 * A js map for the osm route relations. The key of the map objects is the OSM id
-	 * @type {Map}
+	 * @type {Map.<OsmRoute>}
 	 */
 
 	#osmRoutes = new Map ( );
 
 	/**
 	 * A js map for the osm #osmWays. The key of the map objects is the OSM id
-	 * @type {Map}
+	 * @type {Map.<OsmWay>}
 	 */
 
 	#osmWays = new Map ( );
 
 	/**
 	 * A js map for the osm nodes. The key of the map objects is the OSM id
-	 * @type {Map}
+	 * @type {Map.<OsmNode>}
 	 */
 
 	#osmNodes = new Map ( );
 
 	/**
 	 * A js map for the osm platforms. The key of the map objects is the OSM id
-	 * @type {Map}
+	 * @type {Map.<OsmObject>}
 	 */
 
 	#osmPlatforms = new Map ( );
 
 	/**
-	 * An array with the different roles for an osm platform
-	 * @type {Array.<String>}
-	 */
-
-	#platformRoles = [ 'platform', 'platform_entry_only', 'platform_exit_only' ];
-
-	/**
-	 * Clear maps and array.
+	 * Clear the maps
 	 */
 
 	#clear ( ) {
-		this.#osmRoutesMaster = [];
+		this.#osmRoutesMaster.clear ( );
 		this.#osmNodes.clear ( );
 		this.#osmWays.clear ( );
 		this.#osmRoutes.clear ( );
@@ -92,71 +85,20 @@ class OsmDataLoader {
 	}
 
 	/**
-	 * Get the osm object ( = the object given by overpass) corresponding to a route master
-	 * @param {Number} osmId the osm id of the osm object
-	 * @returns {Object} The searched osm route master
+	 * get the first ref:operator given to the platform
+	 * @param {OsmObject} osmPlatform
+	 * @returns {String} a string with the first ref:operator
 	 */
 
-	getRouteMaster ( osmId ) {
-		return ( this.#osmRoutesMaster.find ( element => element.id === osmId ) );
-	}
-
-	/**
-	 * Get the osm object ( = the object given by overpass) corresponding to a route
-	 * @param {Number} osmId the osm id of the osm object
-	 * @returns {Object} The searched osm route
-	 */
-
-	getRoute ( osmId ) {
-		return this.#osmRoutes.get ( osmId );
-	}
-
-	/**
-	 * Get the osm object ( = the object given by overpass) corresponding to a way
-	 * @param {Number} osmId the osm id of the osm object
-	 * @returns {Object} The searched osm route
-	 */
-
-	getWay ( osmId ) {
-		return this.#osmWays.get ( osmId );
-	}
-
-	/**
-	 * Get the osm object ( = the object given by overpass) corresponding to a node
-	 * @param {Number} osmId the osm id of the osm object
-	 * @returns {Object} The searched osm route
-	 */
-
-	getNode ( osmId ) {
-		return this.#osmNodes.get ( osmId );
-	}
-
-	/**
-	 * Get the osm object ( = the object given by overpass) corresponding to a platform
-	 * ( = an osmObject with a tag public_transport=platform )
-	 * @param {Number} osmId the osm id of the osm object
-	 * @returns {Object} The searched osm route
-	 */
-
-	getPlatform ( osmId ) {
-		return this.#osmPlatforms.get ( osmId );
-	}
-
-	/**
-	 * get a string with all the ref:operator given to the platform
-	 * @param {Object} osmPlatform
-	 * @returns {String} a string with all the platforms ref:operator (csv format)
-	 */
-
-	#getOperatorPlatformRef ( osmPlatform ) {
-		let platformRefs = '';
+	#getFirstPlatformRef ( osmPlatform ) {
+		let platformRefsString = '';
 		for ( const network of theOperator.networks ) {
-			let platformRef = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
-			if ( platformRef ) {
-				platformRefs += platformRef.split ( ';' ) [ 0 ] + ';';
+			let platformRefString = osmPlatform?.tags [ 'ref:' + network.osmNetwork ];
+			if ( platformRefString ) {
+				platformRefsString += platformRefString + ';';
 			}
 		}
-		return platformRefs.slice ( 0, -1 );
+		return platformRefsString.slice ( 0, -1 ).split ( ';' ) [ 0 ];
 	}
 
 	/**
@@ -164,53 +106,86 @@ class OsmDataLoader {
 	 */
 
 	#TreeBuilder ( ) {
+
+		/**
+		 * An array with the different roles for an osm platform
+		 * @type {Array.<String>}
+		 */
+
+		const platformRoles = [ 'platform', 'platform_entry_only', 'platform_exit_only' ];
+
+		// Building a generic object for the route master tree
 		const routesMasterTree = {
 			routesMaster : []
 		};
+
+		// loop on the osm route master, adding generic routes master to the generic route master tree
 		this.#osmRoutesMaster.forEach (
 			osmRouteMaster => {
+
+				// Building a generic object from the osm route master
 				const routeMaster = {
 					description : osmRouteMaster?.tags?.description,
 					ref : osmRouteMaster?.tags.ref,
+					fixme : osmRouteMaster?.tags.fixme,
+					operator : osmRouteMaster?.tags?.operator,
 					type : [ 'tram', 'subway', 'train', 'bus' ].indexOf ( osmRouteMaster?.tags?.route_master ),
 					routes : [],
-					osmId : osmRouteMaster.id,
-					operator : osmRouteMaster?.tags?.operator
+					osmId : osmRouteMaster.id
 				};
+
+				// loop on the osm route master members, adding routes
 				osmRouteMaster.members.forEach (
 					routeMasterMember => {
 						const osmRoute = this.#osmRoutes.get ( routeMasterMember.ref );
 						if ( osmRoute ) {
+
+							// building a generic object from the osm route
 							const route = {
 								name : osmRoute?.tags?.name,
 								from : osmRoute?.tags?.from,
 								to : osmRoute?.tags?.to,
+								ref : osmRoute?.tags?.ref,
+								fixme : osmRoute?.tags?.fixme,
+								operator : osmRoute?.tags?.operator,
+								ways : [],
 								platforms : [],
-								shapePk : null,
-								startDate : null,
-								endDate : null,
-								nodes : null,
 								osmId : osmRoute.id
 							};
-							osmRoute.members.forEach (
-								routeMember => {
-									const osmPlatform = this.#osmPlatforms.get ( routeMember.ref );
-									if ( osmPlatform && -1 !== this.#platformRoles.indexOf ( routeMember.role )	) {
 
-										// route.platforms.push ( this.#getOperatorPlatformRef ( osmPlatform ) );
+							// loop on the osm route members adding platforms and ways
+							// only the refs of the platforms are added to the platforms array
+							// Remember that a platform can have multiple refs but only the first ref is added
+							osmRoute.members.forEach (
+								member => {
+
+									// Adding ways
+									if ( '' === member.role ) {
+										route.ways.push ( this.#osmWays.get ( member.ref ) );
+									}
+
+									// AddingPlatform
+									const osmPlatform = this.#osmPlatforms.get ( member.ref );
+									if ( osmPlatform && -1 !== platformRoles.indexOf ( member.role )	) {
 										route.platforms.push (
-											this.#getOperatorPlatformRef ( osmPlatform ).split ( ';' ) [ 0 ]
+											this.#getFirstPlatformRef ( osmPlatform )
 										);
 									}
 								}
 							);
+
+							// Adding the route to the route master
 							routeMaster.routes.push ( route );
 						}
 					}
 				);
+
+				// sorting routes
 				routeMaster.routes.sort (
 					( first, second ) => first.name.localeCompare ( second.name )
 				);
+
+				// Adding the route master to the tree
 				routesMasterTree.routesMaster.push ( routeMaster );
 			}
 		);
@@ -224,18 +199,30 @@ class OsmDataLoader {
 	 */
 
 	#loadOsmData ( elements ) {
+
+		// temp array for platforms
 		const tmpOsmPlatforms = [];
+		const tmpRoutesMaster = [];
 		elements.forEach (
 			element => {
+
+				// objects are frozen
+				if ( element.tags ) {
+					Object.freeze ( element.tags );
+				}
+				if ( element.members ) {
+					Object.freeze ( element.members );
+				}
+				Object.freeze ( element );
+
+				// Each object is added to collections
 				switch ( element.type ) {
 				case 'relation' :
 					switch ( element.tags.type ) {
 					case 'route_master' :
-						Object.freeze ( element );
-						this.#osmRoutesMaster.push ( element );
+						tmpRoutesMaster.push ( element );
 						break;
 					case 'route' :
-						Object.freeze ( element );
 						this.#osmRoutes.set ( element.id, element );
 						break;
 					default :
@@ -243,11 +230,9 @@ class OsmDataLoader {
 					}
 					break;
 				case 'way' :
-					Object.freeze ( element );
 					this.#osmWays.set ( element.id, element );
 					break;
 				case 'node' :
-					Object.freeze ( element );
 					this.#osmNodes.set ( element.id, element );
 					break;
 				default :
@@ -259,6 +244,7 @@ class OsmDataLoader {
 			}
 		);
 
+		// sorting the platforms and adding to the platform collection
 		tmpOsmPlatforms.sort (
 			( first, second ) => first?.tags?.name.localeCompare ( second?.tags?.name )
 		);
@@ -268,13 +254,19 @@ class OsmDataLoader {
 			}
 		);
 
-		this.#osmRoutesMaster.sort (
+		// sorting the routes master and adding to the routes master collection
+		tmpRoutesMaster.sort (
 			( first, second ) => ArrayHelper.compareRouteName ( first.tags.ref, second.tags.ref )
-		 );
+		);
+		tmpRoutesMaster.forEach (
+			tmpRouteMaster => {
+				this.#osmRoutesMaster.set ( tmpRouteMaster.id, tmpRouteMaster );
+			}
+		);
 	}
 
 	/**
-	 * fetch data from the overpass-api or the dev data
+	 * load data from the dev data
 	 * @param {String} uri The uri to use for fetching
 	 */
 
@@ -371,12 +363,6 @@ class OsmDataLoader {
 	}
 }
 
-/**
- * The one and only one object OsmDataLoader
- */
-
-const theOsmDataLoader = new OsmDataLoader ( );
-
-export default theOsmDataLoader;
+export default OsmDataLoader;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

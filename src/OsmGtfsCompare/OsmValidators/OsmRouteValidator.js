@@ -24,9 +24,7 @@ Changes:
 
 import theRelationsReport from '../Reports/RelationsReport.js';
 import theStatsReport from '../Reports/StatsReport.js';
-import theOsmDataLoader from '../DataLoading/OsmDataLoader.js';
 import theOperator from '../../Common/Operator.js';
-import OsmRolesValidator from './OsmRolesValidator.js';
 import OsmContinuousRouteValidator from './OsmContinuousRouteValidator.js';
 import OsmNameFromToRefValidator from './OsmNameFromToRefValidator.js';
 
@@ -43,7 +41,7 @@ class OsmRouteValidator {
 	 * @type {Object}
 	 */
 
-	#osmRoute;
+	#route;
 
 	/**
 	 * A flag indicating that the route master have errors on tags
@@ -57,7 +55,7 @@ class OsmRouteValidator {
 	 */
 
 	#validateFixme ( ) {
-		const fixme = this.#osmRoute?.tags?.fixme;
+		const fixme = this.#route.fixme;
 		if ( fixme ) {
 			theRelationsReport.addWarning ( 'p', 'A fixme exists for this route master:' + fixme );
 			theStatsReport.addRouteWarningFixme ( );
@@ -69,7 +67,7 @@ class OsmRouteValidator {
 	 */
 
 	#validateOperator ( ) {
-		const operator = this.#osmRoute?.tags?.operator;
+		const operator = this.#route.operator;
 		if ( ! operator ) {
 			theRelationsReport.addError ( 'p', 'Oprator tag not found' );
 			theStatsReport.addRouteErrorOperator ( );
@@ -91,13 +89,12 @@ class OsmRouteValidator {
 	 */
 
 	validate ( route ) {
+		this.#route = route;
 		theRelationsReport.add ( 'h3', 'Validation of tags, roles and members for route' );
-		this.#osmRoute = theOsmDataLoader.getRoute ( route.osmId );
 		this.#validateOperator ( );
 		this.#validateFixme ( );
-		this.#haveErrors = this.#haveErrors && new OsmRolesValidator ( this.#osmRoute ).validate ( );
-		this.#haveErrors = this.#haveErrors && new OsmContinuousRouteValidator ( this.#osmRoute ).validate ( );
-		this.#haveErrors = this.#haveErrors && new OsmNameFromToRefValidator ( this.#osmRoute ).validate ( );
+		this.#haveErrors = this.#haveErrors && new OsmContinuousRouteValidator ( this.#route ).validate ( );
+		this.#haveErrors = this.#haveErrors && new OsmNameFromToRefValidator ( this.#route ).validate ( );
 		if ( ( ! this.#haveErrors ) ) {
 			theRelationsReport.add ( 'p', 'No validation errors found for route' );
 		}

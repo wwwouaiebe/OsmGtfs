@@ -73,6 +73,20 @@ class RouteMaster {
 	#osmId;
 
 	/**
+	 * The operator of the route master
+	 * @type {String}
+	 */
+
+	#operator;
+
+	/**
+	 * The fixme of the route master
+	 * @type {String}
+	 */
+
+	#fixme;
+
+	/**
 	 * The description of the route master.
 	 * For gtfs it's the route_long_name field of the table route
 	 * For OSM, it's the description tag of the route master
@@ -120,6 +134,20 @@ class RouteMaster {
 	get osmType ( ) { return 'relation'; }
 
 	/**
+	 * The operator of the route master
+	 * @type {String}
+	 */
+
+	get operator ( ) { return this.#operator; }
+
+	/**
+	 * The fixme of the route master
+	 * @type {String}
+	 */
+
+	get fixme ( ) { return this.#fixme; }
+
+	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route master.
 	 * @type {Object}
 	 */
@@ -130,7 +158,8 @@ class RouteMaster {
 			ref : this.#ref,
 			type : this.#type,
 			routes : [],
-			osmId : this.#osmId
+			osmId : this.#osmId,
+			operator : this.#operator
 		};
 		this.#routes.forEach (
 			route => {
