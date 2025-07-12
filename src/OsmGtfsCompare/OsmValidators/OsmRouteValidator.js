@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -38,20 +39,20 @@ class OsmRouteValidator {
 
 	/**
 	 * The route currently validated
-	 * @type {Object}
+	 * @type {Route}
 	 */
 
 	#route;
 
 	/**
-	 * A flag indicating that the route master have errors on tags
+	 * A flag indicating that the route master have errors
 	 * @type {boolean}
 	 */
 
 	#haveErrors = false;
 
 	/**
-	 * Verify tha the route master don(t have a fixme)
+	 * Verify that the route don't have a fixme
 	 */
 
 	#validateFixme ( ) {
@@ -63,7 +64,7 @@ class OsmRouteValidator {
 	}
 
 	/**
-	 * Verify that the route master have a operator tag including the current operator
+	 * Verify that the route master have an operator tag including the current operator
 	 */
 
 	#validateOperator ( ) {

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -28,7 +29,7 @@ import Platform from './Platform.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * Coming soon
+ * The gtfs platforms collection
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -65,7 +66,7 @@ class GtfsPlatforms {
 
 	loadData ( jsonPlatforms ) {
 
-		this.#platforms.clear ( );
+		this.#platforms = new Map ( );
 		const platformProperties = {};
 		jsonPlatforms.forEach (
 			jsonPlatform => {
@@ -92,6 +93,7 @@ class GtfsPlatforms {
 				}
 			}
 		);
+		Object.freeze ( this.#platforms );
 	}
 
 	/**

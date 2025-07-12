@@ -186,7 +186,7 @@ class GtfsJsonDataBuilder {
 		);
 
 		for ( const network of theOperator.networks ) {
-			this.#GtfsJsonData. set (
+			this.#GtfsJsonData.set (
 				network.osmNetwork,
 				{
 					startDate : startDateRecord [ 0 ]?.startDate,

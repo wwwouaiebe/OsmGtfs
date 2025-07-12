@@ -37,8 +37,8 @@ import theStatsReport from '../Reports/StatsReport.js';
 class OsmRouteMasterValidator {
 
 	/**
-	 * The osm object route master to validate
-	 * @type {Object}
+	 * The route master to validate
+	 * @type {RouteMaster}
 	 */
 
 	#routeMaster;
@@ -113,7 +113,7 @@ class OsmRouteMasterValidator {
 	}
 
 	/**
-	 * Verify tha the route master don(t have a fixme)
+	 * Verify tha the route master don't have a fixme
 	 */
 
 	#validateFixme ( ) {
@@ -153,6 +153,7 @@ class OsmRouteMasterValidator {
 	validate ( routeMaster ) {
 		this.#routeMaster = routeMaster;
 		theRelationsReport.add ( 'h3', 'Validation of tags for route master' );
+
 		this.#validateOperator ( );
 		this.#validateFixme ( );
 		this.#validateRefTag ( );

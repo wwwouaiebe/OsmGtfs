@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20250124
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -34,22 +34,22 @@ import theRelationsReport from '../Reports/RelationsReport.js';
 class OsmContinuousRouteValidator {
 
 	/**
-     * A counter for the errors
-     * @type {Number}
+     * A flag for the errors
+     * @type {boolean}
      */
 
 	#haveErrors = false;
 
 	/**
 	 * The route currently controlled
-	 * @type {Object}
+	 * @type {Route}
 	 */
 
 	#route;
 
 	/**
 	* Verify that a way is circular (= same node for the first and last node)
-	 @param {Object} way to verify
+	 @param {osmWay} way to verify
 	 @returns {boolean} True when the way is circular
 	 */
 
@@ -59,8 +59,8 @@ class OsmContinuousRouteValidator {
 
 	/**
 	 * Verify that two ways are sharing a node at the beginning or at the end
-	 * @param {Object} firstWay The first way to verify
-	 * @param {Object} secondWay The second way to verify
+	 * @param {osmWay} firstWay The first way to verify
+	 * @param {osmWay} secondWay The second way to verify
 	 */
 
 	 #waysHaveCommonNode ( firstWay, secondWay ) {
@@ -73,10 +73,10 @@ class OsmContinuousRouteValidator {
 	/**
 	 * Verify that for two ways:
 	 * - one way is circular (= same node for the first and last node)
-	 * - the other way have the start node or end node shared with the circular way
+	 * - the other way have the start node or end node shared on the circular way
 	 * @returns {boolean} True when a node is shared between the two ways
-	 * @param {Object} firstWay the first way to test
-	 * @param {Object} secondWay the second way to test
+	 * @param {osmWay} firstWay the first way to test
+	 * @param {osmWay} secondWay the second way to test
 	 */
 
 	 #waysViaRoundabout ( firstWay, secondWay ) {
@@ -123,7 +123,7 @@ class OsmContinuousRouteValidator {
 
 	/**
 	 * The constructor
-	 * @param {Object} osmRoute The controlled route
+	 * @param {Route} route The controlled route
 	 */
 
 	constructor ( route ) {

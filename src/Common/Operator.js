@@ -20,12 +20,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * Simple container for storing the contains of the oprator file
+ * Simple container for storing the contains of the operator json file
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -85,9 +86,11 @@ class Operator {
 
 			this.#jsonOperator = jsonOperator;
 
-			this.networks.forEach (
+			this.#jsonOperator.networks.forEach (
 				network => Object.freeze ( network )
 			);
+			Object.freeze ( this.#jsonOperator.networks );
+
 			return true;
 		}
 		catch {

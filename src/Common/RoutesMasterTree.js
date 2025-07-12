@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -86,13 +87,14 @@ class RoutesMasterTree {
 			'" AND routes.route_id like "' + network.gtfsIdPrefix + '%";'
 		);
 
-		// sorting the routes
+		// sorting the routes. Not possible to use an 'order by' sql statement because the sort is a mix
+		// of numeric and alphanumeric
 		dbRoutesMaster.sort ( ( first, second ) => ArrayHelper.compareRouteName ( first.ref, second.ref ) );
 		return dbRoutesMaster;
 	}
 
 	/**
-	 * Complete the route master tree object with the routes master from the jdon file
+	 * Complete the route master tree object with the routes master from the json file
 	 * @param {Object} jsonRoutesMasterTree the routes master tree from the json file
 	 */
 
@@ -100,11 +102,11 @@ class RoutesMasterTree {
 		this.#routesMaster = [];
 		for ( const jsonRouteMaster of jsonRoutesMasterTree.routesMaster ) {
 			if ( jsonRouteMaster.type === theDocConfig.gtfsType ) {
-				const gtfsRouteMaster = new RouteMaster ( jsonRouteMaster );
-				gtfsRouteMaster.buildFromJson ( jsonRouteMaster );
-				this.#routesMaster.push ( gtfsRouteMaster );
+				this.#routesMaster.push ( new RouteMaster ( ).buildFromJson ( jsonRouteMaster ) );
 			}
 		}
+
+		return this;
 	}
 
 	/**
@@ -116,10 +118,14 @@ class RoutesMasterTree {
 		this.#routesMaster = [];
 		const dbRoutesMaster = await this.#selectRoutesMasterFromDb ( network );
 		for ( const dbRouteMaster of dbRoutesMaster ) {
-			const gtfsRouteMaster = new RouteMaster ( dbRouteMaster );
-			await gtfsRouteMaster.buildFromDb ( network );
-			this.#routesMaster.push ( gtfsRouteMaster );
+			console.info ( 'now building route master ' +
+				network.osmNetwork + ' ' +
+				dbRouteMaster.ref + ' ' +
+				dbRouteMaster.description );
+			this.#routesMaster.push ( await new RouteMaster ( ).buildFromDb ( dbRouteMaster, network ) );
 		}
+
+		return this;
 	}
 
 	/**

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -27,7 +28,7 @@ import Platform from './Platform.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * Coming soon
+ * The osm platforms collection
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -38,7 +39,14 @@ class OsmPlatforms {
 	 * @type {Map}
 	 */
 
-	platformsWithMore1ref = new Map ( );
+	#platformsWithMore1ref = new Map ( );
+
+	/**
+	 * A map with the platforms having more than one ref. Key of the map is the osmId
+	 * @type {Map}
+	 */
+
+	get platformsWithMore1ref ( ) { return this.#platformsWithMore1ref; }
 
 	/**
 	 * A js map with the gtfs platforms. The keys are the osm ref
@@ -48,7 +56,7 @@ class OsmPlatforms {
 	#platforms = new Map ( );
 
 	/**
-	 * A js map with the gtfs platforms. The keys are the osm ref
+	 * A js map with the gtfs platforms. The keys are the platform ref
 	 * @type {Map}
 	 */
 
@@ -91,7 +99,6 @@ class OsmPlatforms {
 		platformProperties.zone = osmPlatform?.tags [ 'zone:' + theOperator.operator ];
 		platformProperties.osmId = osmPlatform.id;
 		platformProperties.osmType = osmPlatform.type;
-
 		platformProperties.routeRefs = {};
 		platformProperties.osmRefs = {};
 		theOperator.networks.forEach (
@@ -111,16 +118,25 @@ class OsmPlatforms {
 	}
 
 	/**
-	 * load the data coming from a overpass request
-	 * @param {Array.<Object>} osmPlatforms
+	 * load the data coming from a overpass API request
+	 * @param {Array.<OsmObject>} osmPlatforms the platforms to set in the collection
 	 */
 
 	loadData ( osmPlatforms ) {
-		this.#platforms.clear ( );
-		this.platformsWithMore1ref.clear ( );
+
+		// cleaning maps
+		this.#platforms = new Map ( );
+		this.#platformsWithMore1ref = new Map ( );
+
+		// loop on the platforms
 		osmPlatforms.forEach (
 			osmPlatform => {
+
+				// Building a object literal containing the osm platform properties
 				const platformProperties = this.#buildPlatformProperties ( osmPlatform );
+
+				// creating Platforms object, one for each ref in the osm platform
+				// and adding to the map
 				let refsCounter = 0;
 				let newPlatform = null;
 				Object.values ( platformProperties.osmRefs ) .forEach (
@@ -136,10 +152,15 @@ class OsmPlatforms {
 					}
 				);
 				if ( 1 < refsCounter ) {
-					this.platformsWithMore1ref.set ( newPlatform.osmId, newPlatform );
+
+					// more than 1 ref in the osm platform
+					this.#platformsWithMore1ref.set ( newPlatform.osmId, newPlatform );
 				}
 			}
 		);
+
+		Object.freeze ( this.#platforms );
+		Object.freeze ( this.#platformsWithMore1ref );
 	}
 
 	/**

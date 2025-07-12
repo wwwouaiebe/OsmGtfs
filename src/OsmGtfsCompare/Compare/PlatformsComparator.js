@@ -44,7 +44,7 @@ class PlatformsComparator {
 		let platformCounter = 0;
 		theGtfsPlatforms.platforms.forEach (
 			gtfsPlatform => {
-				if ( ! theOsmPlatforms.platforms.get ( gtfsPlatform.gtfsRef ) ) {
+				if ( ! theOsmPlatforms.getPlatform ( gtfsPlatform.gtfsRef ) ) {
 					thePlatformsReport.add ( 'p', gtfsPlatform.gtfsRef + ' ' + gtfsPlatform.nameOperator );
 					platformCounter ++;
 				}
@@ -64,7 +64,7 @@ class PlatformsComparator {
 		let platformCounter = 0;
 		theOsmPlatforms.platforms.forEach (
 			osmPlatform => {
-				if ( ! theGtfsPlatforms.platforms.get ( osmPlatform.gtfsRef ) ) {
+				if ( ! theGtfsPlatforms.getPlatform ( osmPlatform.gtfsRef ) ) {
 					thePlatformsReport.add (
 						'p',
 						osmPlatform.gtfsRef + ' ' + osmPlatform.name,

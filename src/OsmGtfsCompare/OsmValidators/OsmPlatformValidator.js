@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -71,7 +72,7 @@ class OsmPlatformValidator {
 	#errorsArray = [];
 
 	/**
-	 * an object with the new values for tag when an automatic update is possible
+	 * an object with the new values for tag when an automatic update with JOSM is possible
 	 * @type {Object}
 	 */
 
@@ -84,6 +85,8 @@ class OsmPlatformValidator {
 
 	#addErrors ( ) {
 		if ( 0 === this.#errorsArray.length ) {
+
+			// nothing to report
 			return;
 		}
 		thePlatformsReport.add (
@@ -104,10 +107,15 @@ class OsmPlatformValidator {
 	 */
 
 	#validateName ( ) {
+
+		// A name operator exists on the osm side...
+		// Some strange chars in the name... and also double white spaces
 		const gtfsNameOperator = this.#gtfsPlatform.nameOperator.replaceAll ( '´', '\'' ).replaceAll ( '  ', ' ' );
 
 		if ( this.#osmPlatform.nameOperator ) {
 			const osmNameOperator = this.#osmPlatform.nameOperator.replaceAll ( '´', '\'' );
+
+			// Compare osm name:operator with gffs name:operator
 			if ( 0 !== osmNameOperator.localeCompare ( gtfsNameOperator ) ) {
 				this.#errorsArray.push (
 					{
@@ -119,7 +127,12 @@ class OsmPlatformValidator {
 				theStatsReport.addPlatformsErrorNameOperator ( );
 			}
 		}
-		else if ( 0 !== this.#osmPlatform.name.localeCompare (
+		else if
+
+		// no name operator exists on the osm side
+		// Compare the osm name with the gtfs name operator using fr as locale and
+		// ignoring the casing and punctuation
+		( 0 !== this.#osmPlatform.name.localeCompare (
 			gtfsNameOperator,
 			'fr',
 			{ sensitivity : 'base', ignorePunctuation : true } )
@@ -157,6 +170,8 @@ class OsmPlatformValidator {
 
 	#validateNetwork ( ) {
 		if ( this.#platformWithMoreThan1Ref ) {
+
+			// multiple ref in the platform.description... to complex to verify the network...
 			this.#errorsArray.push (
 				{
 					htmlTag : 'p',
@@ -169,9 +184,14 @@ class OsmPlatformValidator {
 
 		let haveErrors = false;
 		const gtfsNetworks = this.#gtfsPlatform.network.split ( ';' );
-		const osmNetworks = this.#osmPlatform.network ? this.#osmPlatform.network.split ( ';' ) : [];
-		const othersNetworks = [];
 
+		// gtfs and osm networks can contains multiple networks...
+		// gtfs networks are coming from the gtfs data and then are supposed to be correct
+		// so osm networks must contains the gtfs networks, but can also contains networks from other operators
+		const osmNetworks = this.#osmPlatform.network ? this.#osmPlatform.network.split ( ';' ) : [];
+		const othersOsmNetworks = [];
+
+		// loop on the gtfs networks. We add an error when a gtfs network is not found in the osm networks
 		gtfsNetworks.forEach (
 			gtfsNetwork => {
 				if ( -1 === osmNetworks.indexOf ( gtfsNetwork ) ) {
@@ -179,12 +199,16 @@ class OsmPlatformValidator {
 				}
 			}
 		);
+
+		// loop on the osm networks. We add an error when an osm network is not present in the gtfs networks
+		// and this osm network is a network of the operator. If the osm network is not a network of the operator,
+		// we add this osm network to the list of others osm networks
 		osmNetworks.forEach (
 			osmNetwork => {
 				if ( -1 === gtfsNetworks.indexOf ( osmNetwork ) ) {
 
 					if ( -1 === this.#operatorNetworks.indexOf ( osmNetwork ) ) {
-						othersNetworks.push ( osmNetwork );
+						othersOsmNetworks.push ( osmNetwork );
 					}
 					else {
 						haveErrors = true;
@@ -194,12 +218,15 @@ class OsmPlatformValidator {
 		);
 
 		if ( haveErrors ) {
+
+			// Errors found. we create a list of expected networks with the gtfs networks and others osm networks
 			const expectedNetworks =
-                gtfsNetworks.concat ( othersNetworks )
+                gtfsNetworks.concat ( othersOsmNetworks )
                 	.sort ( ( first, second ) => first.localeCompare ( second ) )
                 	.toString ( )
                 	.replaceAll ( ',', ';' );
 
+			// reporting the error
 			this.#errorsArray.push (
 				{
 					htmlTag : 'p',
@@ -207,6 +234,8 @@ class OsmPlatformValidator {
 				}
 			);
 			theStatsReport.addPlatformsErrorNetwork ( );
+
+			// and adding this value to the list of tags to change with josm
 			this.#newTagValues.network = expectedNetworks;
 
 		}
@@ -217,8 +246,12 @@ class OsmPlatformValidator {
 	 */
 
 	#validateOperator ( ) {
+
+		// osm can have multiple operators. Creating a list of osm operators
 		const operators = this.#osmPlatform.operator ? this.#osmPlatform.operator.split ( ';' ) : [];
 		if ( -1 === operators.indexOf ( theOperator.operator ) ) {
+
+			// the operator is not found in the list of osm operators. Reporting an error
 			this.#errorsArray.push (
 				{
 					htmlTag : 'p',
@@ -226,6 +259,8 @@ class OsmPlatformValidator {
 				}
 			);
 			theStatsReport.addPlatformsErrorOperator ( );
+
+			// adding the operator to the list of osm operators and to the list of tags to change with josm
 			this.#newTagValues.operator =
 				this.#osmPlatform.operator
 					?
@@ -246,6 +281,8 @@ class OsmPlatformValidator {
 
 	#validateRouteRefs ( ) {
 		if ( this.#platformWithMoreThan1Ref ) {
+
+			// multiple ref in the platform.description... to complex to verify the network...
 			this.#errorsArray.push (
 				{
 					htmlTag : 'p',
@@ -255,8 +292,15 @@ class OsmPlatformValidator {
 			);
 			return;
 		}
+
+		// gtfs route refs are coming from the gtfs files and are computed for all the operator networks
+		// when gtfs data are loaded in the mysql database, so they are supposed correct.
+
+		// loop on the operator networks
 		theOperator.networks.forEach (
 			network => {
+
+				// gtfs route ref and osm route ref are differnt for the network. Reportinng an errpr
 				if (
 					this.#gtfsPlatform.routeRefs [ network.osmNetwork ]
                     !== this.#osmPlatform.routeRefs [ network.osmNetwork ]
@@ -285,6 +329,7 @@ class OsmPlatformValidator {
 					);
 					theStatsReport.addPlatformsErrorNetwork ( );
 
+					// adding the route ref to the list of tags to change with JOSM
 					this.#newTagValues [ 'route_ref:' + network.osmNetwork ] =
 						this.#gtfsPlatform.routeRefs [ network.osmNetwork ]
 							?
@@ -318,22 +363,28 @@ class OsmPlatformValidator {
 
 	/**
 	 * Performs the validation of an osm platform
-	 * @param {Object} osmPlatform The osm platform to validate
-	 * @param {Object} gtfsPlatform The gtfs platform corresponding to the osm platform
+	 * @param {Platform} osmPlatform The osm platform to validate
+	 * @param {Platform} gtfsPlatform The gtfs platform corresponding to the osm platform
 	 */
 
 	validate ( osmPlatform, gtfsPlatform ) {
+
+		// init the validator
  		this.#osmPlatform = osmPlatform;
 		this.#gtfsPlatform = gtfsPlatform;
 		this.#platformWithMoreThan1Ref = theOsmPlatforms.platformsWithMore1ref.get ( this.#osmPlatform.osmId );
 		this.#errorsArray = [];
 		this.#newTagValues = {};
+
+		// validation
 		this.#validateName ( );
 		this.#validateFixme ( );
 		this.#validateNetwork ( );
 		this.#validateOperator ( );
 		this.#validateRouteRefs ( );
 		this.#validateZone ( );
+
+		// Reporting the errors
 		this.#addErrors ( );
 	}
 

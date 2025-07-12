@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20250126
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -36,32 +36,23 @@ import theDocConfig from '../interface/DocConfig.js';
 class OsmNameFromToRefValidator {
 
 	/**
-     * A counter for the errors
-     * @type {Number}
+     * A flag for the errors
+     * @type {boolean}
      */
 
 	#haveErrors = false;
 
 	/**
 	 * The route currently controlled
-	 * @type {Object}
+	 * @type {Route}
 	 */
 
 	#route = null;
 
 	/**
 	 * the from platform ( = the first platform of the route)
-	 * @type {Object}
+	 * @type {Platform}
 	 */
-
-	#fromPlatform = null;
-
-	/**
-	 * the from platform ( = the last platform of the route)
-	 * @type {Object}
-	 */
-
-	#toPlatform = null;
 
 	/**
 	* Validate the from tag. The from tag must be the same than the name of the first platform
@@ -141,14 +132,6 @@ class OsmNameFromToRefValidator {
 	}
 
 	/**
-	 * Search the first and last platforms of the osm route
-	 */
-
-	#loadPlatforms ( ) {
-
-	}
-
-	/**
 	 * Start the validation of name, from, to and ref tags
 	 */
 
@@ -194,7 +177,6 @@ class OsmNameFromToRefValidator {
 			this.#haveErrors = true;
 		}
 
-		this.#loadPlatforms ( );
 		this.#validateFrom ( );
 		this.#validateTo ( );
 		this.#validateName ( );

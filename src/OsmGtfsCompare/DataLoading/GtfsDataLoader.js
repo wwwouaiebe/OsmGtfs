@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -28,7 +29,7 @@ import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js'
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * Loader for the gtfs data
+  * This class load the gtfs data from the gtfs json file to the gtfs route master tree and gtfs platforms collection
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -41,11 +42,14 @@ class GtfsDataLoader {
 	async loadData ( ) {
 
 		try {
+
+			// Loading the json file
 			const { default : jsonsData } = await import (
 				'../../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json',
 				{ with : { type : 'json' } }
 			);
 
+			// Loading data in the route master tree and platforms collection
 			theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
 			theGtfsPlatforms.loadData ( jsonsData.platforms );
 		}
@@ -53,9 +57,9 @@ class GtfsDataLoader {
 			return false;
 		}
 
+		// sort the routes based on the first and last plaform names
 		theGtfsRoutesMasterTree.routesMaster.forEach (
 			gtfsRouteMaster => {
-
 				gtfsRouteMaster.routes.sort (
 					( first, second ) => {
 						const firstStartPlatform = theGtfsPlatforms.getPlatform ( first.platforms [ 0 ] ).nameOperator;

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -26,7 +27,7 @@ import PolylineEncoder from '../Common/PolylineEncoder.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * An object with all the properties needed for the route comparison OSM GTFS
+ * A simple container for an osm or gtfs route
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -54,7 +55,7 @@ class Route {
 	#to;
 
 	/**
-	 * The ref tag value of the route
+	 * The ref tag of the route
 	 * @type {String}
 	 */
 
@@ -75,14 +76,14 @@ class Route {
 	#shapePk;
 
 	/**
-	 * The start date of the route
+	 * The gtfs start date of the route
 	 * @type {String}
 	 */
 
 	#startDate;
 
 	/**
-	 * The end date of the route
+	 * The gtfs end date of the route
 	 * @type {String}
 	 */
 
@@ -94,6 +95,11 @@ class Route {
 	 */
 
 	#nodes;
+
+	/**
+	 * The osm ways of the route
+	 * @type {OsmWay}
+	 */
 
 	#ways = [];
 
@@ -161,14 +167,14 @@ class Route {
 	get shapePk ( ) { return this.#shapePk; }
 
 	/**
-	 * The start date of the route
+	 * The gtfs start date of the route
 	 * @type {String}
 	 */
 
 	get startDate ( ) { return this.#startDate; }
 
 	/**
-	 * The end date of the route
+	 * The gtfs end date of the route
 	 * @type {String}
 	 */
 
@@ -180,6 +186,11 @@ class Route {
 	 */
 
 	get nodes ( ) { return this.#nodes; }
+
+	/**
+	 * The osm ways of the route
+	 * @type {OsmWay}
+	 */
 
 	get ways ( ) { return this.#ways; }
 
@@ -294,26 +305,39 @@ class Route {
 	 */
 
 	buildFromJson ( jsonRoute ) {
-		this.#nodes = jsonRoute.nodes;
-		this.#platforms = jsonRoute.platforms;
-		this.#osmId = jsonRoute.osmId;
 		this.#name = jsonRoute.name;
 		this.#from = jsonRoute.from;
 		this.#to = jsonRoute.to;
 		this.#ref = jsonRoute.ref;
+		this.#platforms = jsonRoute.platforms;
+		this.#shapePk = jsonRoute.shapePk;
+		this.#startDate = jsonRoute.startDate;
+		this.#endDate = jsonRoute.endDate;
+		this.#nodes = jsonRoute.nodes;
+		this.#ways = jsonRoute.ways;
+		this.#osmId = jsonRoute.osmId;
+		this.#operator = jsonRoute.operator;
+		this.#fixme = jsonRoute.fixme;
+
+		return this;
 	}
 
 	/**
 	 * Complete the route object with the nodes and platforms from the gtfs db
+	 * @param {Object} dbRoute an object with the values of the route coming from the gtfs db
 	 * @param {Object} network theNetwork in witch the orute is located
 	 */
 
-	async buildFromDb ( network ) {
+	async buildFromDb ( dbRoute, network ) {
 
 		let excludeList = [];
 		if ( network?.excludeList?.gtfs?.excludedPlatforms ) {
 			excludeList = Array.from ( network.excludeList.gtfs.excludedPlatforms, excludedPlatform => excludedPlatform.ref );
 		}
+
+		this.#shapePk = dbRoute.shapePk;
+		this.#startDate = dbRoute.startDate;
+		this.#endDate = dbRoute.endDate;
 
 		// nodes
 		this.#nodes = await this.#selectNodesFromDb ( this.#shapePk );
@@ -331,18 +355,16 @@ class Route {
 				previousPlatformRef = dbPlatform.ref;
 			}
 		}
+
+		return this;
 	}
 
 	/**
 	 * The constructor
-	 * @param {Object} dbRoute an object with the values of the route coming from the gtfs db
 	 */
 
-	constructor ( dbRoute ) {
+	constructor ( ) {
 		Object.freeze ( this );
-		this.#shapePk = dbRoute.shapePk;
-		this.#startDate = dbRoute.startDate;
-		this.#endDate = dbRoute.endDate;
 	}
 }
 

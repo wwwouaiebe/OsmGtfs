@@ -19,12 +19,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * Coming soon
+ * A simple container for a platform
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -143,14 +144,14 @@ class Platform {
 	get operator ( ) { return this.#operator; }
 
 	/**
-	 * The ref of the platform
+	 * The gtfs ref of the platform
 	 * @type {String}
 	 */
 
 	#gtfsRef;
 
 	/**
-	 * The ref of the platform
+	 * The gtfs ref of the platform
 	 * @type {String}
 	 */
 
@@ -187,14 +188,14 @@ class Platform {
 	get routeRefs ( ) { return this.#routeRefs; }
 
 	/**
-	 * the zone of the platform
+	 * the operator zone of the platform
 	 * @type {string}
 	 */
 
 	#zone;
 
 	/**
-	 * the zone of the platform
+	 * the operator zone of the platform
 	 * @type {string}
 	 */
 
@@ -215,14 +216,14 @@ class Platform {
 	get osmId ( ) { return this.#osmId; }
 
 	/**
-	 * The osm type ( node, way, relation)
+	 * The osm type ( must be node, way or relation)
 	 * @type {String}
 	 */
 
 	#osmType;
 
 	/**
-	 * The osm type ( node, way, relation)
+	 * The osm type ( must be node, way or relation)
 	 * @type {String}
 	 */
 

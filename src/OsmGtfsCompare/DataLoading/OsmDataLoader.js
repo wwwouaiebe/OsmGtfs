@@ -31,7 +31,8 @@ import ArrayHelper from '../../Common/ArrayHelper.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
- * This class call the overpass-api to obtains the OSM data
+ * This class call the overpass-api to obtains the OSM data and load the osm data on the osm route master tree
+ * and osm platforms collection
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -114,16 +115,16 @@ class OsmDataLoader {
 
 		const platformRoles = [ 'platform', 'platform_entry_only', 'platform_exit_only' ];
 
-		// Building a generic object for the route master tree
+		// Building a object literal for the route master tree
 		const routesMasterTree = {
 			routesMaster : []
 		};
 
-		// loop on the osm route master, adding generic routes master to the generic route master tree
+		// loop on the osm route master, adding routes master object literal to the route master tree object literal
 		this.#osmRoutesMaster.forEach (
 			osmRouteMaster => {
 
-				// Building a generic object from the osm route master
+				// Building a object literal from the osm route master
 				const routeMaster = {
 					description : osmRouteMaster?.tags?.description,
 					ref : osmRouteMaster?.tags.ref,
@@ -140,7 +141,7 @@ class OsmDataLoader {
 						const osmRoute = this.#osmRoutes.get ( routeMasterMember.ref );
 						if ( osmRoute ) {
 
-							// building a generic object from the osm route
+							// building a object literal from the osm route
 							const route = {
 								name : osmRoute?.tags?.name,
 								from : osmRoute?.tags?.from,

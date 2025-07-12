@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -159,7 +160,8 @@ class RouteMaster {
 			type : this.#type,
 			routes : [],
 			osmId : this.#osmId,
-			operator : this.#operator
+			operator : this.#operator,
+			fixme : this.#fixme
 		};
 		this.#routes.forEach (
 			route => {
@@ -222,38 +224,44 @@ class RouteMaster {
 	 */
 
 	buildFromJson ( jsonRouteMaster ) {
-		this.#osmId = jsonRouteMaster.osmId;
+		this.#description = jsonRouteMaster.description;
+		this.#ref = jsonRouteMaster.ref;
+		this.#type = Number.parseInt ( jsonRouteMaster.type );
+		this.#routes = [];
 		for ( const jsonRoute of jsonRouteMaster.routes ) {
-			const gtfsRoute = new Route ( jsonRoute );
-			gtfsRoute.buildFromJson ( jsonRoute );
-			this.routes.push ( gtfsRoute );
+			this.routes.push ( new Route ( ).buildFromJson ( jsonRoute ) );
 		}
+		this.#osmId = jsonRouteMaster.osmId;
+		this.#operator = jsonRouteMaster.operator;
+		this.#fixme = jsonRouteMaster.fixme;
+
+		return this;
 	}
 
 	/**
 	 * Complete the route master object with the routes from the gtfs db
+	 * @param {Object} dbRouteMaster an object with the values of the route master coming from the gtfs db
 	 * @param {Object} network the network in witch the route master is located
 	 */
 
-	async buildFromDb ( network ) {
+	async buildFromDb ( dbRouteMaster, network ) {
+		this.#description = dbRouteMaster.description;
+		this.#ref = dbRouteMaster.ref;
+		this.#type = Number.parseInt ( dbRouteMaster.type );
 		const dbRoutes = await this.#selectRoutesFromDb ( network );
 		for ( const dbRoute of dbRoutes ) {
-			const gtfsRoute = new Route ( dbRoute );
-			await gtfsRoute.buildFromDb ( network );
-			this.#routes.push ( gtfsRoute );
+			this.#routes.push ( await new Route ( ).buildFromDb ( dbRoute, network ) );
 		}
+
+		return this;
 	}
 
 	/**
 	 * The constructor
-	 * @param {Object} dbRouteMaster an object with the values of the route master coming from the gtfs db
 	 */
 
-	constructor ( dbRouteMaster ) {
+	constructor ( ) {
 		Object.freeze ( this );
-		this.#description = dbRouteMaster.description;
-		this.#ref = dbRouteMaster.ref;
-		this.#type = Number.parseInt ( dbRouteMaster.type );
 	}
 }
 
