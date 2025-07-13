@@ -137,45 +137,6 @@ pane buttons
 	background-color: white;
 }
 
-/*
-route links
-*/
-
-#routesLinks {
-	height: 0.2em;
-	overflow: hidden;
-	white-space: pre;
-	border-top-width: 0.4em;
-	border-top-style: solid;
-	border-top-color: red;
-	border-right-width: 0.1em;
-	border-right-style: solid;
-	border-left-width: 0.1em;
-	border-left-style: solid;
-	color:red;
-	text-align: center;
-}
-
-#routesLinks:hover {
-	width: 100%;
-	height: auto;
-	color: var(--main-color);
-	background-color: var(--main-background-color);
-	padding:1em;
-	overflow: visible;
-	white-space: normal;
-}
-
-.busShortcutAnchor {
-	margin-right: 0.1em;
-	color : blue;
-	text-decoration: underline;
-}
-
-.busShortcutAnchor:hover {
-	cursor: pointer;
-	color: red;
-}
 
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -194,6 +155,50 @@ main {
 	border-right-style: solid;
 	border-left-width: 0.1em;
 	border-right-width: 0.1em;
+}
+
+/*
+route links
+*/
+
+#routesLinks {
+	width: 4em;
+	height: 0.2em;
+	overflow: hidden;
+	white-space: pre;
+	border-top-width: 1em;
+	border-top-style: solid;
+	border-top-color: red;
+	border-bottom-style :none;
+	color:red;
+	text-align: center;
+	position: sticky;
+	top : 0;
+	right : 0;
+	transition: all 500ms 500ms;
+}
+
+#routesLinks:hover {
+	width: calc(100% - 2em);
+	height: 4.5em;
+	color: var(--main-color);
+	background-color: lightgray;
+	border-bottom-style: solid;
+	border-bottom-width: 0.1em;
+	padding:1em;
+	overflow: scroll;
+	white-space: normal;
+}
+
+.busShortcutAnchor {
+	margin-right: 0.1em;
+	color : blue;
+	text-decoration: underline;
+}
+
+.busShortcutAnchor:hover {
+	cursor: pointer;
+	color: red;
 }
 
 /*

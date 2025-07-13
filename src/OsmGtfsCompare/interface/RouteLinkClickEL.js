@@ -46,7 +46,7 @@ class RouteLinkClickEL {
 
 	handleEvent ( clickEvent ) {
 		document.getElementById ( clickEvent.target.dataset.routeMasterLinkDiv ).scrollIntoView (
-			{ behavior : 'smooth', block : 'center' }
+			{ behavior : 'smooth', block : 'start' }
 		);
 	}
 }

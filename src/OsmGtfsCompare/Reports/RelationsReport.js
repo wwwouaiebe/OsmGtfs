@@ -156,9 +156,9 @@ class RelationsReport extends Report {
 
 		super.open ( );
 
-		while ( this.#routesLinksdiv.firstChild ) {
-			this.#routesLinksdiv.removeChild ( this.#routesLinksdiv.firstChild );
-		}
+		this.#routesLinksdiv = document.createElement ( 'div' );
+		this.#routesLinksdiv.id = 'routesLinks';
+		this.report.appendChild ( this.#routesLinksdiv );
 
 		// show the animation
 		document.getElementById ( 'waitAnimation' ).style.visibility = 'visible';
