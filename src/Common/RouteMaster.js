@@ -34,6 +34,13 @@ import Route from '../Common/Route.js';
 class RouteMaster {
 
 	/**
+	 * The name of the route master
+	 * @type {String}
+	 */
+
+	#name;
+
+	/**
 	 * The description of the route master.
 	 * For gtfs it's the route_long_name field of the table route
 	 * For OSM, it's the description tag of the route master
@@ -86,6 +93,13 @@ class RouteMaster {
 	 */
 
 	#fixme;
+
+	/**
+	 * The name of the route master
+	 * @type {String}
+	 */
+
+	get name ( ) { return this.#name; }
 
 	/**
 	 * The description of the route master.
@@ -161,7 +175,8 @@ class RouteMaster {
 			routes : [],
 			osmId : this.#osmId,
 			operator : this.#operator,
-			fixme : this.#fixme
+			fixme : this.#fixme,
+			name : this.#name
 		};
 		this.#routes.forEach (
 			route => {
@@ -234,6 +249,7 @@ class RouteMaster {
 		this.#osmId = jsonRouteMaster.osmId;
 		this.#operator = jsonRouteMaster.operator;
 		this.#fixme = jsonRouteMaster.fixme;
+		this.#name = jsonRouteMaster.name;
 
 		return this;
 	}

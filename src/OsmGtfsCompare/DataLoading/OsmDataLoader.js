@@ -132,7 +132,8 @@ class OsmDataLoader {
 					operator : osmRouteMaster?.tags?.operator,
 					type : [ 'tram', 'subway', 'train', 'bus' ].indexOf ( osmRouteMaster?.tags?.route_master ),
 					routes : [],
-					osmId : osmRouteMaster.id
+					osmId : osmRouteMaster.id,
+					name : osmRouteMaster?.tags?.name
 				};
 
 				// loop on the osm route master members, adding routes
