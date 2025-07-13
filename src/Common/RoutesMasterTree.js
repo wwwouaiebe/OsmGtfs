@@ -106,7 +106,7 @@ class RoutesMasterTree {
 			}
 		}
 
-		return this; 
+		return this;
 	}
 
 	/**

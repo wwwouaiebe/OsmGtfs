@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20250124
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -160,7 +160,7 @@ class RoutesMasterTreesComparator {
 	#compareOsmRoutesMasterTree ( ) {
 		theOsmRoutesMasterTree.routesMaster.forEach (
 			osmRouteMaster => {
-				const gtfsRouteMaster = this.#searchRouteMaster (
+				this.#searchRouteMaster (
 					theGtfsRoutesMasterTree,
 					osmRouteMaster,
 					this.#unknownOsmRoutesMaster
@@ -216,7 +216,7 @@ class RoutesMasterTreesComparator {
 
 		// Heading
 		theRelationsReport.add ( 'h1', 'Osm routes master not found in the gtfs data' );
-		if ( 0 === this.#unknownOsmRoutesMaster ) {
+		if ( 0 === this.#unknownOsmRoutesMaster.length ) {
 
 			// empty list
 			theRelationsReport.add ( 'p', 'nothing found' );
