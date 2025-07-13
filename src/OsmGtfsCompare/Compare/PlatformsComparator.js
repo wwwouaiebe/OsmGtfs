@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -100,13 +101,12 @@ class PlatformsComparator {
 	 */
 
 	#validatePlatforms ( ) {
-		const platformValidator = new OsmPlatformValidator ( );
 		thePlatformsReport.add ( 'h1', 'Platforms validation' );
 		theOsmPlatforms.platforms.forEach (
 			osmPlatform => {
 				const gtfsPlatform = theGtfsPlatforms.platforms.get ( osmPlatform.gtfsRef );
 				if ( gtfsPlatform ) {
-					platformValidator.validate ( osmPlatform, gtfsPlatform );
+					new OsmPlatformValidator ( ).validate ( osmPlatform, gtfsPlatform );
 				}
 			}
 		);
