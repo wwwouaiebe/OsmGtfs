@@ -69,7 +69,7 @@ class OsmRouteMasterValidator {
 			if ( this.#routeMaster.name !== vehicle + ' ' + this.#routeMaster.ref ) {
 				theRelationsReport.addError (
 					'p',
-					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#routeMaster.tags.ref + ')'
+					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#routeMaster.ref + ')'
 				);
 				theStatsReport.addRouteMasterErrorName ( );
 				this.#haveErrors = true;
