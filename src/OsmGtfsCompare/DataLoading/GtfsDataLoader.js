@@ -26,6 +26,7 @@ Doc reviewed 20250711
 import theDocConfg from '../../OsmGtfsCompare/interface/DocConfig.js';
 import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutesMasterTree.js';
 import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
+import theStatsReport from '../Reports/StatsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -41,6 +42,7 @@ class GtfsDataLoader {
 
 	async loadData ( ) {
 
+		let startDate = '';
 		try {
 
 			// Loading the json file
@@ -52,10 +54,26 @@ class GtfsDataLoader {
 			// Loading data in the route master tree and platforms collection
 			theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
 			theGtfsPlatforms.loadData ( jsonsData.platforms );
+			startDate = jsonsData.startDate;
 		}
 		catch {
 			return false;
 		}
+
+		theStatsReport.add (
+			'h1',
+			'GTFS files valid from ' +
+			new Date ( startDate )
+				.toLocaleDateString (
+					'en-BE',
+					{
+						weekday : 'long',
+						year : 'numeric',
+						month : 'long',
+						day : 'numeric'
+					}
+				)
+		);
 
 		// sort the routes based on the first and last plaform names
 		theGtfsRoutesMasterTree.routesMaster.forEach (

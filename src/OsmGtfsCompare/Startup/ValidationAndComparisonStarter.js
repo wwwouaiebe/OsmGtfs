@@ -61,12 +61,12 @@ class ValidationAndComparisonStarter {
 		// reading the form
 		theDocConfig.loadData ( );
 
-		await new GtfsDataLoader ( ).loadData ( );
-
 		// opening report
 		thePlatformsReport.open ( );
 		theRelationsReport.open ( );
 		theStatsReport.open ( );
+
+		await new GtfsDataLoader ( ).loadData ( );
 
 		// loading osm data
 		await new OsmDataLoader ( ).fetchData (	);
