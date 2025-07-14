@@ -25,6 +25,7 @@ Doc reviewed 20250711
 
 import theRelationsReport from '../Reports/RelationsReport.js';
 import theStatsReport from '../Reports/StatsReport.js';
+import theDocConfig from '../interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -35,11 +36,18 @@ import theStatsReport from '../Reports/StatsReport.js';
 class OsmContinuousRouteValidator {
 
 	/**
-     * A flag for the errors
+     * A flag for the errors on ways
      * @type {boolean}
      */
 
-	#haveErrors = false;
+	#haveErrorsWays = false;
+
+	/**
+     * A flag for the errors on holes
+     * @type {boolean}
+     */
+
+	#haveErrorsHoles = false;
 
 	/**
 	 * The route currently controlled
@@ -93,36 +101,161 @@ class OsmContinuousRouteValidator {
 	}
 
 	/**
+	 * Verify that a way is a valid way for a bus:
+	 * - the highway tag of way is in the validBusHighways array
+	 * - or the way have a bus=yes tag or psv=yes tag
+	 * @param {Object} way The way to verify
+	 */
+
+	#validateWayForBus ( way ) {
+		const validBusHighways =
+		[
+			'motorway',
+			'motorway_link',
+			'trunk',
+			'trunk_link',
+			'primary',
+			'primary_link',
+			'secondary',
+			'secondary_link',
+			'tertiary',
+			'tertiary_link',
+			'service',
+			'residential',
+			'unclassified',
+			'living_street',
+			'busway',
+			'construction'
+		];
+
+		if ( 'construction' === way?.tags?.highway ) {
+			theRelationsReport.addWarning (
+				'p',
+				'Warning R017: a road under construction is used as way for the route ',
+				{ osmId : way.id, osmType : way.type }
+			);
+			this.#haveErrorsWays = true;
+		}
+		if (
+			-1 === validBusHighways.indexOf ( way?.tags?.highway )
+			&&
+			'yes' !== way?.tags?.psv
+			&&
+			'yes' !== way?.tags [ theDocConfig.vehicle ]
+	   ) {
+		   theRelationsReport.addError (
+				'p',
+				'Error R013: an invalid highway is used as way for the route ',
+				{ osmId : way?.id, osmType : way?.type }
+		   );
+		   this.#haveErrorsWays = true;
+	   }
+	}
+
+	/**
+	 * Verify that a way is valid for a tram:
+	 * - the way must have a railway=tram tag
+	 * @param {Object} way The way to verify
+	 */
+
+	#validateWayForTram ( way ) {
+		if ( 'tram' !== way?.tags?.railway ) {
+			theRelationsReport.add (
+				'p',
+				'Error R014: an invalid railway is used as way for the route ',
+				{ osmId : way.id, osmType : way.type }
+			);
+			this.#haveErrorsWays = true;
+		}
+
+	}
+
+	/**
+	 * Verify that a way is valid for a subway:
+	 * - the way must have a railway=subway tag
+	 * @param {Object} way The way to verify
+	 */
+
+	#validateWayForSubway ( way ) {
+		if ( 'subway' !== way?.tags?.railway ) {
+			theRelationsReport.add (
+				'p',
+				'Error R014: an invalid railway is used as way for the route ',
+				{ osmId : way.id, osmType : way.type }
+			);
+			this.#haveErrorsWays = true;
+		}
+	}
+
+	/**
 	* Verify that the ways of the route are continuous
+	@param {?Object} previousWay the previously controlled way
+	@param {Object} way The currently controled way
+	 */
+
+	#validateContinuousRoute ( previousWay, way ) {
+		if ( previousWay ) {
+			if (
+				! this.#waysHaveCommonNode ( way, previousWay )
+				&&
+				! this.#waysViaRoundabout ( way, previousWay )
+			) {
+				theRelationsReport.addError (
+					'p',
+					'Error R001: hole found for route ' + theRelationsReport.getOsmLink ( this.#route ) +
+					' between way id ' + theRelationsReport.getOsmLink (
+						{ osmId : previousWay.id, osmType : previousWay.type }
+					) +
+					' and way id ' + theRelationsReport.getOsmLink (
+						{ osmId : way.id, osmType : way.type }
+					)
+				);
+				this.#haveErrorsHoles = true;
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	* Verify that the ways of the route are continuous and valid
 	 */
 
 	validate ( ) {
+
 		let previousWay = null;
+
 		this.#route.ways.forEach (
 			way => {
-				if ( previousWay ) {
-					if (
-						! this.#waysHaveCommonNode ( way, previousWay )
-						&&
-						! this.#waysViaRoundabout ( way, previousWay )
-					) {
-						theRelationsReport.add (
-							'p',
-							'Error R001: hole found for route ' + theRelationsReport.getOsmLink ( this.#route ) +
-                            ' between way id ' + theRelationsReport.getOsmLink ( previousWay ) +
-                            ' and way id ' + theRelationsReport.getOsmLink ( way )
-						);
-						this.#haveErrors = true;
-						previousWay = null;
-					}
+				if ( ! this.#validateContinuousRoute ( previousWay, way ) ) {
+					previousWay = null;
 				}
+				switch ( theDocConfig.vehicle ) {
+				case 'bus' :
+					this.#validateWayForBus ( way );
+					break;
+				case 'tram' :
+					this.#validateWayForTram ( way );
+					break;
+				case 'subway' :
+					this.#validateWayForSubway ( way );
+					break;
+				default :
+					break;
+				}
+
 				previousWay = way;
 			}
 		);
-		if ( this.#haveErrors ) {
+
+		if ( this.#haveErrorsHoles ) {
 			theStatsReport.addRouteErrorHoles ( );
 		}
-		return this.#haveErrors;
+		if ( this.#haveErrorsWays ) {
+			theStatsReport.addRouteErrorWays ( );
+		}
+
+		return this.#haveErrorsWays || this.#haveErrorsHoles;
 	}
 
 	/**

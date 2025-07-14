@@ -58,7 +58,7 @@ class OsmRouteValidator {
 	#validateFixme ( ) {
 		const fixme = this.#route.fixme;
 		if ( fixme ) {
-			theRelationsReport.addWarning ( 'p', 'Warning R019: A fixme exists for this route master:' + fixme );
+			theRelationsReport.addWarning ( 'p', 'Warning R019: A fixme exists for this route:' + fixme );
 			theStatsReport.addRouteWarningFixme ( );
 		}
 	}
@@ -70,14 +70,19 @@ class OsmRouteValidator {
 	#validateOperator ( ) {
 		const operator = this.#route.operator;
 		if ( ! operator ) {
-			theRelationsReport.addError ( 'p', 'Error R022: Oprator tag not found' );
+			theRelationsReport.addError (
+				'p',
+				'Error R022: Oprator tag not found (expected to be "' + theOperator.osmOperator + '")'
+			);
 			theStatsReport.addRouteErrorOperator ( );
 			this.#haveErrors = true;
 		}
 		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
 			theRelationsReport.addError (
 				'p',
-				'Error R023: Missing operator:' + theOperator.operator
+				'Error R023: Missing operator ( expected containing "' +
+				theOperator.operator +
+				'" but found "' + this.#route.operator + '")'
 			);
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;
@@ -94,8 +99,8 @@ class OsmRouteValidator {
 		theRelationsReport.add ( 'h3', 'Validation of tags, roles and members for route' );
 		this.#validateOperator ( );
 		this.#validateFixme ( );
-		this.#haveErrors = this.#haveErrors && new OsmContinuousRouteValidator ( this.#route ).validate ( );
-		this.#haveErrors = this.#haveErrors && new OsmNameFromToRefValidator ( this.#route ).validate ( );
+		this.#haveErrors = new OsmContinuousRouteValidator ( this.#route ).validate ( ) || this.#haveErrors;
+		this.#haveErrors = new OsmNameFromToRefValidator ( this.#route ).validate ( ) || this.#haveErrors;
 		if ( ( ! this.#haveErrors ) ) {
 			theRelationsReport.add ( 'p', 'No validation errors found for route' );
 		}

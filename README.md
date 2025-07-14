@@ -115,6 +115,7 @@ The node used as stop_position don't have a public_transport=stop_position tag. 
 ### Error R012: an invalid object ... is used as stop_position for the route ...
 
 A way or a relation is used as stop_position. A stop_position must be a node
+-->
 
 ### Error R013: an invalid highway ... is used as way for the route ...
 
@@ -124,6 +125,7 @@ This kind of way is normally not for motor vehicle (It's a footway, a cycleway, 
 
 Each way object of a tram route must have a tag railway=tram. Each way object of a subway route must have a tag railway=subway. Correct the way.
 
+<!--
 ### Error R015: an invalid object ... is used as way for the route ...
 
 A node or a relation is used as way for the bus route. Verify the role of the object (bus_stop or stop_position without role) or remove the object from the bus route
@@ -131,11 +133,13 @@ A node or a relation is used as way for the bus route. Verify the role of the ob
 ### Error R016: an unknow role ... is found in the route ... for the osm object ... 
 
 The role is not a valid role for a bus/tram/subway relation. Verify the role or remove the object. Valid roles are 'platform', 'platform_entry_only', 'platform_exit_only', 'stop', 'stop_entry_only' and 'stop_exit_only'
+-->
 
 ### Warning R017: A road under construction ...  is used as way for the route
 
 Nothing to do... only a warning.
 
+<!--
 ### Error R018: route with more than one route_master
 
 A route is attached to more than one route_master. Correct the route_masters and probably remove one of the route_master

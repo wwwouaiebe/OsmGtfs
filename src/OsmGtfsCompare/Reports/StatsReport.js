@@ -58,6 +58,7 @@ class StatsReport extends Report {
 			operator : 0,
 			fixme : 0,
 			holes : 0,
+			ways : 0,
 			fromToRefName : 0,
 			doneNoGtfs : 0,
 			doneError : 0,
@@ -201,6 +202,15 @@ class StatsReport extends Report {
 	addRouteErrorHoles ( ) {
 		this.#stats.routes.errors ++;
 		this.#stats.routes.holes ++;
+	}
+
+	/**
+	 * Increment the routes.errors and routes.ways values of the stats
+	 */
+
+	addRouteErrorWays ( ) {
+		this.#stats.routes.errors ++;
+		this.#stats.routes.ways ++;
 	}
 
 	/**
@@ -370,8 +380,9 @@ class StatsReport extends Report {
 		this.add ( 'p', 'Validation warnings on routes master nice to fix: ' + this.#stats.routesMaster.warnings );
 
 		this.add ( 'h2', 'Routes' );
-		this.add ( 'p', 'Osm routes with errors on operator: ' + this.#stats.routes.operator );
 		this.add ( 'p', 'Osm routes with holes: ' + this.#stats.routes.holes );
+		this.add ( 'p', 'Osm routes with invalid ways: ' + this.#stats.routes.ways );
+		this.add ( 'p', 'Osm routes with errors on operator: tags ' + this.#stats.routes.operator );
 		this.add ( 'p', 'Osm routes with errors on from, to, ref or name tags: ' + this.#stats.routes.fromToRefName );
 		this.add ( 'p', 'Osm routes with fixme: ' + this.#stats.routes.fixme );
 		this.add ( 'p', 'Osm route relations done and aligned on GTFS files: ' + this.#stats.routes.doneOk );

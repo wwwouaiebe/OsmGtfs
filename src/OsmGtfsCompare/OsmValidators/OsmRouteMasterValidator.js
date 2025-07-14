@@ -69,7 +69,9 @@ class OsmRouteMasterValidator {
 			if ( this.#routeMaster.name !== vehicle + ' ' + this.#routeMaster.ref ) {
 				theRelationsReport.addError (
 					'p',
-					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#routeMaster.ref + ')'
+					'Error M007: invalid name for route_master (expected "' + vehicle + ' ' + this.#routeMaster.ref +
+					'" but found "' + this.#routeMaster.name + '")',
+					this.#routeMaster
 				);
 				theStatsReport.addRouteMasterErrorName ( );
 				this.#haveErrors = true;
@@ -103,8 +105,12 @@ class OsmRouteMasterValidator {
 				if ( this.#routeMaster.ref !== route.ref ) {
 					theRelationsReport.addError (
 						'p',
-						'Error M006: ref tag of the route master (' + this.#routeMaster.ref +
-						') is not the same than the ref tag of the route (' + route.ref + ')'
+						'Error M006: ref tag of the route master ("' + this.#routeMaster.ref +
+						'") ' + theRelationsReport.getOsmLink ( this.#routeMaster ) +
+						theRelationsReport.getJosmEdit ( this.#routeMaster ) +
+						 ' is not the same than the ref tag of the route ("' + route.ref + '") ' +
+						theRelationsReport.getOsmLink ( route ) +
+						theRelationsReport.getJosmEdit ( route )
 					);
 					theStatsReport.addRouteMasterErrorSameRefs ( );
 					this.#haveErrors = true;
@@ -132,14 +138,20 @@ class OsmRouteMasterValidator {
 	#validateOperator ( ) {
 		const operator = this.#routeMaster.operator;
 		if ( ! operator ) {
-			theRelationsReport.addError ( 'p', 'Error M011: Oprator tag not found' );
+			theRelationsReport.addError (
+				'p',
+				'Error M011: Oprator tag not found (expected to be "' + theOperator.osmOperator + '")',
+				this.#routeMaster.operator );
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;
 		}
 		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
 			theRelationsReport.addError (
 				'p',
-				'Error M012: Missing operator:' + theOperator.operator
+				'Error M012: Missing operator ( expected containing "' +
+				theOperator.operator +
+				'" but found "' + this.#routeMaster.operator + '")',
+				this.#routeMaster
 			);
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;

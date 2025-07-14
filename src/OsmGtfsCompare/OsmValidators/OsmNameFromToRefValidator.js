@@ -65,11 +65,13 @@ class OsmNameFromToRefValidator {
 		if (
 			this.#route.from
 			&&
-			this.#route.from !== fromPlatform.name
+			this.#route.from !== fromPlatform?.name
+			&&
+			fromPlatform?.nameOperator
 			&&
 			this.#route.from.toLowerCase ( ) !== fromPlatform.nameOperator.toLowerCase ( )
 		) {
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error R003: the from tag is not equal to the name of the first platform for route '
 			);
@@ -88,11 +90,13 @@ class OsmNameFromToRefValidator {
 		if (
 			this.#route.to
 			&&
-			this.#route.to !== toPlatform.name
+			this.#route.to !== toPlatform?.name
+			&&
+			toPlatform?.nameOperator
 			&&
 			this.#route.to.toLowerCase ( ) !== toPlatform.nameOperator.toLowerCase ( )
 		) {
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error R005: the to tag is not equal to the name of the last platform for route'
 			);
@@ -123,9 +127,10 @@ class OsmNameFromToRefValidator {
 				vehicle + ' ' + this.#route.ref + ': ' +
 				this.#route.from + ' → ' + this.#route.to;
 			if ( this.#route.name.replaceAll ( '=>', '→' ) !== goodName ) {
-				theRelationsReport.add (
+				theRelationsReport.addError (
 					'p',
-					'Error R006: Invalid name ("' + this.#route.name + '" but expected "' + goodName + '") for route '
+					'Error R006: Invalid name (expected "' + goodName + '" but found "' + this.#route.name + '") for route ',
+					this.#route
 				);
 				this.#haveErrors = true;
 			}
@@ -141,7 +146,7 @@ class OsmNameFromToRefValidator {
 		if ( ! this.#route.from ) {
 
 			// no from tag
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error R002: a from tag is not found for route'
 			);
@@ -151,7 +156,7 @@ class OsmNameFromToRefValidator {
 		if ( ! this.#route.to ) {
 
 			// no to tag
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error R004: a to tag is not found for route'
 			);
@@ -161,7 +166,7 @@ class OsmNameFromToRefValidator {
 		if ( ! this.#route.ref ) {
 
 			// no ref tag
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error R020: a ref tag is not found for route'
 			);
@@ -171,7 +176,7 @@ class OsmNameFromToRefValidator {
 		if ( ! this.#route.name ) {
 
 			// no name tag
-			theRelationsReport.add (
+			theRelationsReport.addError (
 				'p',
 				'Error R021: a name tag is not found for route'
 			);
