@@ -27,6 +27,7 @@ import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
 import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 import thePlatformsReport from '../Reports/PlatformsReport.js';
 import OsmPlatformValidator from '../OsmValidators/OsmPlatformValidator.js';
+import theDocConfig from '../interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -117,6 +118,13 @@ class PlatformsComparator {
 	 */
 
 	compare ( ) {
+		if ( '' !== theDocConfig.ref ) {
+			thePlatformsReport.add (
+				'h1',
+				'No Platforms comparison and validation when the control is limited to a specific route master'
+			);
+			return;
+		}
 		this.#searchMissingOsmPlatforms ( );
 		this.#searchUnknownGtfsPlatforms ( );
 		this.#reportOsmPlatformsWithMore1ref ( );

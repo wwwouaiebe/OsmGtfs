@@ -70,8 +70,7 @@ class OsmRouteMasterValidator {
 				theRelationsReport.addError (
 					'p',
 					'Error M007: invalid name for route_master (expected "' + vehicle + ' ' + this.#routeMaster.ref +
-					'" but found "' + this.#routeMaster.name + '")',
-					this.#routeMaster
+					'" but found "' + this.#routeMaster.name + '")'
 				);
 				theStatsReport.addRouteMasterErrorName ( );
 				this.#haveErrors = true;
@@ -140,8 +139,8 @@ class OsmRouteMasterValidator {
 		if ( ! operator ) {
 			theRelationsReport.addError (
 				'p',
-				'Error M011: Oprator tag not found (expected to be "' + theOperator.osmOperator + '")',
-				this.#routeMaster.operator );
+				'Error M011: Oprator tag not found (expected to be "' + theOperator.osmOperator + '")'
+			);
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;
 		}
@@ -150,8 +149,7 @@ class OsmRouteMasterValidator {
 				'p',
 				'Error M012: Missing operator ( expected containing "' +
 				theOperator.operator +
-				'" but found "' + this.#routeMaster.operator + '")',
-				this.#routeMaster
+				'" but found "' + this.#routeMaster.operator + '")'
 			);
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;

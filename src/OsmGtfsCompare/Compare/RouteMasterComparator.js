@@ -301,8 +301,7 @@ class RouteMasterComparator {
 				'p',
 				'Error M009: the osm description of the route_master is not equal to the GTFS route long name (expected "' +
 				this.#gtfsRouteMaster.description + '" but found "' +
-				this.#osmRouteMaster.description + '")',
-				this.#osmRouteMaster
+				this.#osmRouteMaster.description + '")'
 
 			);
 			theStatsReport.addRouteMasterErrorDescription ( );
