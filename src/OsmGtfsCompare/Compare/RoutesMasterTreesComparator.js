@@ -244,8 +244,10 @@ class RoutesMasterTreesComparator {
 		this.#compareGtfsRoutesMasterTree ( );
 		this.#compareOsmRoutesMasterTree ( );
 
-		this.#reportMissingOsmRoutesMaster ( );
-		this.#reportUnknownOsmRoutesMaster ( );
+		if ( ! theDocConfig.ref ) {
+			this.#reportMissingOsmRoutesMaster ( );
+			this.#reportUnknownOsmRoutesMaster ( );
+		}
 	}
 
 	/**

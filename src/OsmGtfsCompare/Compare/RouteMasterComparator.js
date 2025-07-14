@@ -320,7 +320,7 @@ class RouteMasterComparator {
 			return;
 		}
 
-		theRelationsReport.add ( 'h3', 'gtfs routes not found in the osm data' );
+		theRelationsReport.add ( 'h2', 'gtfs routes not found in the osm data' );
 		this.#gtfsRouteMaster.routes.forEach (
 			gtfsRoute => {
 				if ( ! this.#matchScoresTable.matchedGtfsRoutes.get ( gtfsRoute.shapePk ) ) {
