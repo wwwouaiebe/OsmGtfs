@@ -71,6 +71,7 @@ class OsmRouteMasterValidator {
 					'p',
 					'Error M007: invalid name for route_master (must be ' + vehicle + ' ' + this.#routeMaster.tags.ref + ')'
 				);
+				theStatsReport.addRouteMasterErrorName ( );
 				this.#haveErrors = true;
 			}
 		}
@@ -131,14 +132,14 @@ class OsmRouteMasterValidator {
 	#validateOperator ( ) {
 		const operator = this.#routeMaster.operator;
 		if ( ! operator ) {
-			theRelationsReport.addError ( 'p', 'Oprator tag not found' );
+			theRelationsReport.addError ( 'p', 'Error M011: Oprator tag not found' );
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;
 		}
 		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
 			theRelationsReport.addError (
 				'p',
-				'Missing operator:' + theOperator.operator
+				'Error M012: Missing operator:' + theOperator.operator
 			);
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;

@@ -58,7 +58,7 @@ class OsmRouteValidator {
 	#validateFixme ( ) {
 		const fixme = this.#route.fixme;
 		if ( fixme ) {
-			theRelationsReport.addWarning ( 'p', 'A fixme exists for this route master:' + fixme );
+			theRelationsReport.addWarning ( 'p', 'Warning R019: A fixme exists for this route master:' + fixme );
 			theStatsReport.addRouteWarningFixme ( );
 		}
 	}
@@ -70,14 +70,14 @@ class OsmRouteValidator {
 	#validateOperator ( ) {
 		const operator = this.#route.operator;
 		if ( ! operator ) {
-			theRelationsReport.addError ( 'p', 'Oprator tag not found' );
+			theRelationsReport.addError ( 'p', 'Error R022: Oprator tag not found' );
 			theStatsReport.addRouteErrorOperator ( );
 			this.#haveErrors = true;
 		}
 		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
 			theRelationsReport.addError (
 				'p',
-				'Missing operator:' + theOperator.operator
+				'Error R023: Missing operator:' + theOperator.operator
 			);
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;

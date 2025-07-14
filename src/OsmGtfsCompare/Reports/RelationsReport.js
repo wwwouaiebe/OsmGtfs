@@ -372,20 +372,26 @@ class RelationsReport extends Report {
 
 	addGpxRoute ( routeMaster, gpxRoute, routeIcon ) {
 		const gpxRouteName = this.#getGpxRouteName ( routeMaster, gpxRoute );
-		if ( '🔵' === routeIcon || '🟡' === routeIcon ) {
-			this.addError (
+		if ( -1 === [ '🔵', '🟡', '🔴', '🟣' ].indexOf ( routeIcon ) ) {
+			this.add (
+				'p',
+				routeIcon + ' ' + gpxRouteName + ' ' +
+				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )
+			);
+		}
+		else if ( '🟣' === routeIcon ) {
+			this.addWarning (
 				'p',
 				routeIcon + ' ' + gpxRouteName + ' ' +
 				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )
 			);
 		}
 		else {
-			this.add (
+			this.addError (
 				'p',
 				routeIcon + ' ' + gpxRouteName + ' ' +
 				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )
 			);
-
 		}
 	}
 

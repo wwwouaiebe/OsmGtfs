@@ -113,8 +113,8 @@ class RouteMasterComparator {
 		);
 
 		// reporting
-		theRelationsReport.add ( 'p', osmPlatformsToRemoveStr );
 		theRelationsReport.add ( 'p', gtfsPlatformToAddStr );
+		theRelationsReport.add ( 'p', osmPlatformsToRemoveStr );
  		if (
 			0 === osmPlatformsToRemove.length
 			&&
@@ -275,6 +275,7 @@ class RouteMasterComparator {
 				else if ( 0 === matchScoresSimilarFromEndPlatforms.length ) {
 					theRelationsReport.add ( 'h3', 'GTFS comparison results for route' );
 					theRelationsReport.addError ( 'p', '🔴 No gtfs route found' );
+					theStatsReport.addRouteDoneNoGtfs ( );
 				}
 				else {
 					this.#reportMatchScoresSimilarFromEndPlatforms ( matchScoresSimilarFromEndPlatforms, osmRoute );
@@ -298,12 +299,13 @@ class RouteMasterComparator {
 		) {
 			theRelationsReport.addError (
 				'p',
-				'Error C001: the osm description of the route_master ( ' +
+				'Error M009: the osm description of the route_master ( ' +
 				this.#osmRouteMaster.description +
 				') is not equal to the GTFS route long name ( ' +
 				this.#gtfsRouteMaster.description +
 				' )'
 			);
+			theStatsReport.addRouteMasterErrorDescription ( );
 			return false;
 		}
 		theRelationsReport.add ( 'p', 'No validation errors found for route_master' );

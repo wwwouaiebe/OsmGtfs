@@ -24,6 +24,7 @@ Doc reviewed 20250711
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import theRelationsReport from '../Reports/RelationsReport.js';
+import theStatsReport from '../Reports/StatsReport.js';
 import theDocConfig from '../interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -56,6 +57,7 @@ class RoutesWithoutRouteMasterValidator {
 						theRelationsReport.getOsmLink ( element ),
 						{ osmId : element.id, osmType : element.type }
 					);
+					theStatsReport.addErrorRouteNoRouteMaster ( );
 				}
 			);
 		}

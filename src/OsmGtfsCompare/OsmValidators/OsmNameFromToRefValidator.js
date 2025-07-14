@@ -25,6 +25,7 @@ Doc reviewed 20250711
 
 import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 import theRelationsReport from '../Reports/RelationsReport.js';
+import theStatsReport from '../Reports/StatsReport.js';
 import theDocConfig from '../interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -180,6 +181,10 @@ class OsmNameFromToRefValidator {
 		this.#validateFrom ( );
 		this.#validateTo ( );
 		this.#validateName ( );
+
+		if ( this.#haveErrors ) {
+			theStatsReport.addRouteErrorFromToRefName ();
+		}
 
 		return this.#haveErrors;
 	}

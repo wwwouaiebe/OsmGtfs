@@ -24,6 +24,7 @@ Doc reviewed 20250711
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import theRelationsReport from '../Reports/RelationsReport.js';
+import theStatsReport from '../Reports/StatsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -118,6 +119,9 @@ class OsmContinuousRouteValidator {
 				previousWay = way;
 			}
 		);
+		if ( this.#haveErrors ) {
+			theStatsReport.addRouteErrorHoles ( );
+		}
 		return this.#haveErrors;
 	}
 

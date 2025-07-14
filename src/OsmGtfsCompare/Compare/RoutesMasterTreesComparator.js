@@ -228,9 +228,12 @@ class RoutesMasterTreesComparator {
 				unknownOsmRouteMaster => {
 					theRelationsReport.add (
 						'p',
-						( unknownOsmRouteMaster.ref ?? '' ) + ' ' + ( unknownOsmRouteMaster.description ?? '' ),
+						'Error M10: An unknown osm route master is found: ' +
+						( unknownOsmRouteMaster.ref ?? '' ) + ' ' +
+						( unknownOsmRouteMaster.description ?? '' ),
 						unknownOsmRouteMaster
 					);
+					theStatsReport.addRouteMasterErrorIsUnknown ( );
 				}
 			);
 		}
