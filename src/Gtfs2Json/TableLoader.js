@@ -119,7 +119,7 @@ class TableLoader {
 
 		// it's complex... field are comma separated, but values can contains a comma...
 		// So, first we split the line at the ""
-		const tmpFieldsValues = dataLine.split ( '"' );
+		let tmpFieldsValues = dataLine.split ( '"' );
 		let tmpDataLine = '';
 		let tmpFieldsValuesCounter = 0;
 
