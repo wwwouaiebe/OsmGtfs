@@ -28,6 +28,7 @@ import theOperator from '../../Common/Operator.js';
 import theOsmRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/OsmRoutesMasterTree.js';
 import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
 import ArrayHelper from '../../Common/ArrayHelper.js';
+import JsonLoader from '../../Common/JsonLoader.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -273,16 +274,11 @@ class OsmDataLoader {
 		console.info ( 'Warning: osm dev data are used' );
 		console.info ( uri );
 
-		try {
-			const { default : osmData } = await import (
-				'../../../devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json',
-				{ with : { type : 'json' } }
-			);
-			return osmData.elements;
-		}
-		catch {
-			return null;
-		}
+		let devData = await new JsonLoader ( ).loadData (
+			'../../devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json'
+		);
+
+		return devData.elements;
 
 	}
 

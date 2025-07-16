@@ -27,6 +27,7 @@ import theDocConfg from '../../OsmGtfsCompare/Interface/DocConfig.js';
 import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutesMasterTree.js';
 import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
 import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
+import JsonLoader from '../../Common/JsonLoader.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -42,23 +43,14 @@ class GtfsDataLoader {
 
 	async loadData ( ) {
 
-		let startDate = '';
-		try {
+		let jsonData = await new JsonLoader ( ).loadData (
+			'../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json'
+		);
 
-			// Loading the json file
-			const { default : jsonsData } = await import (
-				'../../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json',
-				{ with : { type : 'json' } }
-			);
-
-			// Loading data in the route master tree and platforms collection
-			theGtfsRoutesMasterTree.setJsonRoutesMaster ( jsonsData.routesMasterTree.routesMaster, theDocConfg.gtfsType );
-			theGtfsPlatforms.loadData ( jsonsData.platforms );
-			startDate = jsonsData.startDate;
-		}
-		catch {
-			return false;
-		}
+		// Loading data in the route master tree and platforms collection
+		theGtfsRoutesMasterTree.setJsonRoutesMaster ( jsonData.routesMasterTree.routesMaster, theDocConfg.gtfsType );
+		theGtfsPlatforms.loadData ( jsonData.platforms );
+		const startDate = jsonData.startDate;
 
 		theStatsReport.add (
 			'h1',

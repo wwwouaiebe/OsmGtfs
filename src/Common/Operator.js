@@ -24,6 +24,8 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
+import JsonLoader from './JsonLoader.js';
+
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
  * Simple container for storing the contains of the operator json file
@@ -81,11 +83,9 @@ class Operator {
 
 	async loadData ( operatorFile ) {
 
-		try {
-			const { default : jsonOperator } = await import ( '../../operators/' + operatorFile, { with : { type : 'json' } } );
+		this.#jsonOperator = await new JsonLoader ( ).loadData ( '../../operators/' + operatorFile );
 
-			this.#jsonOperator = jsonOperator;
-
+		if ( this.#jsonOperator ) {
 			this.#jsonOperator.networks.forEach (
 				network => Object.freeze ( network )
 			);
@@ -93,9 +93,8 @@ class Operator {
 
 			return true;
 		}
-		catch {
-			return false;
-		}
+
+		return false;
 	}
 
 	/**

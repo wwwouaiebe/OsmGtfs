@@ -26,6 +26,7 @@ Doc reviewed 20250711
 import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
 import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
 import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
+import JsonLoader from '../../Common/JsonLoader.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -72,16 +73,11 @@ class RoutesWithoutRouteMasterValidator {
 		console.info ( 'Warning: osm dev data are used' );
 		console.info ( uri );
 
-		try {
-			const { default : osmData } = await import (
-				'../../../devData/routesMasterDevData-' + theDocConfig.network.toUpperCase ( ) + '.json',
-				{ with : { type : 'json' } }
-			);
-			return osmData.elements;
-		}
-		catch {
-			return null;
-		}
+		let devData = await new JsonLoader ( ).loadData (
+			'../../devData/routesMasterDevData-' + theDocConfig.network.toUpperCase ( ) + '.json'
+		);
+
+		return devData.elements;
 	}
 
 	/**
