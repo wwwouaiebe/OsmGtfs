@@ -23,8 +23,6 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import PolylineEncoder from '../Common/PolylineEncoder.js';
-
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
  * A simple container for an osm or gtfs route
@@ -251,60 +249,12 @@ class Route {
 	}
 
 	/**
-	 * Select in the gtfs db all the platforms ref used by a route
-	 * @param {String} shapePk The unique identifier of the route
-	 * @returns {Array.<Object>} An array with all the platforms used by the route
+	 * The constructor
+	 * @param {Object} jsonRoute An object litteral with the properties of the route to create
 	 */
 
-	async #selectPlatformsFromDb ( shapePk ) {
-
-		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
-
-		const dbPlatforms = await theMySqlDb.execSql (
-			'SELECT stops.stop_id AS ref ' +
-            'FROM stop_times INNER JOIN stops ON stops.stop_pk = stop_times.stop_pk ' +
-            'WHERE stop_times.trip_pk = ' +
-            '( SELECT trips.trip_pk FROM trips WHERE trips.shape_pk = ' + shapePk + ' LIMIT 1 ) ' +
-            'ORDER BY stop_times.stop_sequence;'
-		);
-
-		return dbPlatforms;
-	}
-
-	/**
-	 * Select in the gtfs db all the coords ref used by a route
-	 * @param {String} shapePk The unique identifier of the route
-	 * @returns {String } A string with all the coords used by the route encoded with PolylineEncoder
-	 */
-
-	async #selectNodesFromDb ( shapePk ) {
-
-		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
-
-		// select
-		const nodes = await theMySqlDb.execSql (
-			'SELECT shapes.shape_pt_lat AS lat, shapes.shape_pt_lon AS lon ' +
-            'FROM shapes WHERE shapes.shape_pk = ' + shapePk + ' ' +
-            'ORDER BY shapes.shape_pk, shapes.shape_pt_sequence;'
-		);
-
-		// Creating an array of array of numbers. Reminder numbers are coming as string from the db
-		const nodesArray = [];
-		nodes.forEach (
-			node => nodesArray.push ( [ Number.parseFloat ( node.lat ), Number.parseFloat ( node.lon ) ] )
-		);
-
-		// encoding the arry with PolylineE,coder and return
-		// eslint-disable-next-line no-magic-numbers
-		return new PolylineEncoder ( ).encode ( nodesArray, [ 6, 6 ] );
-	}
-
-	/**
-	 * Complete the route object with the nodes and platforms from the json file
-	 * @param {Object} jsonRoute the route from the json file
-	 */
-
-	buildFromJson ( jsonRoute ) {
+	constructor ( jsonRoute ) {
+		Object.freeze ( this );
 		this.#name = jsonRoute.name;
 		this.#from = jsonRoute.from;
 		this.#to = jsonRoute.to;
@@ -318,53 +268,6 @@ class Route {
 		this.#osmId = jsonRoute.osmId;
 		this.#operator = jsonRoute.operator;
 		this.#fixme = jsonRoute.fixme;
-
-		return this;
-	}
-
-	/**
-	 * Complete the route object with the nodes and platforms from the gtfs db
-	 * @param {Object} dbRoute an object with the values of the route coming from the gtfs db
-	 * @param {Object} network theNetwork in witch the orute is located
-	 */
-
-	async buildFromDb ( dbRoute, network ) {
-
-		let excludeList = [];
-		if ( network?.excludeList?.gtfs?.excludedPlatforms ) {
-			excludeList = Array.from ( network.excludeList.gtfs.excludedPlatforms, excludedPlatform => excludedPlatform.ref );
-		}
-
-		this.#shapePk = dbRoute.shapePk;
-		this.#startDate = dbRoute.startDate;
-		this.#endDate = dbRoute.endDate;
-
-		// nodes
-		this.#nodes = await this.#selectNodesFromDb ( this.#shapePk );
-
-		// platforms
-		const dbPlatforms = await this.#selectPlatformsFromDb ( this.#shapePk );
-		let previousPlatformRef = '';
-		for ( const dbPlatform of dbPlatforms ) {
-			if (
-				previousPlatformRef !== dbPlatform.ref
-				&&
-				! excludeList.includes ( dbPlatform.ref )
-			) {
-				this.#platforms.push ( dbPlatform.ref );
-				previousPlatformRef = dbPlatform.ref;
-			}
-		}
-
-		return this;
-	}
-
-	/**
-	 * The constructor
-	 */
-
-	constructor ( ) {
-		Object.freeze ( this );
 	}
 }
 

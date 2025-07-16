@@ -189,95 +189,23 @@ class RouteMaster {
 	}
 
 	/**
-	 * Select in the gtfs db all the routes referenced by the route master
-	 * @param {Object} network the network in witch the route master is located
-	 * @returns {Array.<Object>} An array with all the routes used by the route master
+	 * The constructor
+	 * @param {Object} jsonRouteMaster An object litteral with the properties of the route master to create
 	 */
 
-	async #selectRoutesFromDb ( network ) {
-
-		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
-
-		// Remember that in some networks the same ref is used for multiple routes master
-		// so the description field is needed
-		const dbRoutes = await theMySqlDb.execSql (
-			'SELECT ' +
-				'min(t.start_date) AS startDate,' +
-				'max(t.end_date) AS endDate, ' +
-				't.route_pk AS routePk, ' +
-				't.shape_pk AS shapePk ' +
-				'FROM ' +
-					'( ' +
-						'SELECT DISTINCT ' +
-						'calendar.start_date AS start_date, ' +
-						'calendar.end_date AS end_date, ' +
-						'routes.route_pk AS route_pk, ' +
-						'trips.shape_pk AS shape_pk ' +
-						'FROM ' +
-						'( ' +
-							'(routes JOIN trips ON ((routes.route_pk = trips.route_pk)) ' +
-						') ' +
-						'JOIN calendar ' +
-						'ON ((trips.service_pk = calendar.service_pk)) ' +
-					') ' +
-					'WHERE routes.agency_id = "' + network.gtfsAgencyId + '" ' +
-					'AND routes.route_id like "' + network.gtfsIdPrefix + '%"' +
-					'AND routes.route_short_name ="' + this.#ref + '" ' +
-					'AND routes.route_long_name = "' + this.#description + '" ' +
-				')  t ' +
-				'GROUP BY ' +
-				'shapePk ' +
-				'ORDER BY startDate,endDate;'
-		);
-
-		return dbRoutes;
-	}
-
-	/**
-	 * Complete the route master object with the routes from the json file
-	 * @param {Object} jsonRouteMaster the routeMaster from the json file
-	 */
-
-	buildFromJson ( jsonRouteMaster ) {
+	constructor ( jsonRouteMaster ) {
+		Object.freeze ( this );
 		this.#description = jsonRouteMaster.description;
 		this.#ref = jsonRouteMaster.ref;
 		this.#type = Number.parseInt ( jsonRouteMaster.type );
 		this.#routes = [];
 		for ( const jsonRoute of jsonRouteMaster.routes ) {
-			this.routes.push ( new Route ( ).buildFromJson ( jsonRoute ) );
+			this.routes.push ( new Route ( jsonRoute ) );
 		}
 		this.#osmId = jsonRouteMaster.osmId;
 		this.#operator = jsonRouteMaster.operator;
 		this.#fixme = jsonRouteMaster.fixme;
 		this.#name = jsonRouteMaster.name;
-
-		return this;
-	}
-
-	/**
-	 * Complete the route master object with the routes from the gtfs db
-	 * @param {Object} dbRouteMaster an object with the values of the route master coming from the gtfs db
-	 * @param {Object} network the network in witch the route master is located
-	 */
-
-	async buildFromDb ( dbRouteMaster, network ) {
-		this.#description = dbRouteMaster.description;
-		this.#ref = dbRouteMaster.ref;
-		this.#type = Number.parseInt ( dbRouteMaster.type );
-		const dbRoutes = await this.#selectRoutesFromDb ( network );
-		for ( const dbRoute of dbRoutes ) {
-			this.#routes.push ( await new Route ( ).buildFromDb ( dbRoute, network ) );
-		}
-
-		return this;
-	}
-
-	/**
-	 * The constructor
-	 */
-
-	constructor ( ) {
-		Object.freeze ( this );
 	}
 }
 

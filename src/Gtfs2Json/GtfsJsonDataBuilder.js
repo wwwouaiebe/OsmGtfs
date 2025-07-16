@@ -33,6 +33,7 @@ import fs from 'fs';
 import RoutesMasterTree from '../Common/RoutesMasterTree.js';
 import theMySqlDb from '../Gtfs2Json/MySqlDb.js';
 import theOperator from '../Common/Operator.js';
+import RoutesMasterBuilder from './RoutesMasterBuilder.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -109,8 +110,12 @@ class GtfsJsonDataBuilder {
 
 	async #buildRoutesMasterTree ( network ) {
 		console.info ( 'Now building routes master tree for network ' + network.osmNetwork );
+
    		const routesMasterTree = new RoutesMasterTree ( );
-		await routesMasterTree.buildFromDb ( network );
+
+		routesMasterTree.setRoutesMaster (
+			await new RoutesMasterBuilder ( ).build ( network )
+		);
 
 		this.#GtfsJsonData.get ( network.osmNetwork ).routesMasterTree = routesMasterTree.jsonObject;
 

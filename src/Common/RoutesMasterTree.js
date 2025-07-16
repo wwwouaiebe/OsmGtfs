@@ -24,8 +24,6 @@ Doc reviewed 20250711
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import RouteMaster from '../Common/RouteMaster.js';
-import ArrayHelper from '../Common/ArrayHelper.js';
-import theDocConfig from '../OsmGtfsCompare/Interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -66,66 +64,26 @@ class RoutesMasterTree {
 		return Object.freeze ( jsonRoutesMasterTree );
 	}
 
-	/**
-	 * Select in the gtfs db all the routes master in the network
-	 * @param {Object} network the network for witch the routes master are searched
-	 * @returns {Array.<Object>} An array with all the routes master in the network
+	/** Set the routes master of the RoutesMasterTree
+	 * @param {Array.<Object>} jsonRoutesMaster an Array of object litterals with the routes master properties
+	 * @param {Number} gtfsType A gtfs type used to filter the routes master
 	 */
 
-	async #selectRoutesMasterFromDb ( network ) {
-
-		const { default : theMySqlDb } = await import ( '../Gtfs2Json/MySqlDb.js' );
-
-		// searching the data in the database
-		const dbRoutesMaster = await theMySqlDb.execSql (
-			'SELECT DISTINCT ' +
-			'routes.route_short_name AS ref, ' +
-			'routes.route_long_name AS description, ' +
-			'routes.route_type as type ' +
-			'FROM routes ' +
-            'WHERE routes.agency_id = "' + network.gtfsAgencyId +
-			'" AND routes.route_id like "' + network.gtfsIdPrefix + '%";'
-		);
-
-		// sorting the routes. Not possible to use an 'order by' sql statement because the sort is a mix
-		// of numeric and alphanumeric
-		dbRoutesMaster.sort ( ( first, second ) => ArrayHelper.compareRouteName ( first.ref, second.ref ) );
-		return dbRoutesMaster;
-	}
-
-	/**
-	 * Complete the route master tree object with the routes master from the json file
-	 * @param {Object} jsonRoutesMasterTree the routes master tree from the json file
-	 */
-
-	buildFromJson ( jsonRoutesMasterTree ) {
+	setJsonRoutesMaster ( jsonRoutesMaster, gtfsType ) {
 		this.#routesMaster = [];
-		for ( const jsonRouteMaster of jsonRoutesMasterTree.routesMaster ) {
-			if ( jsonRouteMaster.type === theDocConfig.gtfsType ) {
-				this.#routesMaster.push ( new RouteMaster ( ).buildFromJson ( jsonRouteMaster ) );
+		for ( const jsonRouteMaster of jsonRoutesMaster ) {
+			if ( ! gtfsType || jsonRouteMaster.type === gtfsType ) {
+				this.#routesMaster.push ( new RouteMaster ( jsonRouteMaster ) );
 			}
 		}
-
-		return this;
 	}
 
-	/**
-	 * Complete the route master tree object with the routes master from the gtfs db
-	 * @param {Object} network the network for witch the routes master are searched
+	/** Set the routes master of the RoutesMasterTree
+	 * @param {Array.<RouteMaster>} routesMaster an Array of RouteMaster objects
 	 */
 
-	async buildFromDb ( network ) {
-		this.#routesMaster = [];
-		const dbRoutesMaster = await this.#selectRoutesMasterFromDb ( network );
-		for ( const dbRouteMaster of dbRoutesMaster ) {
-			console.info ( 'now building route master ' +
-				network.osmNetwork + ' ' +
-				dbRouteMaster.ref + ' ' +
-				dbRouteMaster.description );
-			this.#routesMaster.push ( await new RouteMaster ( ).buildFromDb ( dbRouteMaster, network ) );
-		}
-
-		return this;
+	setRoutesMaster ( routesMaster ) {
+		this.#routesMaster = routesMaster;
 	}
 
 	/**

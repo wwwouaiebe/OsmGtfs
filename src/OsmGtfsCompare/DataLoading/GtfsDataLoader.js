@@ -52,7 +52,7 @@ class GtfsDataLoader {
 			);
 
 			// Loading data in the route master tree and platforms collection
-			theGtfsRoutesMasterTree.buildFromJson ( jsonsData.routesMasterTree );
+			theGtfsRoutesMasterTree.setJsonRoutesMaster ( jsonsData.routesMasterTree.routesMaster, theDocConfg.gtfsType );
 			theGtfsPlatforms.loadData ( jsonsData.platforms );
 			startDate = jsonsData.startDate;
 		}

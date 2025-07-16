@@ -115,10 +115,7 @@ class OsmDataLoader {
 
 		const platformRoles = [ 'platform', 'platform_entry_only', 'platform_exit_only' ];
 
-		// Building a object literal for the route master tree
-		const routesMasterTree = {
-			routesMaster : []
-		};
+		const routesMaster = [];
 
 		// loop on the osm route master, adding routes master object literal to the route master tree object literal
 		this.#osmRoutesMaster.forEach (
@@ -188,11 +185,11 @@ class OsmDataLoader {
 				);
 
 				// Adding the route master to the tree
-				routesMasterTree.routesMaster.push ( routeMaster );
+				routesMaster.push ( routeMaster );
 			}
 		);
 
-		theOsmRoutesMasterTree.buildFromJson ( routesMasterTree );
+		theOsmRoutesMasterTree.setJsonRoutesMaster ( routesMaster );
 	}
 
 	/**
