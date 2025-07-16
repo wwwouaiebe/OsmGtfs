@@ -27,7 +27,7 @@ import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutes
 import theOsmRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/OsmRoutesMasterTree.js';
 import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
 import OsmRouteMasterValidator from '../../OsmGtfsCompare/OsmValidators/OsmRouteMasterValidator.js';
-import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
 import RouteMasterComparator from '../../OsmGtfsCompare/Compare/RouteMasterComparator.js';
 import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
 

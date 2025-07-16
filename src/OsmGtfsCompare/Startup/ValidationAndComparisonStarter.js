@@ -24,7 +24,7 @@ Doc reviewed 20250124
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import GtfsDataLoader from '../../OsmGtfsCompare/DataLoading/GtfsDataLoader.js';
-import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
 import OsmDataLoader from '../../OsmGtfsCompare/DataLoading/OsmDataLoader.js';
 import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
 import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';

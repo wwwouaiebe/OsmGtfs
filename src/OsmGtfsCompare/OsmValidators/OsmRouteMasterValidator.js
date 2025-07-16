@@ -25,7 +25,7 @@ Doc reviewed 20250124
 
 import theOperator from '../../Common/Operator.js';
 import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
-import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
 import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */

@@ -24,10 +24,10 @@ Doc reviewed 20250124
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
-import JosmButtonClickEL from '../../OsmGtfsCompare/interface/JosmButtonClickEL.js';
-import GpxButtonClickEL from '../../OsmGtfsCompare/interface/GpxButtonClickEL.js';
-import RouteLinkClickEL from '../../OsmGtfsCompare/interface/RouteLinkClickEL.js';
-import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import JosmButtonClickEL from '../../OsmGtfsCompare/Interface/JosmButtonClickEL.js';
+import GpxButtonClickEL from '../../OsmGtfsCompare/Interface/GpxButtonClickEL.js';
+import RouteLinkClickEL from '../../OsmGtfsCompare/Interface/RouteLinkClickEL.js';
+import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
 import Report from '../../OsmGtfsCompare/Reports/Report.js';
 
 /*

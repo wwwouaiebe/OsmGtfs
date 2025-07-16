@@ -23,7 +23,7 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
 import theOperator from '../../Common/Operator.js';
 import theOsmRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/OsmRoutesMasterTree.js';
 import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';

@@ -27,7 +27,7 @@ import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js'
 import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
 import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
 import OsmPlatformValidator from '../../OsmGtfsCompare/OsmValidators/OsmPlatformValidator.js';
-import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
