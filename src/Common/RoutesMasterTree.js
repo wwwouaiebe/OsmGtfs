@@ -23,8 +23,8 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import RouteMaster from './RouteMaster.js';
-import ArrayHelper from './ArrayHelper.js';
+import RouteMaster from '../Common/RouteMaster.js';
+import ArrayHelper from '../Common/ArrayHelper.js';
 import theDocConfig from '../OsmGtfsCompare/interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */

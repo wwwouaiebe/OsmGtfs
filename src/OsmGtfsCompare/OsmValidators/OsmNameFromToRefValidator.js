@@ -23,10 +23,10 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
-import theRelationsReport from '../Reports/RelationsReport.js';
-import theStatsReport from '../Reports/StatsReport.js';
-import theDocConfig from '../interface/DocConfig.js';
+import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
+import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
+import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

@@ -23,11 +23,11 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
-import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
-import thePlatformsReport from '../Reports/PlatformsReport.js';
-import OsmPlatformValidator from '../OsmValidators/OsmPlatformValidator.js';
-import theDocConfig from '../interface/DocConfig.js';
+import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
+import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
+import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
+import OsmPlatformValidator from '../../OsmGtfsCompare/OsmValidators/OsmPlatformValidator.js';
+import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

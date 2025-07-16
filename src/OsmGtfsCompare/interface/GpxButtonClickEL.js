@@ -23,8 +23,8 @@ Doc reviewed 20250126
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theGtfsRoutesMasterTree from '../DataLoading/GtfsRoutesMasterTree.js';
-import GpxFactory from '../Gpx/GpxFactory.js';
+import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutesMasterTree.js';
+import GpxFactory from '../../OsmGtfsCompare/Gpx/GpxFactory.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

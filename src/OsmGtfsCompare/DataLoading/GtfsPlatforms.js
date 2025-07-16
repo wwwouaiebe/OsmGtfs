@@ -24,8 +24,8 @@ Doc reviewed 20250711
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import theOperator from '../../Common/Operator.js';
-import theDocConfig from '../interface/DocConfig.js';
-import Platform from './Platform.js';
+import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import Platform from '../../OsmGtfsCompare/DataLoading/Platform.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

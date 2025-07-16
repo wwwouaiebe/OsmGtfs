@@ -26,7 +26,7 @@ Doc reviewed 20250711
 import theDocConfg from '../../OsmGtfsCompare/interface/DocConfig.js';
 import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutesMasterTree.js';
 import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
-import theStatsReport from '../Reports/StatsReport.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

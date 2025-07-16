@@ -23,13 +23,13 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theRelationsReport from '../Reports/RelationsReport.js';
-import OsmRouteValidator from '../OsmValidators/OsmRouteValidator.js';
-import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
-import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
-import theStatsReport from '../Reports/StatsReport.js';
-import MatchScoresTable from './MatchScoresTable.js';
-import MatchScoreValues from './MatchScoreValues.js';
+import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
+import OsmRouteValidator from '../../OsmGtfsCompare/OsmValidators/OsmRouteValidator.js';
+import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
+import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
+import MatchScoresTable from '../../OsmGtfsCompare/Compare/MatchScoresTable.js';
+import MatchScoreValues from '../../OsmGtfsCompare//Compare/MatchScoreValues.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

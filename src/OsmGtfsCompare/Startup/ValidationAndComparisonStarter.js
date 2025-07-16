@@ -27,11 +27,11 @@ import GtfsDataLoader from '../../OsmGtfsCompare/DataLoading/GtfsDataLoader.js';
 import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
 import OsmDataLoader from '../../OsmGtfsCompare/DataLoading/OsmDataLoader.js';
 import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
-import theStatsReport from '../Reports/StatsReport.js';
-import theRelationsReport from '../Reports/RelationsReport.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
+import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
 import PlatformsComparator from '../../OsmGtfsCompare/Compare/PlatformsComparator.js';
 import RoutesWithoutRouteMasterValidator from '../../OsmGtfsCompare/Compare/RoutesWithoutRouteMasterValidator.js';
-import RoutesMasterTreesComparator from '../Compare/RoutesMasterTreesComparator.js';
+import RoutesMasterTreesComparator from '../../OsmGtfsCompare/Compare/RoutesMasterTreesComparator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

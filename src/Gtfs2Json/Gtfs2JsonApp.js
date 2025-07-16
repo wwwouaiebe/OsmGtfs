@@ -28,8 +28,8 @@ import theConfig from './Config.js';
 import theMySqlDb from './MySqlDb.js';
 
 import theOperator from '../Common/Operator.js';
-import GtfsJsonDataBuilder from './GtfsJsonDataBuilder.js';
-import GtfsTxt2MySqlLoader from './GtfsTxt2MySqlLoader.js';
+import GtfsJsonDataBuilder from '../Gtfs2Json/GtfsJsonDataBuilder.js';
+import GtfsTxt2MySqlLoader from '../Gtfs2Json/GtfsTxt2MySqlLoader.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

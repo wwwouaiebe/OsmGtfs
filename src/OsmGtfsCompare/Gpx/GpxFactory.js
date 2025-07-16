@@ -24,7 +24,7 @@ Doc reviewed 20250711
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import PolylineEncoder from '../../Common/PolylineEncoder.js';
-import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
+import theGtfsPlatforms from '../../OsmGtfsCompare/DataLoading/GtfsPlatforms.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

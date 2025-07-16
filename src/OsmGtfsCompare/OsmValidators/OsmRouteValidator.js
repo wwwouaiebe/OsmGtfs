@@ -23,11 +23,11 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theRelationsReport from '../Reports/RelationsReport.js';
-import theStatsReport from '../Reports/StatsReport.js';
+import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
 import theOperator from '../../Common/Operator.js';
-import OsmContinuousRouteValidator from './OsmContinuousRouteValidator.js';
-import OsmNameFromToRefValidator from './OsmNameFromToRefValidator.js';
+import OsmContinuousRouteValidator from '../../OsmGtfsCompare/OsmValidators/OsmContinuousRouteValidator.js';
+import OsmNameFromToRefValidator from '../../OsmGtfsCompare/OsmValidators/OsmNameFromToRefValidator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

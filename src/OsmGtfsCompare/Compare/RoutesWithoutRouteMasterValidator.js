@@ -23,9 +23,9 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theRelationsReport from '../Reports/RelationsReport.js';
-import theStatsReport from '../Reports/StatsReport.js';
-import theDocConfig from '../interface/DocConfig.js';
+import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
+import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

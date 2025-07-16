@@ -23,8 +23,8 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
-import MatchScoreValues from './MatchScoreValues.js';
+import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
+import MatchScoreValues from '../../OsmGtfsCompare/Compare/MatchScoreValues.js';
 
 /**
  * Simple container for a matchScore value of a gtfs route

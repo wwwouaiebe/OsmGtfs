@@ -23,13 +23,13 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theGtfsRoutesMasterTree from '../DataLoading/GtfsRoutesMasterTree.js';
-import theOsmRoutesMasterTree from '../DataLoading/OsmRoutesMasterTree.js';
-import theRelationsReport from '../Reports/RelationsReport.js';
-import OsmRouteMasterValidator from '../OsmValidators/OsmRouteMasterValidator.js';
-import theDocConfig from '../interface/DocConfig.js';
-import RouteMasterComparator from './RouteMasterComparator.js';
-import theStatsReport from '../Reports/StatsReport.js';
+import theGtfsRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/GtfsRoutesMasterTree.js';
+import theOsmRoutesMasterTree from '../../OsmGtfsCompare/DataLoading/OsmRoutesMasterTree.js';
+import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js';
+import OsmRouteMasterValidator from '../../OsmGtfsCompare/OsmValidators/OsmRouteMasterValidator.js';
+import theDocConfig from '../../OsmGtfsCompare/interface/DocConfig.js';
+import RouteMasterComparator from '../../OsmGtfsCompare/Compare/RouteMasterComparator.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**

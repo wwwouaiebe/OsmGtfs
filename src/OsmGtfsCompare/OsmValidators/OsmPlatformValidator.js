@@ -23,10 +23,10 @@ Doc reviewed 20250711
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import thePlatformsReport from '../Reports/PlatformsReport.js';
+import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
 import theOperator from '../../Common/Operator.js';
-import theStatsReport from '../Reports/StatsReport.js';
-import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
+import theStatsReport from '../../OsmGtfsCompare/Reports/StatsReport.js';
+import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
