@@ -28,7 +28,7 @@ import OsmRouteValidator from '../OsmValidators/OsmRouteValidator.js';
 import theOsmPlatforms from '../DataLoading/OsmPlatforms.js';
 import theGtfsPlatforms from '../DataLoading/GtfsPlatforms.js';
 import theStatsReport from '../Reports/StatsReport.js';
-import MatchScoresTable from './matchScoresTable.js';
+import MatchScoresTable from './MatchScoresTable.js';
 import MatchScoreValues from './MatchScoreValues.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */

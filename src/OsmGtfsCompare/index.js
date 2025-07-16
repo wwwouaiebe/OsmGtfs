@@ -33,7 +33,7 @@ Doc reviewed 20250110
 // is needed to enable theThemeChanger and so :
 // eslint-disable-next-line no-unused-vars
 import theThemeChanger from '../OsmGtfsCompare/interface/ThemeChanger.js';
-import OsmGtfsCompareApp from '../OSmGtfsCompare/Startup/OsmGtfsCompareApp.js';
+import OsmGtfsCompareApp from '../OsmGtfsCompare/Startup/OsmGtfsCompareApp.js';
 
 new OsmGtfsCompareApp ( ).start ( );
 
