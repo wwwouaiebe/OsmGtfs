@@ -89,7 +89,7 @@ class AutoStartup {
 
 		// Loading data from the json operator file
 		// stop and alert the user in case of bad operator given in the parameters
-		if ( ! ( await theOperator.loadData ( this.#operator + '.json' ) ) ) {
+		if ( ! ( await theOperator.loadData ( './dataFiles/operators/' + this.#operator + '.json' ) ) ) {
 			alert ( 'Unknown operator parameter ' + this.#operator );
 			return false;
 		}

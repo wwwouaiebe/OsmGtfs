@@ -1,0 +1,403 @@
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/*
+* Colors
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--main-background-color: black;
+		--main-color: white;
+		--link-hover-color: lightgray;
+		--link-color: orange;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--main-background-color: white;
+		--main-color: black;
+		--link-hover-color: #505050;
+		--link-color: #8b0000;
+	}
+}
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/*
+* Body
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+body {
+	margin:0;
+	padding:0;
+	line-height: normal;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	margin-left: 2em;
+	margin-right: 2em;
+	color: var(--main-color);
+	background-color: var(--main-background-color);
+	display: flex;
+	flex-direction: column;
+	height : 100vh;
+	max-height : 100vh;
+}
+
+body.cyDark {
+	--main-background-color: black;
+	--main-color: white;
+	--link-hover-color: lightgray;
+	--link-color: orange;
+}
+
+body.cyLight {
+	--main-background-color: white;
+	--main-color: black;
+	--link-hover-color: #505050;
+	--link-color: #8b0000;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/*
+* Header
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+header {
+	flex-basis : 7em;
+	flex-grow : 0;
+	flex-shrink : 0;
+	overflow : clip;
+}
+
+/*
+Form
+*/
+
+#configForm {
+	padding-top: 1em;
+	text-align: center;
+}
+
+label {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.fontLarge {
+	/* For sun, moon and help buttons */
+	margin-left: 2em;
+	font-size: 150%;
+}
+
+/*
+wait animation
+*/
+
+#waitAnimation 
+{
+	margin-bottom: 0em; 
+	height: 0.2em; width: 100%; 
+	overflow: hidden;
+	visibility: hidden;
+}
+
+#waitAnimationBullet { 
+	background-color: red; 
+	height: 100%; 
+	width: 3em; 
+	animation: 2s linear 0s infinite alternate WaitAnimationBullet;
+}
+
+@keyframes WaitAnimationBullet { from { margin-left: 0%; } to { margin-left: calc(100% - 1em); } }
+
+/*
+pane buttons
+*/
+
+#paneButtons{
+	border-top-style: solid;
+	border-top-width: 0.1em;
+	padding-top: 2em;
+	border-bottom-style: solid;
+	border-bottom-width: 0.1em;
+}
+.paneButton {
+	display: inline-block;
+	border-style: solid;
+	border-width: 0.1em;
+	padding-top: 0.3em;
+	padding-left: 2em;
+	padding-right: 2em;
+	background-color: lightgray;
+}
+
+.selectedPaneButton {
+	background-color: white;
+}
+
+
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/*
+* Main
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+
+main {
+	flex-basis : 5em;
+	flex-grow : 1;
+	flex-shrink : 1;
+	overflow : scroll;
+	border-left-style: solid;
+	border-right-style: solid;
+	border-left-width: 0.1em;
+	border-right-width: 0.1em;
+}
+
+/*
+route links
+*/
+
+#routesLinks {
+	width: 4em;
+	height: 0.2em;
+	overflow: hidden;
+	white-space: pre;
+	border-top-width: 1em;
+	border-top-style: solid;
+	border-top-color: red;
+	border-bottom-style :none;
+	color:red;
+	text-align: center;
+	position: sticky;
+	top : 0;
+	right : 0;
+	transition: all 500ms 500ms;
+}
+
+#routesLinks:hover {
+	width: calc(100% - 2em);
+	height: 4.5em;
+	color: var(--main-color);
+	background-color: lightgray;
+	border-bottom-style: solid;
+	border-bottom-width: 0.1em;
+	padding:1em;
+	overflow: scroll;
+	white-space: normal;
+}
+
+.busShortcutAnchor {
+	margin-right: 0.1em;
+	color : blue;
+	text-decoration: underline;
+}
+
+.busShortcutAnchor:hover {
+	cursor: pointer;
+	color: red;
+}
+
+/*
+Warnings
+*/
+
+.isWarning {
+	color: #7856b6;
+}
+
+/*
+Errors
+*/
+
+.isError {
+	color: red;
+}
+
+/*
+JOSM buttons
+*/
+
+.josmButton{
+	margin-left: 1em;
+	background-color: rgb(41, 193, 243);
+	color: white;
+}
+
+.josmButton.josmButtonVisited {
+	background-color: gray;
+	color:black;
+}
+
+.josmButton:hover, .josmButton.josmButtonVisited:hover {
+	background-color: blue;
+	color: white;
+	cursor: pointer;
+}
+
+/*
+GPX buttons
+*/
+
+.gpxButton {
+	font-size: 80%;
+	padding: 0.2em;
+	margin-right: 1em;
+	margin-bottom: 0.2em;
+	background-color: rgb(41, 193, 243);
+	color:white;
+}
+
+.gpxButton:hover, .gpxButton.gpxButtonVisited:hover {
+	background-color: blue;
+	color: white;
+}
+
+.gpxButton.gpxButtonVisited {
+	background-color: gray;
+}
+
+/*
+panes
+*/
+
+.pane {
+	min-height: 5em;
+	margin: 0;
+	padding: 0em;
+	padding-bottom: 1em;
+}
+
+.pane h1 {
+    font-size:  160%;
+	font-weight: bold;
+	text-decoration: underline;
+	margin-left:1em;
+	padding-top : 3em;
+	margin-bottom: 1em;
+}
+
+.pane h2 {
+    font-size:  140%;
+	font-weight: bold;
+    margin-top : 1em;
+    margin-left : 3em;
+	margin-bottom : 1em;
+	text-decoration: underline dotted;
+}
+
+.pane h3 {
+    font-size:  120%;
+	font-weight: bold;
+    padding-top : 1em;
+    padding-left : 5em;
+	padding-bottom : 1em;
+}
+
+.pane p {
+	margin-left: 7em;
+}
+
+/*
+panes error only
+*/
+
+
+.pane.errorsOnly div > h1,
+.pane.errorsOnly div > h2,
+.pane.errorsOnly div > h3,
+.pane.errorsOnly div > p
+{
+	width: 0;
+	height: 0;
+	margin: 0 ;
+	padding: 0 ;
+	border-width: 0 !important;
+	border-style: none !important;
+	visibility: hidden;
+	transform: scale(0);
+}
+
+.pane.errorsOnly div.haveErrors > h1,
+.pane.errorsOnly div.haveErrors > h2,
+.pane.errorsOnly div.haveErrors > h3,
+.pane.errorsOnly div.haveErrors > p
+{
+	width:auto;
+	height:auto;
+	visibility:visible;
+	transform: scale(1);
+}
+
+.pane.errorsOnly div.haveErrors > h1 {
+	margin-left:1em;
+	padding-top : 3em;
+	margin-bottom: 1em;
+}
+
+.pane.errorsOnly div.haveErrors > h2 {
+    margin-top : 1em;
+    margin-left : 3em;
+	margin-bottom : 1em;
+}
+
+.pane.errorsOnly div.haveErrors > h3 {
+    padding-top : 1em;
+    padding-left : 5em;
+	padding-bottom : 1em;
+}
+
+.pane.errorsOnly div.haveErrors > p {
+	margin-left: 7em;
+}
+
+/*
+hidden panes
+*/
+
+.hiddenPane,
+.hiddenPane h1,
+.hiddenPane h2,
+.hiddenPane h3,
+.hiddenPane p
+{
+	width: 0;
+	height: 0;
+	margin: 0 ;
+	padding: 0 ;
+	min-height: 0;
+	border-width: 0 !important;
+	border-style: none !important;
+	visibility: hidden;
+	transform: scale(0);
+}
+
+
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/*
+* Footer
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+footer {
+	background-color : blue;
+	flex-basis: 3.5em;
+	flex-grow : 0;
+	flex-shrink : 0;
+	overflow: scroll;
+	border-top-style: solid ;
+	border-top-width: 0.1em;
+	background-color: var(--main-background-color);
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	text-align: center;
+}
+footer span {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+

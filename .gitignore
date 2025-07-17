@@ -1,8 +1,6 @@
 node_modules/
 tmp/
-dist/
-docs/
 src/Gtfs2Json/dataFiles/
 src/Common/dataFiles/
 src/OsmGtfsCompare/dataFiles/
-upload.bat
+dist/OsmGtfsCompare/dataFiles/
