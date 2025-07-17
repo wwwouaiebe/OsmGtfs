@@ -176,9 +176,11 @@ module.exports = function ( grunt ) {
 			'hello',
 			'buildnumber:start',
 			'eslint',
+			/*
 			'rollup:debug',
 			'terser',
 			'copy:debug',
+			*/
 			'essimpledoc',
 			'buildnumber:end',
 			'bye'
