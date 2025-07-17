@@ -6,16 +6,20 @@
     "bin": {
         "sd": "./src/index.js"
     },
-   "version": "1.0.0",
+    "version": "1.0.0",
     "keywords": [],
     "devDependencies": {
         "eslint": "latest",
         "grunt": "latest",
+        "grunt-contrib-copy": "latest",
         "grunt-eslint": "latest",
         "grunt-essimpledoc": "latest",
+        "grunt-rollup": "latest",
+        "grunt-terser": "latest", 
         "grunt-wwwouaiebe-buildnumber": "latest"
     },
     "dependencies": {
+        "grunt-terser": "^2.0.0",
         "mysql2": "latest"
     },
     "repository": {

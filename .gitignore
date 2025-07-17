@@ -1,6 +1,9 @@
 node_modules/
 gtfs/
 tmp/
+tmpDebug/
+tmpRelease/
+dist/
 json/
 devData/
 docs/
