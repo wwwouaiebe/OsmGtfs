@@ -89,13 +89,30 @@ module.exports = function ( grunt ) {
 				]
 			}
 		},
+		essimpledoc : {
+			debug : {
+				options : {
+					src : 'src',
+					dest : 'docs/techDoc',
+					validate : true,
+					noFiles : true
+				}
+			},
+			release : {
+				options : {
+					src : './src',
+					dest : './docs/techDoc',
+					validate : true
+				}
+			}
+		},
 		rollup : {
 			debug : {
 				options : {
 					format : 'iife'
 				},
 				files : {
-					'tmpDebug/OsmGtfsCompare.min.js' : [ 'src/OsmGtfsCompare/index.js' ]
+					'tmp/debug/OsmGtfsCompare.min.js' : [ 'src/OsmGtfsCompare/index.js' ]
 				}
 			},
 			release : {
@@ -103,7 +120,7 @@ module.exports = function ( grunt ) {
 					format : 'iife'
 				},
 				files : {
-					'tmpRelease.min.js' : [ 'src/OsmGtfsCompare/index.js' ]
+					'tmp/release/OsmGtfsCompare.min.js' : [ 'src/OsmGtfsCompare/index.js' ]
 				}
 			}
 		},
@@ -116,18 +133,64 @@ module.exports = function ( grunt ) {
 					}
 				},
 				files : {
-					'dist/src/OsmGtfsCompare/index.js' :
-						[ 'tmpDebug/OsmGtfsCompare.min.js' ]
+					'dist/OsmGtfsCompare/index.js' :
+						[ 'tmp/debug/OsmGtfsCompare.min.js' ]
+				}
+			},
+			release : {
+				options : {
+					mangle : true,
+					output : {
+						preamble : banner
+					}
+				},
+				files : {
+					'dist/OsmGtfsCompare/index.js' :
+						[ 'tmp/release/OsmGtfsCompare.min.js' ]
 				}
 			}
+
 		},
 		copy : {
-			debug : {
+			afterRollup : {
 				files : [
-					{ expand : true, cwd : 'operators/', src : [ '*.json' ], dest : 'dist/operators/' },
-					{ expand : true, cwd : 'json/', src : [ '*/*.json' ], dest : 'dist/json/' },
-					{ expand : true, cwd : 'src/OsmGtfsCompare/', src : [ 'index.html' ], dest : 'dist/src/osmGtfsCompare/' },
-					{ expand : true, cwd : 'src/OsmGtfsCompare/', src : [ 'index.css' ], dest : 'dist/src/osmGtfsCompare/' }
+					{
+						expand : true,
+						cwd : 'src/Common/JsonLoader/',
+						src : [ 'JsonLoader4NodeAndBrowser.js' ],
+						rename : function ( ) { return 'src/Common/JsonLoader.js'; }
+					 }
+				]
+			},
+			beforeRollup : {
+				files : [
+					{
+						expand : true,
+						cwd : 'src/Common/JsonLoader/',
+						src : [ 'JsonLoader4Rollup.js' ],
+						rename : function ( ) { return 'src/Common/JsonLoader.js'; }
+					 }
+				]
+			},
+			release : {
+				files : [
+
+					{ expand : true,
+						cwd : 'src/OsmGtfsCompare/dataFiles/operators',
+						src : [ '*.json' ],
+						dest : 'dist/OsmGtfsCompare/dataFiles/operators/' },
+					{ expand : true,
+						cwd : 'src/OsmGtfsCompare/dataFiles/json',
+						src : [ '*/*.json' ],
+						dest : 'dist/OsmGtfsCompare/dataFiles/json/' },
+					{ expand : true,
+						cwd : 'src/OsmGtfsCompare/dataFiles/gtfs',
+						src : [ '*/*.txt' ],
+						dest : 'dist/OsmGtfsCompare/dataFiles/gtfs/' },
+					{ expand : true, cwd : 'src/OsmGtfsCompare/', src : [ 'index.html' ], dest : 'dist/OsmGtfsCompare/' },
+					{ expand : true, cwd : 'src/OsmGtfsCompare/', src : [ 'index.css' ], dest : 'dist/OsmGtfsCompare/' },
+					{ expand : true, cwd : 'src/Gtfs2json/', src : [ '*.js', '*.bat' ], dest : 'dist/Gtfs2Json/' },
+					{ expand : true, cwd : 'src/Common/', src : [ '*.js' ], dest : 'dist/Common/' }
 				]
 			}
 		}
@@ -171,17 +234,29 @@ module.exports = function ( grunt ) {
 	);
 
 	grunt.registerTask (
-		'default',
+		'release',
 		[
 			'hello',
 			'buildnumber:start',
 			'eslint',
-			/*
-			'rollup:debug',
-			'terser',
-			'copy:debug',
-			*/
-			'essimpledoc',
+			'copy:beforeRollup',
+			'rollup:release',
+			'copy:afterRollup',
+			'terser:release',
+			'copy:release',
+			'essimpledoc:release',
+			'buildnumber:end',
+			'bye'
+		]
+	);
+
+	grunt.registerTask (
+		'debug',
+		[
+			'hello',
+			'buildnumber:start',
+			'essimpledoc:debug',
+			'eslint',
 			'buildnumber:end',
 			'bye'
 		]

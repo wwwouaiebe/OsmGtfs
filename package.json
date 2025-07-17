@@ -1,6 +1,6 @@
 {
     "type": "module",
-    "name": "GtfsOsm",
+    "name": "OsmGtfs",
     "description": "",
     "main": "bin/index.js",
     "bin": {
@@ -19,22 +19,22 @@
         "grunt-wwwouaiebe-buildnumber": "latest"
     },
     "dependencies": {
-        "grunt-terser": "^2.0.0",
         "mysql2": "latest"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/wwwouaiebe/GtfsOsm.git"
+        "url": "git+https://github.com/wwwouaiebe/OsmGtfs.git"
     },
     "engines": {
         "node": ">=22.14.0"
     },
     "scripts": {
-        "debug": "node node_modules/grunt/bin/grunt",
-        "gtfs2json-tec": "node ./src/Gtfs2json/index.js --operatorFile=tec.json"
+        "debug": "node node_modules/grunt/bin/grunt debug",
+        "release": "node node_modules/grunt/bin/grunt release",
+        "gtfs2json-tec": "node ./src/Gtfs2json/index.js --cwd=src/Gtfs2Json/ --operatorFile=../OsmGtfsCompare/dataFiles/operators/tec.json"
     },
     "author": "wwwouaiebe",
     "license": "GPL-3.0",
-    "sources": "https://github.com/wwwouaiebe/GtfsOsm",
-    "homepage": "https://github.com/wwwouaiebe/GtfsOsm#readme"
+    "sources": "https://github.com/wwwouaiebe/OsmGtfs",
+    "homepage": "https://github.com/wwwouaiebe/OsmGtfs#readme"
 }

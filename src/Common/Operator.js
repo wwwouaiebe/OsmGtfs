@@ -56,6 +56,13 @@ class Operator {
 	get gtfsDirectory ( ) { return this.#jsonOperator.gtfsDirectory; }
 
 	/**
+	 * the name of the directory where the gfs files are
+	 * @type {String}
+	 */
+
+	get jsonDirectory ( ) { return this.#jsonOperator.jsonDirectory; }
+
+	/**
 	 * The name of the operator
 	 * @type {String}
 	 */
@@ -83,7 +90,8 @@ class Operator {
 
 	async loadData ( operatorFile ) {
 
-		this.#jsonOperator = await new JsonLoader ( ).loadData ( '../../operators/' + operatorFile );
+		// line ok for OsmGtfsCompare
+		this.#jsonOperator = await new JsonLoader ( ).loadData ( operatorFile );
 
 		if ( this.#jsonOperator ) {
 			this.#jsonOperator.networks.forEach (

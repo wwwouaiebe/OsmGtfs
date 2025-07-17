@@ -74,7 +74,7 @@ class RoutesWithoutRouteMasterValidator {
 		console.info ( uri );
 
 		let devData = await new JsonLoader ( ).loadData (
-			'../../devData/routesMasterDevData-' + theDocConfig.network.toUpperCase ( ) + '.json'
+			'./dataFiles/devData/routesMasterDevData-' + theDocConfig.network.toUpperCase ( ) + '.json'
 		);
 
 		return devData.elements;

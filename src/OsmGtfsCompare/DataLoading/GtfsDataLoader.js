@@ -44,7 +44,7 @@ class GtfsDataLoader {
 	async loadData ( ) {
 
 		let jsonData = await new JsonLoader ( ).loadData (
-			'../../json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json'
+			'./dataFiles/json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json'
 		);
 
 		// Loading data in the route master tree and platforms collection

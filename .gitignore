@@ -1,10 +1,8 @@
 node_modules/
-gtfs/
 tmp/
-tmpDebug/
-tmpRelease/
 dist/
-json/
-devData/
 docs/
+src/Gtfs2Json/dataFiles/
+src/Common/dataFiles/
+src/OsmGtfsCompare/dataFiles/
 upload.bat

@@ -275,7 +275,7 @@ class OsmDataLoader {
 		console.info ( uri );
 
 		let devData = await new JsonLoader ( ).loadData (
-			'../../devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json'
+			'./dataFiles/devData/devData-' + theDocConfig.network.toUpperCase ( ) + '.json'
 		);
 
 		return devData.elements;

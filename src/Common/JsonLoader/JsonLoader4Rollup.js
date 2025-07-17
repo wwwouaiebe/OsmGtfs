@@ -32,26 +32,36 @@ Doc reviewed 20250711
 class JsonLoader {
 
 	/**
-	 * Load the data from a json file
+	 * Load the data from a json file aaaaa
 	 * @param {String} dataFile The file to load with it's path completed and relative to the position of this file!
 	 * @returns {Object} An object with the file content
 	 */
 
 	async loadData ( dataFile ) {
 
-		/**
-		 * 2025-07 The code below works, but import (..., with {...}) is not known by Rollup...
-		 */
-
 		let loadedData = null;
-		try {
-			const { default : data } = await import ( dataFile, { with : { type : 'json' } } );
-			loadedData = data;
-			return loadedData;
-		}
-		catch {
-			return loadedData;
-		}
+
+		await fetch ( dataFile )
+			.then (
+				response => {
+					if ( response.ok ) {
+						return response.json ( );
+					}
+					console.error ( String ( response.status ) + ' ' + response.statusText );
+				}
+			)
+			.then (
+				jsonResponse => {
+					loadedData = jsonResponse;
+				}
+			)
+			.catch (
+				err => {
+					console.error ( err );
+				}
+			);
+
+		return loadedData;
 	}
 
 	/**

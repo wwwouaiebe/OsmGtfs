@@ -171,11 +171,11 @@ class GtfsJsonDataBuilder {
 
 	async #writeFile ( network ) {
 
-		if ( ! fs.existsSync ( './json/' + theOperator.operator ) ) {
-			fs.mkdirSync ( './json/' + theOperator.operator );
+		if ( ! fs.existsSync ( theOperator.jsonDirectory ) ) {
+			fs.mkdirSync ( theOperator.jsonDirectory );
 		}
 		fs.writeFileSync (
-			'./json/' + theOperator.operator + '/gtfsData-' + network.osmNetwork + '.json',
+			theOperator.jsonDirectory + '/gtfsData-' + network.osmNetwork + '.json',
 			JSON.stringify ( this.#GtfsJsonData.get ( network.osmNetwork ) )
 		);
 	}

@@ -63,6 +63,9 @@ class Gtfs2JsonApp {
 				arg => {
 					const argContent = arg.split ( '=' );
 					switch ( argContent [ 0 ] ) {
+					case '--cwd' :
+						process.chdir ( argContent [ 1 ] );
+						break;
 					case '--operatorFile' :
 						theConfig.operatorFile = argContent [ 1 ] || '';
 						break;
