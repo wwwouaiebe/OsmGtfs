@@ -72,7 +72,7 @@ class RoutesMasterTree {
 	setJsonRoutesMaster ( jsonRoutesMaster, gtfsType ) {
 		this.#routesMaster = [];
 		for ( const jsonRouteMaster of jsonRoutesMaster ) {
-			if ( ! gtfsType || jsonRouteMaster.type === gtfsType ) {
+			if ( undefined === gtfsType || jsonRouteMaster.type === gtfsType ) {
 				this.#routesMaster.push ( new RouteMaster ( jsonRouteMaster ) );
 			}
 		}
