@@ -2,5 +2,7 @@ node_modules/
 tmp/
 src/Gtfs2Json/dataFiles/
 src/Common/dataFiles/
-src/OsmGtfsCompare/dataFiles/
+src/OsmGtfsCompare/dataFiles/devData
+src/OsmGtfsCompare/dataFiles/gtfs
+src/OsmGtfsCompare/dataFiles/json
 dist/OsmGtfsCompare/dataFiles/
