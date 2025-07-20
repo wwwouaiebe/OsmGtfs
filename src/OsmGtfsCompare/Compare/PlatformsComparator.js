@@ -28,6 +28,7 @@ import theOsmPlatforms from '../../OsmGtfsCompare/DataLoading/OsmPlatforms.js';
 import thePlatformsReport from '../../OsmGtfsCompare/Reports/PlatformsReport.js';
 import OsmPlatformValidator from '../../OsmGtfsCompare/OsmValidators/OsmPlatformValidator.js';
 import theDocConfig from '../../OsmGtfsCompare/Interface/DocConfig.js';
+import theOperator from '../../Common/Operator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -81,6 +82,30 @@ class PlatformsComparator {
 	}
 
 	/**
+	 * Display the gtfs exclude list on the screen
+	 */
+
+	#reportExcludeList ( ) {
+		const excludeList = theOperator.networks.find (
+			network => network.osmNetwork === theDocConfig.network
+		)
+			?.excludeList
+			?.gtfs
+			?.excludedPlatforms;
+		if ( excludeList ) {
+			thePlatformsReport.add ( 'h1', 'Excluded gtfs patforms' );
+			excludeList.forEach (
+				excludedPlatform => {
+					thePlatformsReport.add (
+						'p',
+						excludedPlatform.ref + ' ' + excludedPlatform.name + ' ' + 	excludedPlatform.reason
+					);
+				}
+			);
+		}
+	}
+
+	/**
 	 * Report the platforms with more than one ref:tec? (on the same tag or on different tag)
 	 */
 
@@ -125,6 +150,7 @@ class PlatformsComparator {
 			);
 			return;
 		}
+		this.#reportExcludeList ( );
 		this.#searchMissingOsmPlatforms ( );
 		this.#searchUnknownGtfsPlatforms ( );
 		this.#reportOsmPlatformsWithMore1ref ( );
