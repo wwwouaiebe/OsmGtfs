@@ -42,7 +42,6 @@ class GtfsDataLoader {
      */
 
 	async loadData ( ) {
-
 		let jsonData = await new JsonLoader ( ).loadData (
 			'./dataFiles/json/' + theDocConfg.operator + '/gtfsData-' + theDocConfg.network + '.json'
 		);

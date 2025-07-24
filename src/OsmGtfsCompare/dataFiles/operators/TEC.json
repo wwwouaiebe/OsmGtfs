@@ -9,7 +9,18 @@
 			"osmNetwork" : "TECB",
 			"gtfsAgencyId" : "B",
 			"gtfsAgencyName" : "TEC Brabant Wallon",
-			"gtfsIdPrefix" : "B"
+			"gtfsIdPrefix" : "B",
+			"excludeList" : {
+				"gtfs" : {
+					"excludedPlatforms" : [
+						{
+							"ref" : "Bhalgar1",
+							"name" : "Halle Station",
+							"reason" : "Duplicate with Bhalgar2"
+						}
+					]
+				}
+			}
 		},
 		{
 			"osmNetwork" : "TECC",

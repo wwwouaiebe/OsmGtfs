@@ -190,6 +190,7 @@ class RoutesMasterBuilder {
 	async #selectRoutesMasterFromDb ( ) {
 
 		// searching the data in the database
+
 		const dbRoutesMaster = await theMySqlDb.execSql (
 			'SELECT DISTINCT ' +
 			'routes.route_short_name AS ref, ' +

@@ -144,11 +144,11 @@ class OsmRouteMasterValidator {
 			theStatsReport.addRouteMasterErrorOperator ( );
 			this.#haveErrors = true;
 		}
-		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
+		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.osmOperator ) ) {
 			theRelationsReport.addError (
 				'p',
 				'Error M012: Missing operator ( expected containing "' +
-				theOperator.operator +
+				theOperator.osmOperator +
 				'" but found "' + this.#routeMaster.operator + '")'
 			);
 			theStatsReport.addRouteMasterErrorOperator ( );

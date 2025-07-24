@@ -1,0 +1,15 @@
+{
+	"mySqlDbName" : "new_gtfs_stib",
+	"gtfsDirectory" : "../OsmGtfsCompare/dataFiles/gtfs/STIB/",
+	"jsonDirectory" : "../OsmGtfsCompare/dataFiles/json/STIB/",
+	"operator" : "STIB",
+	"osmOperator" : "STIB/MIVB",
+	"networks" : [
+		{
+			"osmNetwork" : "IBXL",
+			"gtfsAgencyId" : "STIB/MIVB",
+			"gtfsAgencyName" : "STIB",
+			"gtfsIdPrefix" : ""
+		}
+	]
+}

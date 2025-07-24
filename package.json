@@ -31,7 +31,8 @@
     "scripts": {
         "debug": "node node_modules/grunt/bin/grunt debug",
         "release": "node node_modules/grunt/bin/grunt release",
-        "gtfs2json-tec": "node ./src/Gtfs2json/index.js --cwd=src/Gtfs2Json/ --operatorFile=../OsmGtfsCompare/dataFiles/operators/tec.json"
+        "gtfs2json-tec": "node ./src/Gtfs2json/index.js --cwd=src/Gtfs2Json/ --operatorFile=../OsmGtfsCompare/dataFiles/operators/TEC.json",
+        "gtfs2json-stib": "node ./src/Gtfs2json/index.js --cwd=src/Gtfs2Json/ --operatorFile=../OsmGtfsCompare/dataFiles/operators/STIB.json"
     },
     "author": "wwwouaiebe",
     "license": "GPL-3.0",

@@ -25,6 +25,7 @@ Doc reviewed 20250124
 
 import theVersion from '../../OsmGtfsCompare/Interface/version.js';
 import GoButtonClickEL from '../../OsmGtfsCompare/Interface/GoButtonClickEL.js';
+import OperatorSelectChangeEL from '../../OsmGtfsCompare/Interface/OperatorSelectChangeEL.js';
 import AutoStartup from '../../OsmGtfsCompare/Startup/AutoStartup.js';
 import ErrorsOnlyButtonClickEL from '../../OsmGtfsCompare/Interface/ErrorsOnlyButtonClickEL.js';
 import HeadingReportButtonClickEL from '../../OsmGtfsCompare/Interface/HeadingReportButtonClickEL.js';
@@ -52,6 +53,7 @@ class OsmGtfsCompareApp {
 	start ( ) {
 
 		// Adding event listeners on buttons
+		document.getElementById ( 'osmOperatorSelect' ).addEventListener ( 'change', new OperatorSelectChangeEL ( ), false );
 		document.getElementById ( 'goInput' ).addEventListener ( 'click', new GoButtonClickEL ( ), false );
 		document.getElementById ( 'errorsOnlyInput' ).addEventListener ( 'click', new ErrorsOnlyButtonClickEL ( ), false );
 		document.getElementById ( 'relationsButton' ).addEventListener (

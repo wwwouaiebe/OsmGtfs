@@ -77,11 +77,11 @@ class OsmRouteValidator {
 			theStatsReport.addRouteErrorOperator ( );
 			this.#haveErrors = true;
 		}
-		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.operator ) ) {
+		else if ( -1 === operator.split ( ';' ).indexOf ( theOperator.osmOperator ) ) {
 			theRelationsReport.addError (
 				'p',
 				'Error R023: Missing operator ( expected containing "' +
-				theOperator.operator +
+				theOperator.osmOperator +
 				'" but found "' + this.#route.operator + '")'
 			);
 			theStatsReport.addRouteMasterErrorOperator ( );
