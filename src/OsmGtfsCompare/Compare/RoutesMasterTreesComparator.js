@@ -226,7 +226,7 @@ class RoutesMasterTreesComparator {
 			// loop on the missing routes master
 			this.#unknownOsmRoutesMaster.forEach (
 				unknownOsmRouteMaster => {
-					theRelationsReport.add (
+					theRelationsReport.addError (
 						'p',
 						'Error M10: An unknown osm route master is found: ' +
 						( unknownOsmRouteMaster.ref ?? '' ) + ' ' +
