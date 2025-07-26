@@ -209,14 +209,18 @@ If not found, a error is diplayed with a red bullet "No gtfs route found 🔴"
 And finally a list of all GTFS routes that cannot be linked to an OSM route is displayed
 - with a red bullet 🔴
 - with a purple bullet 🟣 when the GTFS route is a part of a already existing OSM route. In that case a list of the OSM routes is also displayed.
-- with a ⚫ when the validity end date of the GTFS route is in the past
-- with a ⚪ when the validity start date of the GTFS route is in the future
+
+In all cases the 🟢, 🔵, 🟡, 🔴 or 🟣 is followed with:
+- a black bullet ⚫ when the validity end date of the GTFS route is in the past
+- a white bullet ⚪ when the validity start date of the GTFS route is in the future
 
 When all osm route_master and routes are linked and displayed , a list of the GTFS route_master not linked to an osm_route_master is displayed.
 
 __Be carefull before deleting an OSM route that seems not linked to a GTFS route, especially for school bus! Verify and compare!__
 
 __Fixing the comparison errors is not easy, so first use your brain, then use your brain and finally use your brain!__
+
+__In any case, what you see on the ground is reality and takes precedence over what OsmGtfsCompare says__
 
 Good luck
 

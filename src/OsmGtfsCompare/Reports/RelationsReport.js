@@ -372,22 +372,28 @@ class RelationsReport extends Report {
 
 	addGpxRoute ( routeMaster, gpxRoute, routeIcon ) {
 		const gpxRouteName = this.#getGpxRouteName ( routeMaster, gpxRoute );
-		if ( -1 === [ '🔵', '🟡', '🔴', '🟣' ].indexOf ( routeIcon ) ) {
-			this.add (
+
+		// the route is not ok and not a part of another route and not in the past or the future -> error
+		if ( routeIcon.match ( /(🔵|🟡|🔴)(?!(⚪|⚫))/g ) ) {
+			this.addError (
 				'p',
 				routeIcon + ' ' + gpxRouteName + ' ' +
 				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )
 			);
 		}
-		else if ( '🟣' === routeIcon ) {
+
+		// the route is a part of another route but not in the past or thr future -> warning
+		else if ( routeIcon.match ( /🟣(?!(⚪|⚫))/g ) ) {
 			this.addWarning (
 				'p',
 				routeIcon + ' ' + gpxRouteName + ' ' +
 				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )
 			);
 		}
+
+		// all other cases
 		else {
-			this.addError (
+			this.add (
 				'p',
 				routeIcon + ' ' + gpxRouteName + ' ' +
 				this.#getGpxDownloadButton ( gpxRoute.shapePk, gpxRouteName )

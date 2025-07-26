@@ -132,22 +132,25 @@ class RouteMasterComparator {
 	 */
 
 	#getRouteIcon ( gtfsRoute, matchScore ) {
-		if ( new Date ( gtfsRoute.startDate ).valueOf ( ) > Date.now ( ) ) {
-			return '⚪';
-		}
-		else if ( new Date ( gtfsRoute.endDate ).valueOf ( ) < Date.now ( ) ) {
-			return '⚫'; // †
-		}
-		else if ( matchScore.matchScore === MatchScoreValues.haveSamePlatforms ) {
-			return '🟢';
+		let routeIcon = '🔴';
+		if ( matchScore.matchScore === MatchScoreValues.haveSamePlatforms ) {
+			routeIcon = '🟢';
 		}
 		else if ( matchScore.matchScore === MatchScoreValues.haveSameFromToPlatforms ) {
-			return '🔵';
+			routeIcon = '🔵';
 		}
 		else if ( matchScore.matchScore === MatchScoreValues.haveSimilarFromToPlatforms ) {
-			return '🟡';
+			routeIcon = '🟡';
 		}
-		return '';
+
+		if ( new Date ( gtfsRoute.startDate ).valueOf ( ) > Date.now ( ) ) {
+			routeIcon += '⚪';
+		}
+		else if ( new Date ( gtfsRoute.endDate ).valueOf ( ) < Date.now ( ) ) {
+			routeIcon += '⚫'; // †
+		}
+
+		return routeIcon;
 	}
 
 	/**
@@ -334,14 +337,15 @@ class RouteMasterComparator {
 						}
 					);
 
-					// const startPlatform = theGtfsPlatforms.getPlatform ( route.platforms [ 0 ] );
-					// const lastPlatform = theGtfsPlatforms.getPlatform ( route.platforms.slice ( -1 ) [ 0 ] );
+					let routeIcon = 0 === gtfsRoutesPartOfOsmRoute.length ? '🔴' : '🟣';
+					if ( new Date ( gtfsRoute.startDate ).valueOf ( ) > Date.now ( ) ) {
+						routeIcon += '⚪';
+					}
+					else if ( new Date ( gtfsRoute.endDate ).valueOf ( ) < Date.now ( ) ) {
+						routeIcon += '⚫';
+					}
 
-					theRelationsReport.addGpxRoute (
-						this.#gtfsRouteMaster,
-						gtfsRoute,
-						0 === gtfsRoutesPartOfOsmRoute.length ? '🔴' : '🟣'
-					);
+					theRelationsReport.addGpxRoute ( this.#gtfsRouteMaster, gtfsRoute, routeIcon );
 					gtfsRoutesPartOfOsmRoute.forEach (
 						gtfsRoutePart => {
 							theRelationsReport.add (
