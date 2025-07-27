@@ -61,6 +61,25 @@ class RouteMasterComparator {
 	#matchScoresTable;
 
 	/**
+	 * get an array with all the platforms ref of an osm platform
+	 * @param {String} osmPlatform one of the ref of the platform
+	 * @returns {Array.<String>} the list of refs
+	 */
+
+	#getOsmPlatformRefs ( osmPlatform ) {
+		let osmPlatformRefs = [ ];
+		const osmRefs = theOsmPlatforms.getPlatform ( osmPlatform )?.osmRefs;
+		if ( osmRefs ) {
+			Object.values ( osmRefs ).forEach (
+				osmRefValue => {
+					osmPlatformRefs = osmPlatformRefs.concat ( osmRefValue.split ( ';' ) );
+				}
+			);
+		}
+		return osmPlatformRefs;
+	}
+
+	/**
 	 * Report the osm platforms to remove and the gtfs platforms to add  in an osmRoute
 	 * when an osmRoute have differnt platforms than the gtfs route
 	 * @param {Route} osmRoute The osm route
@@ -75,7 +94,11 @@ class RouteMasterComparator {
 		// Searching the platforms to remove
 		osmRoute.platforms.forEach (
 			osmPlatform => {
-				if ( ! gtfsRoute.platforms.includes ( osmPlatform ) ) {
+				let platformFound = false;
+				 this.#getOsmPlatformRefs ( osmPlatform ).forEach (
+					platformRef => { platformFound ||= gtfsRoute.platforms.includes ( platformRef ); }
+				);
+				if ( ! platformFound ) {
 					osmPlatformsToRemove.push ( osmPlatform );
 				}
 			}
@@ -84,7 +107,11 @@ class RouteMasterComparator {
 		// Searching the platforms to add
 		gtfsRoute.platforms.forEach (
 			gtfsPlatform => {
-				if ( ! osmRoute.platforms.includes ( gtfsPlatform ) ) {
+				let platformFound = false;
+				this.#getOsmPlatformRefs ( gtfsPlatform ).forEach (
+					platformRef => { platformFound ||= osmRoute.platforms.includes ( platformRef ); }
+				);
+				if ( ! platformFound ) {
 					gtfsPlatformsToAdd.push ( gtfsPlatform );
 				}
 			}
