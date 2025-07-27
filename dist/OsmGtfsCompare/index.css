@@ -324,7 +324,7 @@ panes error only
 .pane.errorsOnly div.haveErrors > h1,
 .pane.errorsOnly div.haveErrors > h2,
 .pane.errorsOnly div.haveErrors > h3,
-.pane.errorsOnly div.haveErrors > p
+.pane.errorsOnly div.haveErrors > p.isError
 {
 	width:auto;
 	height:auto;

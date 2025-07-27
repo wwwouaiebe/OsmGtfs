@@ -320,7 +320,7 @@ class RouteMasterComparator {
 	 */
 
 	#reportNotMatchedGtfsRoutes ( ) {
-		if ( this.#matchScoresTable.matchedGtfsRoutes.length === this.#gtfsRouteMaster.routes.length ) {
+		if ( this.#matchScoresTable.matchedGtfsRoutes.size === this.#gtfsRouteMaster.routes.length ) {
 			return;
 		}
 
@@ -348,7 +348,7 @@ class RouteMasterComparator {
 					theRelationsReport.addGpxRoute ( this.#gtfsRouteMaster, gtfsRoute, routeIcon );
 					gtfsRoutesPartOfOsmRoute.forEach (
 						gtfsRoutePart => {
-							theRelationsReport.add (
+							theRelationsReport.addPartial (
 								'p',
 								'This route is a part of ' + gtfsRoutePart [ 1 ].name,
 								gtfsRoutePart [ 1 ]

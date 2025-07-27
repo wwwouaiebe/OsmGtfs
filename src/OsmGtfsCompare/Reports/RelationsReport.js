@@ -111,6 +111,13 @@ class RelationsReport extends Report {
 	#routesLinksdiv = document.getElementById ( 'routesLinks' );
 
 	/**
+	 * The route icon that was in the parameters of the last call to the addGpxRoute procedure
+	 * @type {String}
+	 */
+
+	#lastRouteIcon = '';
+
+	/**
 	 * The constructor
 	 */
 
@@ -244,6 +251,58 @@ class RelationsReport extends Report {
 	}
 
 	/**
+	 * Return an HTML string with a "Download gpx" button
+	 * @param {?Number} shapePk A unique identifier given to a GTFS route and coming from mySQL db
+	 * @param {String} fileName the file name to use when the button is clicked
+	 * @returns {String} a HTML string with an ButtonHTMLElement or an empty string when the shapePk is null
+	 */
+
+	#getGpxDownloadButton ( shapePk, fileName ) {
+		const gpxDownloadButton =
+				'<button title="download the gpx file" ' +
+				'class="gpxButton" data-shape-pk="' +
+				shapePk + '" + data-file-name ="' + fileName + '" >Download gpx</button>';
+
+		return gpxDownloadButton;
+	}
+
+	/**
+	 * Convert a date to the format year-month-day
+	 * @param {String} sourceDate The date as in the json file. Dates in the json file are ISO date with UTC hours...
+	 * @returns {String} the date in the format year-month-day
+	 */
+
+	#convertDate ( sourceDate ) {
+		const tmpDate =
+			new Date ( sourceDate )
+				.toLocaleDateString ( )
+				.split ( '/' );
+
+		return tmpDate [ 2 ] + '-' + tmpDate [ 1 ] + '-' + tmpDate [ 0 ];
+	}
+
+	/**
+	 * Get the gpx route name
+	 * @param {Object} routeMaster the routeMaster for witch the gpx route name is searched
+	 * @param {Object} route the route for witch the gpx route name is searched
+	 * @returns {String} the route name
+	 */
+
+	#getGpxRouteName ( routeMaster, route ) {
+		const startPlatform = theGtfsPlatforms.getPlatform ( route.platforms [ 0 ] );
+		const lastPlatform = theGtfsPlatforms.getPlatform ( route.platforms.slice ( -1 ) [ 0 ] );
+		const gpxRouteName =
+            theDocConfig.vehicle.slice ( 0, 1 ).toUpperCase ( ) + theDocConfig.vehicle.slice ( 1 ) + ' ' +
+            routeMaster.ref + ' - from ' + startPlatform.nameOperator +
+            ' (' + startPlatform.gtfsRef + ') to ' +
+            lastPlatform.nameOperator + ' (' + lastPlatform.gtfsRef + ') - ' +
+            route.shapePk + ' - valid from ' + this.#convertDate ( route.startDate ) +
+            ' - valid to ' + this.#convertDate ( route.endDate );
+
+		return gpxRouteName;
+	}
+
+	/**
 	 * Add an HTMLElement to the report and mark this element as warning
 	 * @param {String} htmlTag The HTML tag to add (h1, h2, h3 or p)
 	 * @param {String} text The text to add in the HTMLElement
@@ -312,55 +371,22 @@ class RelationsReport extends Report {
 	}
 
 	/**
-	 * Return an HTML string with a "Download gpx" button
-	 * @param {?Number} shapePk A unique identifier given to a GTFS route and coming from mySQL db
-	 * @param {String} fileName the file name to use when the button is clicked
-	 * @returns {String} a HTML string with an ButtonHTMLElement or an empty string when the shapePk is null
+	 * Add the text 'This route is a part of ...'
+	 * @param {String} htmlTag The HTML tag to add (h1, h2, h3 or p)
+	 * @param {String} text The text to add in the HTMLElement
+	 * @param {Object} osmObject an OSM object to add as a link or a JOSM buton in the HTMLElement
 	 */
 
-	#getGpxDownloadButton ( shapePk, fileName ) {
-		const gpxDownloadButton =
-				'<button title="download the gpx file" ' +
-				'class="gpxButton" data-shape-pk="' +
-				shapePk + '" + data-file-name ="' + fileName + '" >Download gpx</button>';
-
-		return gpxDownloadButton;
-	}
-
-	/**
-	 * Convert a date to the format year-month-day
-	 * @param {String} sourceDate The date as in the json file. Dates in the json file are ISO date with UTC hours...
-	 * @returns {String} the date in the format year-month-day
-	 */
-
-	#convertDate ( sourceDate ) {
-		const tmpDate =
-			new Date ( sourceDate )
-				.toLocaleDateString ( )
-				.split ( '/' );
-
-		return tmpDate [ 2 ] + '-' + tmpDate [ 1 ] + '-' + tmpDate [ 0 ];
-	}
-
-	/**
-	 * Get the gpx route name
-	 * @param {Object} routeMaster the routeMaster for witch the gpx route name is searched
-	 * @param {Object} route the route for witch the gpx route name is searched
-	 * @returns {String} the route name
-	 */
-
-	#getGpxRouteName ( routeMaster, route ) {
-		const startPlatform = theGtfsPlatforms.getPlatform ( route.platforms [ 0 ] );
-		const lastPlatform = theGtfsPlatforms.getPlatform ( route.platforms.slice ( -1 ) [ 0 ] );
-		const gpxRouteName =
-            theDocConfig.vehicle.slice ( 0, 1 ).toUpperCase ( ) + theDocConfig.vehicle.slice ( 1 ) + ' ' +
-            routeMaster.ref + ' - from ' + startPlatform.nameOperator +
-            ' (' + startPlatform.gtfsRef + ') to ' +
-            lastPlatform.nameOperator + ' (' + lastPlatform.gtfsRef + ') - ' +
-            route.shapePk + ' - valid from ' + this.#convertDate ( route.startDate ) +
-            ' - valid to ' + this.#convertDate ( route.endDate );
-
-		return gpxRouteName;
+	addPartial ( htmlTag, text, osmObject ) {
+		if ( this.#lastRouteIcon.match ( /(🔵|🟡|🔴)(?!(⚪|⚫))/g ) ) {
+			this.addError ( htmlTag, text, osmObject );
+		}
+		else if ( this.#lastRouteIcon.match ( /🟣(?!(⚪|⚫))/g ) ) {
+			this.addWarning ( htmlTag, text, osmObject );
+		}
+		else {
+			this.add ( htmlTag, text, osmObject );
+		}
 	}
 
 	/**
@@ -371,6 +397,7 @@ class RelationsReport extends Report {
 	 */
 
 	addGpxRoute ( routeMaster, gpxRoute, routeIcon ) {
+		this.#lastRouteIcon = routeIcon;
 		const gpxRouteName = this.#getGpxRouteName ( routeMaster, gpxRoute );
 
 		// the route is not ok and not a part of another route and not in the past or the future -> error
