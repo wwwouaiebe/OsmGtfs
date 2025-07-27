@@ -113,14 +113,14 @@ class RouteMasterComparator {
 		);
 
 		// reporting
-		theRelationsReport.add ( 'p', gtfsPlatformToAddStr );
-		theRelationsReport.add ( 'p', osmPlatformsToRemoveStr );
+		theRelationsReport.addPartial ( 'p', gtfsPlatformToAddStr );
+		theRelationsReport.addPartial ( 'p', osmPlatformsToRemoveStr );
  		if (
 			0 === osmPlatformsToRemove.length
 			&&
 			0 === gtfsPlatformsToAdd.length
 		) {
-			theRelationsReport.add ( 'p', 'Verify the order of the platforms and the duplicate platforms' );
+			theRelationsReport.addPartial ( 'p', 'Verify the order of the platforms and the duplicate platforms' );
 		}
 	}
 
