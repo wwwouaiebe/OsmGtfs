@@ -61,6 +61,13 @@ class RouteMasterComparator {
 	#matchScoresTable;
 
 	/**
+	 * A map where the gtfs route having an osm route (same, same fromAndTo, similar fromAndTo).
+	 * @type {Map}
+	 */
+
+	#reportedGtfsRoutes = new Map ( );
+
+	/**
 	 * get an array with all the platforms ref of an osm platform
 	 * @param {String} osmPlatform one of the ref of the platform
 	 * @returns {Array.<String>} the list of refs
@@ -201,6 +208,7 @@ class RouteMasterComparator {
 						this.#gtfsRouteMaster.routes.find ( route => route.shapePk === matchScore.shapePk )
 					);
 				}
+				this.#reportedGtfsRoutes.set ( gtfsRoute.shapePk, gtfsRoute.shapePk );
 			}
 		);
 	}
@@ -277,6 +285,8 @@ class RouteMasterComparator {
 
 	#compareRoutes ( ) {
 
+		this.#reportedGtfsRoutes.clear ( );
+
 		// loop on the osm routes
 		this.#osmRouteMaster.routes.forEach (
 			osmRoute => {
@@ -347,14 +357,15 @@ class RouteMasterComparator {
 	 */
 
 	#reportNotMatchedGtfsRoutes ( ) {
-		if ( this.#matchScoresTable.matchedGtfsRoutes.size === this.#gtfsRouteMaster.routes.length ) {
+
+		if ( this.#reportedGtfsRoutes.size === this.#gtfsRouteMaster.routes.length ) {
 			return;
 		}
 
 		theRelationsReport.add ( 'h2', 'gtfs routes not found in the osm data' );
 		this.#gtfsRouteMaster.routes.forEach (
 			gtfsRoute => {
-				if ( ! this.#matchScoresTable.matchedGtfsRoutes.get ( gtfsRoute.shapePk ) ) {
+				if ( ! this.#reportedGtfsRoutes.get ( gtfsRoute.shapePk ) ) {
 					const gtfsRoutesPartOfOsmRoute = [];
 					this.#osmRouteMaster.routes.forEach (
 						osmRoute => {

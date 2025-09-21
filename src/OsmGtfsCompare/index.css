@@ -172,14 +172,16 @@ route links
 	border-bottom-style :none;
 	color:red;
 	text-align: center;
-	position: sticky;
-	top : 0;
-	right : 0;
+	position: absolute;
+	top: 7em;
+	left: 2em;
 	transition: all 500ms 500ms;
+	z-index: 500;
+	max-width: calc(100% - 6em);
 }
 
 #routesLinks:hover {
-	width: calc(100% - 2em);
+	width: calc(100% - 6em);
 	height: 4.5em;
 	color: var(--main-color);
 	background-color: lightgray;

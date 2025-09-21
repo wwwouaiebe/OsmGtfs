@@ -27,7 +27,7 @@ Changes:
  * @type {String}
  */
 
-const theVersion = 'v3.0.0';
+const theVersion = 'v3.0.1';
 
 export default theVersion;
 
