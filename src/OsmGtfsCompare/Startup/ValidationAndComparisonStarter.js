@@ -69,11 +69,22 @@ class ValidationAndComparisonStarter {
 
 		await new GtfsDataLoader ( ).loadData ( );
 
-		// loading osm data
-		await new OsmDataLoader ( ).fetchData (	);
-
 		// Search routes without route_master
-		await new RoutesWithoutRouteMasterValidator ( ).fetchData ( );
+		let success = await new RoutesWithoutRouteMasterValidator ( ).fetchData ( );
+		if ( ! success ) {
+			alert ( 'An error occurs when loading \nroutes without route master from osm' );
+		}
+
+		// loading osm data
+		success = await new OsmDataLoader ( ).fetchData (	);
+		if ( ! success ) {
+			thePlatformsReport.close ( );
+			theRelationsReport.close ( );
+			theStatsReport.close ( );
+			theErrorsNavigator.reset ( );
+			alert ( 'An error occurs when loading osm data' );
+			return;
+		}
 
 		new RoutesMasterTreesComparator ( ).compare ( );
 

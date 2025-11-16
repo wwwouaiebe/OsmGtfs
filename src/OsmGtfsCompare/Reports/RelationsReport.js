@@ -292,12 +292,13 @@ class RelationsReport extends Report {
 		const startPlatform = theGtfsPlatforms.getPlatform ( route.platforms [ 0 ] );
 		const lastPlatform = theGtfsPlatforms.getPlatform ( route.platforms.slice ( -1 ) [ 0 ] );
 		const gpxRouteName =
+			String ( route.shapePk ).padStart ( 4, '0' ) + ' - ' +
             theDocConfig.vehicle.slice ( 0, 1 ).toUpperCase ( ) + theDocConfig.vehicle.slice ( 1 ) + ' ' +
             routeMaster.ref + ' - from ' + startPlatform.nameOperator +
             ' (' + startPlatform.gtfsRef + ') to ' +
-            lastPlatform.nameOperator + ' (' + lastPlatform.gtfsRef + ') - ' +
-            route.shapePk + ' - valid from ' + this.#convertDate ( route.startDate ) +
-            ' - valid to ' + this.#convertDate ( route.endDate );
+            lastPlatform.nameOperator + ' (' + lastPlatform.gtfsRef + ')' +
+            ' - valid from ' + this.#convertDate ( route.startDate ) +
+            ' to ' + this.#convertDate ( route.endDate );
 
 		return gpxRouteName;
 	}

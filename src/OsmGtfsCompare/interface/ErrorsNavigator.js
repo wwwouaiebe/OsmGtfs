@@ -31,7 +31,7 @@ Navigator for errors in the relations pane
 class ErrorsNavigator {
 
 	/**
-	 * An array with the paragraphs containing a 🔵🟡🔴🟣 char
+	 * An array with the paragraphs containing a 🔵🟡🔴🟣⚫ char
 	 * @type {Array.<HTMLElement>}
 	 */
 
@@ -61,7 +61,7 @@ class ErrorsNavigator {
 		this.#paragraphPointer = 0;
 		this.#paragraphs.length = 0;
 		while ( this.#paragraphPointer < paragraphs.length ) {
-			if ( paragraphs.item ( this.#paragraphPointer ).innerText.match ( /(🔵|🟡|🔴|🟣)/g ) ) {
+			if ( paragraphs.item ( this.#paragraphPointer ).innerText.match ( /(🔵|🟡|🔴|🟣|⚫)/g ) ) {
 				this.#paragraphs.push ( paragraphs.item ( this.#paragraphPointer ) );
 			}
 			this.#paragraphPointer ++;

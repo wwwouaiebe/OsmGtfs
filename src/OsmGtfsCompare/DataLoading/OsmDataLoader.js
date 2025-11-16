@@ -348,7 +348,10 @@ class OsmDataLoader {
 			this.#loadOsmData ( elements );
 			this.#TreeBuilder ( );
 			theOsmPlatforms.loadData ( this.#osmPlatforms );
+			return true;
 		}
+
+		return false;
 	}
 
 	/**

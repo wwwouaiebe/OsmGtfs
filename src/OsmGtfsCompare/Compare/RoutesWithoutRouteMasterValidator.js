@@ -140,7 +140,12 @@ class RoutesWithoutRouteMasterValidator {
 			elements = await this.#fetchOverpassApi ( uri );
 		}
 
+		if ( ! elements ) {
+			return false;
+		}
+
 		this.#reportMissingRouteMaster ( elements );
+		return true;
 	}
 
 	/**
