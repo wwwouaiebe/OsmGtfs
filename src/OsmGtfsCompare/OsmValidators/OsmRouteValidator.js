@@ -70,8 +70,8 @@ class OsmRouteValidator {
 	#validateNote ( ) {
 		const note = this.#route.note;
 		if ( note ) {
-			theRelationsReport.addWarning ( 'p', 'Warning R024: A note exists for this route:' + note );
-			theStatsReport.addRouteWarningNote ( );
+			theRelationsReport.addError ( 'p', 'Error R024: A note exists for this route:' + note );
+			theStatsReport.addRouteErrorNote ( );
 		}
 	}
 
@@ -111,6 +111,7 @@ class OsmRouteValidator {
 		theRelationsReport.add ( 'h3', 'Validation of tags, roles and members for route' );
 		this.#validateOperator ( );
 		this.#validateFixme ( );
+		this.#validateNote ( );
 		this.#haveErrors = new OsmContinuousRouteValidator ( this.#route ).validate ( ) || this.#haveErrors;
 		this.#haveErrors = new OsmNameFromToRefValidator ( this.#route ).validate ( ) || this.#haveErrors;
 		if ( ( ! this.#haveErrors ) ) {

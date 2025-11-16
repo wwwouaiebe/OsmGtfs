@@ -210,8 +210,8 @@ class StatsReport extends Report {
 	 * Increment the routes.warnings and routes.note values of the stats
 	 */
 
-	addRouteWarningNote ( ) {
-		this.#stats.routes.warnings ++;
+	addRouteErrorNote ( ) {
+		this.#stats.routes.errors ++;
 		this.#stats.routes.note ++;
 	}
 

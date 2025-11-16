@@ -106,6 +106,7 @@ class RoutesWithoutRouteMasterValidator {
 			.catch (
 				err => {
 					console.error ( err );
+					elements = null;
 				}
 			);
 

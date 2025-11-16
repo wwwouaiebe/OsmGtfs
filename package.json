@@ -6,15 +6,15 @@
     "bin": {
         "sd": "./src/index.js"
     },
-    "version": "3.1.0-RC2",
+    "version": "3.1.0-RC3",
     "keywords": [],
     "devDependencies": {
         "eslint": "latest",
         "grunt": "latest",
         "grunt-contrib-copy": "latest",
-        "grunt-eslint": "latest",
+        "grunt-eslint": "^26.0.0",
         "grunt-rollup": "latest",
-        "grunt-terser": "latest"
+        "grunt-terser": "^1.0.0"
     },
     "dependencies": {
         "mysql2": "latest"

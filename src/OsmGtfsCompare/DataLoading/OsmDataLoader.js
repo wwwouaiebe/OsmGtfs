@@ -310,6 +310,7 @@ class OsmDataLoader {
 			.catch (
 				err => {
 					console.error ( err );
+					elements = null;
 				}
 			);
 

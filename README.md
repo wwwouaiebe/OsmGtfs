@@ -165,7 +165,7 @@ Add an operator tag
 
 The operator tag don't include the current operator. Add the operator to the tag.
 
-### Warning R024: a note exists for this relation ...
+### Error R024: a note exists for this relation ...
 
 For your information
 
