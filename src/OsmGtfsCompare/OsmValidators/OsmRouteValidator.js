@@ -64,6 +64,18 @@ class OsmRouteValidator {
 	}
 
 	/**
+	 * Verify that the route don't have a note
+	 */
+
+	#validateNote ( ) {
+		const note = this.#route.note;
+		if ( note ) {
+			theRelationsReport.addWarning ( 'p', 'Warning R024: A note exists for this route:' + note );
+			theStatsReport.addRouteWarningNote ( );
+		}
+	}
+
+	/**
 	 * Verify that the route master have an operator tag including the current operator
 	 */
 

@@ -6,17 +6,15 @@
     "bin": {
         "sd": "./src/index.js"
     },
-    "version": "3.0.1",
+    "version": "3.1.0",
     "keywords": [],
     "devDependencies": {
         "eslint": "latest",
         "grunt": "latest",
         "grunt-contrib-copy": "latest",
         "grunt-eslint": "latest",
-        "grunt-essimpledoc": "latest",
         "grunt-rollup": "latest",
-        "grunt-terser": "latest", 
-        "grunt-wwwouaiebe-buildnumber": "latest"
+        "grunt-terser": "latest"
     },
     "dependencies": {
         "mysql2": "latest"
@@ -31,6 +29,7 @@
     "scripts": {
         "debug": "node node_modules/grunt/bin/grunt debug",
         "release": "node node_modules/grunt/bin/grunt release",
+        "doc": "node ../ESSimpleDoc/bin/index.js --src=./src --dest=./docs/techDoc --validate=true",
         "gtfs2json-tec": "node ./src/Gtfs2json/index.js --cwd=src/Gtfs2Json/ --operatorFile=../OsmGtfsCompare/dataFiles/operators/TEC.json",
         "gtfs2json-stib": "node ./src/Gtfs2json/index.js --cwd=src/Gtfs2Json/ --operatorFile=../OsmGtfsCompare/dataFiles/operators/STIB.json"
     },

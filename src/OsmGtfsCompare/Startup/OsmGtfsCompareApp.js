@@ -29,6 +29,8 @@ import OperatorSelectChangeEL from '../../OsmGtfsCompare/Interface/OperatorSelec
 import AutoStartup from '../../OsmGtfsCompare/Startup/AutoStartup.js';
 import ErrorsOnlyButtonClickEL from '../../OsmGtfsCompare/Interface/ErrorsOnlyButtonClickEL.js';
 import HeadingReportButtonClickEL from '../../OsmGtfsCompare/Interface/HeadingReportButtonClickEL.js';
+import PreviousErrorButtonClickEL from '../interface/PreviousErrorButtonClickEL.js';
+import NextErrorButtonClickEL from '../interface/NextErrorButtonClickEL.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -56,6 +58,8 @@ class OsmGtfsCompareApp {
 		document.getElementById ( 'osmOperatorSelect' ).addEventListener ( 'change', new OperatorSelectChangeEL ( ), false );
 		document.getElementById ( 'goInput' ).addEventListener ( 'click', new GoButtonClickEL ( ), false );
 		document.getElementById ( 'errorsOnlyInput' ).addEventListener ( 'click', new ErrorsOnlyButtonClickEL ( ), false );
+		document.getElementById ( 'previousError' ).addEventListener ( 'click', new PreviousErrorButtonClickEL ( ), false );
+		document.getElementById ( 'nextError' ).addEventListener ( 'click', new NextErrorButtonClickEL ( ), false );
 		document.getElementById ( 'relationsButton' ).addEventListener (
 			'click',
 			new HeadingReportButtonClickEL ( 'relationsButton', 'relationsPane' ),

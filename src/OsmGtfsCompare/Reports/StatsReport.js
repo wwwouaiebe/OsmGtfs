@@ -43,6 +43,7 @@ class StatsReport extends Report {
 		routesMaster : {
 			operator : 0,
 			fixme : 0,
+			note : 0,
 			name : 0,
 			description : 0,
 			members : 0,
@@ -50,13 +51,13 @@ class StatsReport extends Report {
 			sameRefs : 0,
 			errors : 0,
 			warnings : 0,
-			fixme : 0,
 			isUnknown : 0,
 			routeNoRouteMaster : 0
 		},
 		routes : {
 			operator : 0,
 			fixme : 0,
+			note : 0,
 			holes : 0,
 			ways : 0,
 			fromToRefName : 0,
@@ -73,6 +74,7 @@ class StatsReport extends Report {
 			name : 0,
 			nameOperator : 0,
 			fixme : 0,
+			note : 0,
 			network : 0,
 			operator : 0,
 			routeRefs : 0,
@@ -178,6 +180,15 @@ class StatsReport extends Report {
 	}
 
 	/**
+	 * Increment the routesMaster.warnings and routesMaster.fixme values of the stats
+	 */
+
+	addRouteMasterErrorNote ( ) {
+		this.#stats.routesMaster.errors ++;
+		this.#stats.routesMaster.note ++;
+	}
+
+	/**
 	 * Increment the routesMaster.errors and routesMaster.operator values of the stats
 	 */
 
@@ -193,6 +204,15 @@ class StatsReport extends Report {
 	addRouteWarningFixme ( ) {
 		this.#stats.routes.warnings ++;
 		this.#stats.routes.fixme ++;
+	}
+
+	/**
+	 * Increment the routes.warnings and routes.note values of the stats
+	 */
+
+	addRouteWarningNote ( ) {
+		this.#stats.routes.warnings ++;
+		this.#stats.routes.note ++;
 	}
 
 	/**
@@ -300,6 +320,15 @@ class StatsReport extends Report {
 	}
 
 	/**
+	 * Increment the platforms.warnings and platforms.note values of the stats
+	 */
+
+	addPlatformsWarningNote ( ) {
+		this.#stats.platforms.warnings ++;
+		this.#stats.platforms.note ++;
+	}
+
+	/**
 	 * Increment the platforms.errors and platforms.network values of the stats
 	 */
 
@@ -369,6 +398,7 @@ class StatsReport extends Report {
 		this.add ( 'h2', 'Routes master' );
 		this.add ( 'p', 'Osm routes master with errors on operator tag: ' + this.#stats.routesMaster.operator );
 		this.add ( 'p', 'Osm routes master with fixme tag: ' + this.#stats.routesMaster.fixme );
+		this.add ( 'p', 'Osm routes master with note tag: ' + this.#stats.routesMaster.note );
 		this.add ( 'p', 'Osm routes master with errors on name tag: ' + this.#stats.routesMaster.name );
 		this.add ( 'p', 'Osm routes master with errors on description tag: ' + this.#stats.routesMaster.description );
 		this.add ( 'p', 'Osm routes master with errors on ref tag: ' + this.#stats.routesMaster.refs );
@@ -385,6 +415,7 @@ class StatsReport extends Report {
 		this.add ( 'p', 'Osm routes with errors on operator: tags ' + this.#stats.routes.operator );
 		this.add ( 'p', 'Osm routes with errors on from, to, ref or name tags: ' + this.#stats.routes.fromToRefName );
 		this.add ( 'p', 'Osm routes with fixme: ' + this.#stats.routes.fixme );
+		this.add ( 'p', 'Osm routes with note: ' + this.#stats.routes.note );
 		this.add ( 'p', 'Osm route relations done and aligned on GTFS files: ' + this.#stats.routes.doneOk );
 		this.add ( 'p', 'Osm route relations done but not aligned on GTFS files: ' + this.#stats.routes.doneError );
 		this.add ( 'p', 'Osm route relations done but no GTFS data found: ' + this.#stats.routes.doneNoGtfs );

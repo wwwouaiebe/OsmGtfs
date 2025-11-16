@@ -126,7 +126,8 @@ class OsmDataLoader {
 				const routeMaster = {
 					description : osmRouteMaster?.tags?.description,
 					ref : osmRouteMaster?.tags.ref,
-					fixme : osmRouteMaster?.tags.fixme,
+					fixme : osmRouteMaster?.tags?.fixme,
+					note : osmRouteMaster?.tags?.note,
 					operator : osmRouteMaster?.tags?.operator,
 					type : [ 'tram', 'subway', 'train', 'bus' ].indexOf ( osmRouteMaster?.tags?.route_master ),
 					routes : [],
@@ -147,6 +148,7 @@ class OsmDataLoader {
 								to : osmRoute?.tags?.to,
 								ref : osmRoute?.tags?.ref,
 								fixme : osmRoute?.tags?.fixme,
+								note : osmRoute?.tags?.note,
 								operator : osmRoute?.tags?.operator,
 								ways : [],
 								platforms : [],

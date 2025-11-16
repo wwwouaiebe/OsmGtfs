@@ -123,6 +123,13 @@ class Route {
 	#fixme;
 
 	/**
+	 * The note of the route
+	 * @type {String}
+	 */
+
+	#note;
+
+	/**
 	 * The name of the route (empty for GTFS)
 	 * @type {String}
 	 */
@@ -221,6 +228,13 @@ class Route {
 	get fixme ( ) { return this.#fixme; }
 
 	/**
+	 * The note of the route
+	 * @type {String}
+	 */
+
+	get note ( ) { return this.#note; }
+
+	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route.
 	 * @type {Object}
 	 */
@@ -239,7 +253,8 @@ class Route {
 			ways : this.#ways,
 			osmId : this.#osmId,
 			operator : this.#operator,
-			fixme : this.#fixme
+			fixme : this.#fixme,
+			note : this.#note
 		};
 		this.#platforms.forEach (
 			platform => jsonRoute.platforms.push ( platform )
@@ -268,6 +283,7 @@ class Route {
 		this.#osmId = jsonRoute.osmId;
 		this.#operator = jsonRoute.operator;
 		this.#fixme = jsonRoute.fixme;
+		this.#note = jsonRoute.note;
 	}
 }
 

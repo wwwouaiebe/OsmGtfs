@@ -85,6 +85,11 @@ label {
     margin-right: 1em;
 }
 
+.button {
+	margin-left: 0.5em;
+	margin-right: 0.5em;;
+}
+
 .fontLarge {
 	/* For sun, moon and help buttons */
 	margin-left: 2em;
@@ -219,6 +224,12 @@ Errors
 	color: red;
 }
 
+.currentError {
+	font-weight: bold;
+}
+.currentError::before {
+	content: " ⯈ ";
+}
 /*
 JOSM buttons
 */

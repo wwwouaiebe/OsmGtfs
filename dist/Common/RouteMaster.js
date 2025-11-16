@@ -95,6 +95,13 @@ class RouteMaster {
 	#fixme;
 
 	/**
+	 * The note of the route master
+	 * @type {String}
+	 */
+
+	#note;
+
+	/**
 	 * The name of the route master
 	 * @type {String}
 	 */
@@ -163,6 +170,13 @@ class RouteMaster {
 	get fixme ( ) { return this.#fixme; }
 
 	/**
+	 * The note of the route master
+	 * @type {String}
+	 */
+
+	get note ( ) { return this.#note; }
+
+	/**
 	 * An object that can be used by JSON.stringify with all the properties of the route master.
 	 * @type {Object}
 	 */
@@ -176,6 +190,7 @@ class RouteMaster {
 			osmId : this.#osmId,
 			operator : this.#operator,
 			fixme : this.#fixme,
+			note : this.#note,
 			name : this.#name
 		};
 		this.#routes.forEach (
@@ -205,6 +220,7 @@ class RouteMaster {
 		this.#osmId = jsonRouteMaster.osmId;
 		this.#operator = jsonRouteMaster.operator;
 		this.#fixme = jsonRouteMaster.fixme;
+		this.#note = jsonRouteMaster.note;
 		this.#name = jsonRouteMaster.name;
 	}
 }

@@ -89,23 +89,6 @@ module.exports = function ( grunt ) {
 				]
 			}
 		},
-		essimpledoc : {
-			debug : {
-				options : {
-					src : 'src',
-					dest : 'docs/techDoc',
-					validate : true,
-					noFiles : true
-				}
-			},
-			release : {
-				options : {
-					src : './src',
-					dest : './docs/techDoc',
-					validate : true
-				}
-			}
-		},
 		rollup : {
 			debug : {
 				options : {
@@ -194,8 +177,7 @@ module.exports = function ( grunt ) {
 	} );
 
 	grunt.loadNpmTasks ( 'grunt-eslint' );
-	grunt.loadNpmTasks ( 'grunt-wwwouaiebe-buildnumber' );
-	grunt.loadNpmTasks ( 'grunt-essimpledoc' );
+	grunt.loadTasks ( '../Grunt-wwwouaiebe-BuildNumber/tasks/' );
 	grunt.loadNpmTasks ( 'grunt-rollup' );
 	grunt.loadNpmTasks ( 'grunt-terser' );
 	grunt.loadNpmTasks ( 'grunt-contrib-copy' );
@@ -240,7 +222,6 @@ module.exports = function ( grunt ) {
 			'copy:afterRollup',
 			'terser:release',
 			'copy:release',
-			'essimpledoc:release',
 			'buildnumber:end',
 			'bye'
 		]
@@ -251,7 +232,6 @@ module.exports = function ( grunt ) {
 		[
 			'hello',
 			'buildnumber:start',
-			'essimpledoc:debug',
 			'eslint',
 			'buildnumber:end',
 			'bye'

@@ -32,6 +32,7 @@ import theRelationsReport from '../../OsmGtfsCompare/Reports/RelationsReport.js'
 import PlatformsComparator from '../../OsmGtfsCompare/Compare/PlatformsComparator.js';
 import RoutesWithoutRouteMasterValidator from '../../OsmGtfsCompare/Compare/RoutesWithoutRouteMasterValidator.js';
 import RoutesMasterTreesComparator from '../../OsmGtfsCompare/Compare/RoutesMasterTreesComparator.js';
+import theErrorsNavigator from '../interface/ErrorsNavigator.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -82,6 +83,7 @@ class ValidationAndComparisonStarter {
 		thePlatformsReport.close ( );
 		theRelationsReport.close ( );
 		theStatsReport.close ( );
+		theErrorsNavigator.reset ( );
 
 	}
 }

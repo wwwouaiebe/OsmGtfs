@@ -52,8 +52,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
                     New JOSM layer
                     <input type="checkbox" value="newJosmLayer" id="newJosmLayer" title="JOSM check out in a new layer" checked />
                 </label>
-                <input type="button" value="go" id="goInput" title="Start the control"/>
-                <input type="button" value="Errors only" id="errorsOnlyInput" title="Show all or show only errors"/>
+                <input type="button" value="go" class="button" id="goInput" title="Start the control"/>
+                <input type="button" value="⯇" class="button" id="previousError" title="Previous error" />
+                <label>🔵🟡🔴🟣</label>
+                <input type="button" value="⯈" class="button" id="nextError" title="Next error" />
+                <input type="button" value="Errors only" class="button" id="errorsOnlyInput" title="Show all or show only errors"/>
                 <span class="fontLarge"> <a id="cyDarkLight" title="Apparence: sombre">☽</a> </span>
                 <span class="fontLarge"> <a id="help" title="help" target="_blank" href="https://github.com/wwwouaiebe/OsmGtfs#readme">?</a> </span>
             </div>

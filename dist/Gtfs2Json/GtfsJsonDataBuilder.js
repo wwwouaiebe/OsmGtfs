@@ -80,12 +80,21 @@ class GtfsJsonDataBuilder {
 		);
 
 		for ( const platform of platforms ) {
-			const sqlString =
+
+			let sqlString = 'select route_ref_' + network.osmNetwork +
+				' from stops where stop_id = "' +
+                platform [ 0 ] + '";';
+			const routesRefRecord = await theMySqlDb.execSql ( sqlString );
+			const routesRef = routesRefRecord [ 0 ][ 'route_ref_' + network.osmNetwork ].split ( ';' );
+
+			if ( ! routesRef.find ( element => element === routeMaster.ref ) ) {
+				sqlString =
 				'UPDATE stops set route_ref_' + network.osmNetwork +
                    ' = CONCAT ( route_ref_' + network.osmNetwork + ', "' + routeMaster.ref + ';" ), platform_type = ' +
 				   routeMaster.type + ' where stop_id = "' +
                 platform [ 0 ] + '";';
-			await theMySqlDb.execSql ( sqlString );
+				await theMySqlDb.execSql ( sqlString );
+			}
 		}
 	}
 

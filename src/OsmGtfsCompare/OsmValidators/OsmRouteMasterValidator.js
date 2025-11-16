@@ -131,6 +131,18 @@ class OsmRouteMasterValidator {
 	}
 
 	/**
+	 * Verify tha the route master don't have a note
+	 */
+
+	#validateNote ( ) {
+		const note = this.#routeMaster.note;
+		if ( note ) {
+			theRelationsReport.addError ( 'p', 'A note exists for this route master:' + note );
+			theStatsReport.addRouteMasterErrorNote ( );
+		}
+	}
+
+	/**
 	 * Verify that the route master have a operator tag including the current operator
 	 */
 
@@ -167,6 +179,7 @@ class OsmRouteMasterValidator {
 
 		this.#validateOperator ( );
 		this.#validateFixme ( );
+		this.#validateNote ( );
 		this.#validateRefTag ( );
 		this.#validateSameRefTag ( );
 		this.#validateName ( );
